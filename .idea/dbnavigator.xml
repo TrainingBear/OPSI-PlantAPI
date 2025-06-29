@@ -19,7 +19,7 @@
   <component name="DBNavigator.Project.DatabaseBrowserManager">
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
-    <show-object-properties value="true" />
+    <show-object-properties value="false" />
     <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
@@ -31,12 +31,15 @@
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="50de4df2-7fd7-46fe-aea2-df60c30ae3f0" object-ref="schemas/plants/tables/plantdiseaselist" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="50de4df2-7fd7-46fe-aea2-df60c30ae3f0" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="50de4df2-7fd7-46fe-aea2-df60c30ae3f0" dataset="plants.plantdiseaselist" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="50de4df2-7fd7-46fe-aea2-df60c30ae3f0" dataset="plants.plantlist" active-filter-id="EMPTY_FILTER">
       <filter id="ccfb564b-5e70-407d-9df7-d08dbbd15f12" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="id" operator="=" value="" active="true" />

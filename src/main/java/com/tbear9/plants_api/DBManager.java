@@ -15,7 +15,6 @@ import java.util.Map;
 @Component
 public final class DBManager {
     final static Logger log = LoggerFactory.getLogger(DBManager.class);
-    final String key = PerenualAPI.key;
     @Autowired JdbcTemplate template;
     @Autowired PerenualAPI api;
     ObjectMapper mapper = new ObjectMapper();
@@ -23,23 +22,30 @@ public final class DBManager {
     public void init(){
         createTable();
         try{
-            deploy_database("plantlist");
-            deploy_database("plantdiseaselist");
-            deploy_database("plantdetails");
-            deploy_database("plantguidelist");
-            deploy_database("planthardness");
+            log.warn("Starting to deploy database to backend servers");
+            for(Table table: Table.values()) deploy_database(table);
 
             deploy_collection(api.plant_list_pages, api.plants);
             deploy_collection(api.plant_disease_list_pages, api.plant_diseases);
             deploy_collection(api.plant_guide_pages, api.plant_guides);
+
+            log.info("Deploying sudah selesai dengan hasil : ");
+            log.info("  Species tanaman yang terdaftar : {}", api.plants.size());
+            log.info("  Hama tanaman yang terdaftar : {}", api.plant_diseases.size());
+            log.info("  Panduan tanaman yang terdaftar : {}", api.plant_guides.size());
+            log.info("  Lokasi/Suhu/Iklim/hardiness tanaman yang terdaftar : {}", api.plant_hardiness.size());
+            log.info("  Detail tanaman yang terdaftar : {}", api.plant_details.size());
+            log.info("  Total halaman species yang terindex : {}", api.plant_list_pages.size());
+            log.info("  Total halaman disease yang terindex : {}", api.plant_disease_list_pages.size());
+            log.info("  Total halaman guide yang terindex : {}", api.plant_guide_pages.size());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void deploy_database(String database) throws JsonProcessingException {
-        log.info("Deploying {}... ", database);
-        String sql = "SELECT * FROM "+database;
+    public void deploy_database(Table table) throws JsonProcessingException {
+        log.info("Deploying {}... ", table.name);
+        String sql = "SELECT * FROM "+table.name;
         List<Map<String, Object>> maps = template.queryForList(sql);
         for (Map<String, Object> map : maps) {
             int id = (int) map.get("id");
@@ -64,37 +70,14 @@ public final class DBManager {
     }
 
     public void createTable(){
-        log.info("Creating tables... ");
-        String plantlist = "CREATE TABLE IF NOT EXISTS plantlist(" +
-                "id int NOT NULL," +
-                " data JSON," +
-                " CONSTRAINT UNIK UNIQUE (id)" +
-                ")";
-        String plantdisseaselist = "CREATE TABLE IF NOT EXISTS plantdiseaselist(" +
-                "id int NOT NULL UNIQUE," +
-                " data JSON," +
-                " CONSTRAINT UNIK UNIQUE (id)" +
-                ")";
-        String plantguidelist = "CREATE TABLE IF NOT EXISTS plantguidelist(" +
-                "id int NOT NULL UNIQUE," +
-                " data JSON," +
-                " CONSTRAINT UNIK UNIQUE (id)" +
-                ")";
-        String plantdetails = "CREATE TABLE IF NOT EXISTS plantdetails(" +
-                "id int NOT NULL UNIQUE," +
-                " data JSON," +
-                " CONSTRAINT UNIK UNIQUE (id)" +
-                ")";
-        String planthardness = "CREATE TABLE IF NOT EXISTS planthardness(" +
-                "id int NOT NULL UNIQUE," +
-                " data JSON," +
-                " CONSTRAINT UNIK UNIQUE (id)" +
-                ")";
-
-        template.execute(plantlist);
-        template.execute(plantdisseaselist);
-        template.execute(plantguidelist);
-        template.execute(plantdetails);
-        template.execute(planthardness);
+        log.warn("Creating tables... ");
+        for (Table value : Table.values()) {
+            String sql = "CREATE TABLE IF NOT EXISTS "+value.name+"(" +
+                    "id int NOT NULL," +
+                    " data JSON," +
+                    " CONSTRAINT UNIK UNIQUE (id)" +
+                    ")";
+            template.execute(sql);
+        }
     }
 }

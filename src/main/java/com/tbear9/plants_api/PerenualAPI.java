@@ -24,6 +24,7 @@ public final class PerenualAPI {
     @Setter public static String key = "sk-fh6s685f9f720fc7b11089";
     @Autowired JdbcTemplate template;
     static RestTemplate rest = new RestTemplate();
+    ObjectMapper mapper = new ObjectMapper();
 
     public final Map<Integer, JsonNode> plant_list_pages = new HashMap<>(); // PAGE 1 - 405 | SPECIES TANAMAN | TOTAL ADA 10k SPECIES
     public final Map<Integer, JsonNode> plants = new HashMap<>(); // 1 - 10k+ | SPECIES TANAMAN | TOTAL ADA 10k SPECIES
@@ -34,13 +35,17 @@ public final class PerenualAPI {
     public final Map<Integer, JsonNode> plant_guides = new HashMap<>(); // 1 - 10k+ | GUIDE TANAMAN | TOTAL ADA 10k PANDUAN UNTUK SETIAP SPECIES
     public final Map<Integer, JsonNode> plant_hardiness = new HashMap<>(); // ID DARI SPECIES | HARDNESS TANAMAN | TOTAL ADA 10k HARDNESS UNTUK SETIAP SPECIES
 
+    public void update(Table table, int id, JsonNode json) throws JsonProcessingException {
+        String sql = "INSERT INTO "+table.name+"(id, data) VALUES(?, ?)";
+        String string = mapper.writeValueAsString(json);
+        template.update(sql, id, string);
+        this.plant_list_pages.put(id, json);
+    }
+
     public JsonNode getPlantList(int page) throws JsonProcessingException {
         if(!this.plant_list_pages.containsKey(page)){
             JsonNode json = rest.getForObject("https://perenual.com/api/v2/species-list?key="+key+"&page="+page, JsonNode.class);
-            String sql = "INSERT INTO plantlist(id, data) VALUES(?, ?)";
-            String string = new ObjectMapper().writeValueAsString(json);
-            template.update(sql, page, string);
-            this.plant_list_pages.put(page, json);
+            update(Table.PLANT_LIST, page, json);
             return json;
         }
         return this.plant_list_pages.get(page);
@@ -49,10 +54,7 @@ public final class PerenualAPI {
     public JsonNode getPlantDiseaseList(int page) throws JsonProcessingException {
         if(!this.plant_disease_list_pages.containsKey(page)){
             JsonNode json = rest.getForObject("https://perenual.com/api/pest-disease-list?key="+key+"&page="+page, JsonNode.class);
-            String sql = "INSERT INTO plantdiseaselist(id, data) VALUES(?, ?)";
-            String string = new ObjectMapper().writeValueAsString(json);
-            template.update(sql, page, string);
-            this.plant_disease_list_pages.put(page, json);
+            update(Table.PLANT_DISEASE_LIST, page, json);
             return json;
         }
         return this.plant_disease_list_pages.get(page);
@@ -136,10 +138,7 @@ public final class PerenualAPI {
     public JsonNode getSpecificPlantDetails(int id) throws JsonProcessingException {
         if(!this.plant_details.containsKey(id)){
             JsonNode json = rest.getForObject("https://perenual.com/api/v2/species/details/"+id+"?key="+key, JsonNode.class);
-            String sql = "INSERT INTO plantdetails(id, data) VALUES(?, ?)";
-            String string = new ObjectMapper().writeValueAsString(json);
-            template.update(sql, id, string);
-            this.plant_details.put(id, json);
+            update(Table.PLANT_DETAILS, id, json);
             return json;
         }
         return this.plant_details.get(id);
@@ -150,10 +149,7 @@ public final class PerenualAPI {
             return this.plant_guide_pages.get(page);
         }
         JsonNode json = rest.getForObject("https://perenual.com/api/species-care-guide-list?key=" + key + "&page=" + page, JsonNode.class);
-        String sql = "INSERT INTO plantguidelist(id, data) VALUES(?, ?)";
-        String string = new ObjectMapper().writeValueAsString(json);
-        template.update(sql, page, string);
-        this.plant_guide_pages.put(page, json);
+        update(Table.PLANT_GUIDE_LIST, page, json);
         return json;
     }
 
@@ -202,10 +198,7 @@ public final class PerenualAPI {
     public JsonNode getPlantHardiness(int id) throws JsonProcessingException {
         if(this.plant_hardiness.containsKey(id)){
             JsonNode json = rest.getForObject("https://perenual.com/api/hardiness-map?species_id="+id+"&key="+key, JsonNode.class);
-            String sql = "INSERT INTO planthardiness(id, data) VALUES(?, ?)";
-            String string = new ObjectMapper().writeValueAsString(json);
-            template.update(sql, id, string);
-            this.plant_hardiness.put(id, json);
+            update(Table.PLANT_HARDINESS, id, json);
             return json;
         }
         return this.plant_hardiness.get(id);

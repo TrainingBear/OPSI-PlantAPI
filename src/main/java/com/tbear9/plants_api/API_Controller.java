@@ -21,12 +21,12 @@ public class API_Controller {
         return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(perenual.getPlantList(page));
     }
 
-    @GetMapping("/api/plantdisease")
+    @GetMapping("/api/plant-disease")
     public String getPlantDiseaseList(@RequestParam int page) throws JsonProcessingException {
         return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(perenual.getPlantDiseaseList(page));
     }
 
-    @GetMapping("/api/plantdisease")
+    @GetMapping("/api/plant-disease/list")
     public String getSpecificPlantDisease(@RequestParam int id) throws JsonProcessingException {
         return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(perenual.getSpecificPlantDisease(id));
     }
