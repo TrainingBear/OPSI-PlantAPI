@@ -24,7 +24,11 @@ repositories {
 }
 
 dependencies {
+//	implementation("com.konghq:unirest-java:3.13.6")
+	implementation ("com.fasterxml.jackson.core:jackson-databind")
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
+	implementation("com.mysql:mysql-connector-j:8.3.0")
+	implementation("org.springframework.boot:spring-boot-starter-web")
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
