@@ -27,13 +27,15 @@ public final class PerenualAPI {
     ObjectMapper mapper = new ObjectMapper();
 
     public final Map<Integer, JsonNode> plant_list_pages = new HashMap<>(); // PAGE 1 - 405 | SPECIES TANAMAN | TOTAL ADA 10k SPECIES
-    public final Map<Integer, JsonNode> plants = new HashMap<>(); // 1 - 10k+ | SPECIES TANAMAN | TOTAL ADA 10k SPECIES
     public final Map<Integer, JsonNode> plant_disease_list_pages = new HashMap<>(); // PAGE 1 - 8 | TANAMAN HAMA | TOTAL ADA 239 SPECIES
-    public final Map<Integer, JsonNode> plant_diseases = new HashMap<>(); // PAGE 1 - 8 | TANAMAN HAMA | TOTAL ADA 239 SPECIES
-    public final Map<Integer, JsonNode> plant_details = new HashMap<>(); // 1 - 10k+ | DETAIL TANAMAN | TOTAL ADA 10k DETAILS UNTUK SETIAP SPECIES
     public final Map<Integer, JsonNode> plant_guide_pages= new HashMap<>(); // PAGE 1 - 405 | GUIDE TANAMAN | TOTAL ADA 10k PANDUAN UNTUK SETIAP SPECIES
-    public final Map<Integer, JsonNode> plant_guides = new HashMap<>(); // 1 - 10k+ | GUIDE TANAMAN | TOTAL ADA 10k PANDUAN UNTUK SETIAP SPECIES
     public final Map<Integer, JsonNode> plant_hardiness = new HashMap<>(); // ID DARI SPECIES | HARDNESS TANAMAN | TOTAL ADA 10k HARDNESS UNTUK SETIAP SPECIES
+    public final Map<Integer, JsonNode> plant_details = new HashMap<>(); // 1 - 10k+ | DETAIL TANAMAN | TOTAL ADA 10k DETAILS UNTUK SETIAP SPECIES
+
+    /// data yang tidak langsung terkait dengan database
+    public final Map<Integer, JsonNode> plants = new HashMap<>(); // 1 - 10k+ | SPECIES TANAMAN | TOTAL ADA 10k SPECIES
+    public final Map<Integer, JsonNode> plant_diseases = new HashMap<>(); // PAGE 1 - 8 | TANAMAN HAMA | TOTAL ADA 239 SPECIES
+    public final Map<Integer, JsonNode> plant_guides = new HashMap<>(); // 1 - 10k+ | GUIDE TANAMAN | TOTAL ADA 10k PANDUAN UNTUK SETIAP SPECIES
 
     public void update(Table table, int id, JsonNode json) throws JsonProcessingException {
         String sql = "INSERT INTO "+table.name+"(id, data) VALUES(?, ?)";
@@ -106,7 +108,7 @@ public final class PerenualAPI {
                 JsonNode data = json.path("data");
                 for (JsonNode plant : data) {
                     int id_ = plant.path("id").asInt(-1);
-                    if(id_ != -1) this.plant_details.put(id_, plant);
+                    if(id_ != -1) this.plants.put(id_, plant);
                     else continue;
                     if(id_ == id) return plant;
                 }
@@ -130,7 +132,7 @@ public final class PerenualAPI {
 
             throw new IllegalArgumentException("ID TANAMAN TIDAK DITEMUKAN");
         }
-        return this.plant_details.get(id);
+        return this.plants.get(id);
     }
 
     @SuppressWarnings({"Untuk sekarang jangan di gunakan jika memang tidak perlu",
@@ -164,7 +166,7 @@ public final class PerenualAPI {
                 JsonNode json = plant_guide_pages.get(i);
                 JsonNode data = json.path("data");
                 for (JsonNode guide : data) {
-                    int id_ = guide.path("id").asInt(-1);
+                    int id_ = guide.path("species_id").asInt(-1);
                     if(id_ != -1) this.plant_guides.put(id_, guide);
                     else continue;
                     if(id_ == id) return guide;

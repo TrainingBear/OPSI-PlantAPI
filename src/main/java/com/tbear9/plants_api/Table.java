@@ -1,5 +1,6 @@
 package com.tbear9.plants_api;
 
+@SuppressWarnings("JANGAN DI MODIFIKASI YANG SUDAH ADA")
 public enum Table {
     PLANT_LIST("plant_list"),
     PLANT_DISEASE_LIST("plant_disease_list"),

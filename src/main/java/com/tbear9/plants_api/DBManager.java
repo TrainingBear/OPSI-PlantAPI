@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Component
 public final class DBManager {
-    final static Logger log = LoggerFactory.getLogger(DBManager.class);
+    final static Logger log = LoggerFactory.getLogger("[Database Manager]");
     @Autowired JdbcTemplate template;
     @Autowired PerenualAPI api;
     ObjectMapper mapper = new ObjectMapper();
@@ -46,12 +46,25 @@ public final class DBManager {
     public void deploy_database(Table table) throws JsonProcessingException {
         log.info("Deploying {}... ", table.name);
         String sql = "SELECT * FROM "+table.name;
+        long startTime = System.nanoTime();
         List<Map<String, Object>> maps = template.queryForList(sql);
+        StringBuilder  builder = new StringBuilder();
         for (Map<String, Object> map : maps) {
             int id = (int) map.get("id");
             JsonNode json = mapper.readTree((String) map.get("data"));
-            api.plant_list_pages.put(id, json);
+            builder.append(id).append(", ");
+            switch (table){
+                case PLANT_LIST -> api.plant_list_pages.put(id, json);
+                case PLANT_DISEASE_LIST -> api.plant_disease_list_pages.put(id, json);
+                case PLANT_GUIDE_LIST -> api.plant_guide_pages.put(id, json);
+                case PLANT_DETAILS -> api.plant_details.put(id, json);
+                case PLANT_GUIDE_DETAILS -> api.plant_guides.put(id, json);
+                case PLANT_HARDINESS -> api.plant_hardiness.put(id, json);
+            }
         }
+        long endTime = System.nanoTime();
+        String time = String.format("%.2f", (endTime - startTime) / 1_000_000.0);
+        log.info("DONE! Tabel {} menghabiskan waktu {} ms!", table.name, time);
     }
 
     /**
