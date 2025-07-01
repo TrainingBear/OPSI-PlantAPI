@@ -4,15 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="clean code!">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/Util.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/tbear9/plants_api/APIControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
+    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="fixed plants index">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/API.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/Query.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/code_lama/Perenualapi.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/code_lama/TabList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/code_lama/dbmanager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/API_Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/API_Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/API_Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/APIController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/DBManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/DBManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/PerenualAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/PerenualAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/PerenualAPI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/PlantsApiApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/PlantsApiApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/Table.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/Table.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/tbear9/plants_api/APIControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/tbear9/plants_api/APIControllerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,9 +52,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="DBN - JDBC Connector" />
-        <option value="Enum" />
-        <option value="Class" />
         <option value="JUnit5 Test Class" />
+        <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -74,6 +78,9 @@
     &quot;accountId&quot;: &quot;515801a6-83af-4f3f-8112-94991c9faad4&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/6.2.8/7b6a4ffb12639779721bc5adbc7f5ba80db72ff9/spring-web-6.2.8.jar!/org/springframework/web/client/RestTemplate.class" root0="SKIP_INSPECTION" />
+  </component>
   <component name="JvmLoggingSettingsStorage">
     <option name="loggerId" value="Lombok Slf4j" />
   </component>
@@ -102,7 +109,7 @@
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/Fun/plants-api",
-    "settings.editor.selected.configurable": "com.maddyhome.idea.vim.ui.VimEmulationConfigurable"
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -143,7 +150,7 @@
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
+        <option name="scriptParameters" value="--stacktrace" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -226,7 +233,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751199560986</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="fixed plants index">
+      <option name="closed" value="true" />
+      <created>1751207437354</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1751207437354</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -243,16 +258,16 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="created copy database of PerenualAPI,&#10;created querry id int search" />
     <MESSAGE value="clean code!" />
-    <option name="LAST_COMMIT_MESSAGE" value="clean code!" />
+    <MESSAGE value="fixed plants index" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed plants index" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/tbear9/plants_api/PerenualAPI.java</url>
-          <line>42</line>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.IllegalStateException" package="java.lang" />
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
+        </breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
