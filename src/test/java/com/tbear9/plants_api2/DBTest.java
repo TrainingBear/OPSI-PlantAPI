@@ -5,7 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = PlantsApi2Application.class)
+@SpringBootTest(classes = DB.class)
 class DBTest {
     @Test
     public void getRecordWithParameters(){

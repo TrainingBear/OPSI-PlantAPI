@@ -1,4 +1,4 @@
-package com.tbear9.plants_api;
+package com.tbear9;
 
 import org.slf4j.Logger;
 
