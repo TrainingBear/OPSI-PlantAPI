@@ -25,6 +25,7 @@ repositories {
 
 dependencies {
 //	implementation("com.konghq:unirest-java:3.13.6")
+	implementation("org.apache.commons:commons-csv:1.10.0")
 	implementation ("com.fasterxml.jackson.core:jackson-databind")
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
 	implementation("com.mysql:mysql-connector-j:8.3.0")
