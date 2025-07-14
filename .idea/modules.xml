@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plants-api.main.iml" filepath="$PROJECT_DIR$/.idea/modules/plants-api.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/OPSI-PlantAPI.iml" filepath="$PROJECT_DIR$/.idea/OPSI-PlantAPI.iml" />
     </modules>
   </component>
 </project>
