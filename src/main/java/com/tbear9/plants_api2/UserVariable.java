@@ -14,5 +14,5 @@ public class UserVariable implements Serializable {
     @Serial private static final long serialVersionUID = 1L;
 
     private final String tanah;
-    @Singular private final Set<? extends DB.Parameters> parameters;
+    @Singular private final Set<? extends Parameters> parameters;
 }

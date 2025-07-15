@@ -2,6 +2,7 @@ package com.tbear9.plants_api;
 
 import com.tbear9.plants_api2.DB;
 import com.tbear9.plants_api2.E;
+import com.tbear9.plants_api2.Parameters;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +21,7 @@ public class ApplicationTest {
 
     @Test
     public void find2(){
-        CSVRecord record = DB.getRecord(DB.SoilParameters.builder()
+        CSVRecord record = DB.getRecord(Parameters.SoilParameters.builder()
                         .O_depth(E.DEPTH.deep)
                         .O_drainage(E.DRAINAGE.poorly)
                 .build());

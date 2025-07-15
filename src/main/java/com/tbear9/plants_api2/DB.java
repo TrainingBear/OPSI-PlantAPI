@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.Serializable;
 import java.util.*;
 
 public class DB {
@@ -24,14 +23,70 @@ public class DB {
         for (CSVRecord record : getRecords()) {
             int score = 0;
             boolean flag = false;
-            for (Parameters parameter : parameters)
-                for (String col : parameter.getParameters().keySet()) {
-                    String row = record.get(col);
-                    if(row.contains(parameter.getParameters().get(col))){
-                        score += 1;
-                        flag = true;
+            for (Parameters parameter : parameters) {
+                Map<String, String> par_ = parameter.getParameters();
+                for (String col : par_.keySet()) {
+                    final String var = par_.get(col);
+                    switch (col){
+                        case "LAT" -> {
+                            float min = Float.parseFloat(record.get(E.O_minimum_latitude).equals( "NA") ? "0" : record.get(E.O_minimum_latitude));
+                            float max = Float.parseFloat(record.get(E.O_maximum_latitude).equals("NA") ? "0" : record.get(E.A_maximum_latitude));
+                            float i = Float.parseFloat(var);
+                            if(i <= max && i >= min){
+                                score += 1;
+                                flag = true;
+                            }
+                        }
+                        case "ALT" -> {
+                            float altitude = Float.parseFloat(record.get(E.A_minimum_altitude).equals("NA")? "0" : record.get(E.A_minimum_altitude));
+                            if(altitude <= Float.parseFloat(var)){
+                                score += 1;
+                                flag = true;
+                            }
+                        }
+                        case "RAIN" -> {
+                            float min = Float.parseFloat(record.get(E.O_minimum_rainfall));
+                            float max = Float.parseFloat(record.get(E.O_maximum_rainfall));
+                            if (min <= max && min <= Float.parseFloat(var)) {
+                                score += 1;
+                                flag = true;
+                            }
+                        }
+                        case "TEMP" -> {
+                            float min = Float.parseFloat(record.get(E.O_minimum_temperature));
+                            float max = Float.parseFloat(record.get(E.O_maximum_temperature));
+                            if (min <= max && min <= Float.parseFloat(var)) {
+                                score += 1;
+                                flag = true;
+                            }
+                        }
+
+                        case "PANEN" -> {
+                            float min = Float.parseFloat(record.get(E.MIN_crop_cycle));
+                            float max = Float.parseFloat(record.get(E.MAX_crop_cycle));
+                            if (min <= max && min <= Float.parseFloat(var)) {
+                                score += 1;
+                                flag = true;
+                            }
+                        }
+
+                        case "QUERY" -> {
+                            if (record.get(E.Common_names).contains(var)) {
+                                score += 1;
+                                flag = true;
+                            }
+                        }
+
+                        default -> {
+                            String row = record.get(col);
+                            if(row.contains(var)){
+                                score += 1;
+                                flag = true;
+                            }
+                        }
                     }
                 }
+            }
             if(flag) map.put(score, record);
         }
         return new TreeMap<>(map);
@@ -72,78 +127,6 @@ public class DB {
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
-        }
-    }
-
-    public interface Parameters extends Serializable {
-        Map<String, String> getParameters();
-    }
-
-    @Builder
-    public static class SoilParameters implements Parameters {
-        public final E.DEPTH O_depth;
-        public final E.DEPTH A_depth;
-        public final E.TEXTURE O_texture;
-        public final E.TEXTURE A_texture;
-        public final E.FERTILITY O_fertility; // tingkat kesuburan
-        public final E.FERTILITY A_fertility;
-        public final E.DRAINAGE O_drainage;
-        public final E.DRAINAGE A_drainage;
-        public final int pH;
-
-        @Override
-        public Map<String, String> getParameters() {
-            Map<String, String> map = new HashMap<>();
-            map.put(E.O_soil_depth, O_depth== null? null : O_depth.head);
-            map.put(E.A_soil_depth, A_depth== null? null : A_depth.head);
-            map.put(E.O_soil_texture, O_texture== null? null : O_texture.head);
-            map.put(E.A_soil_texture, A_texture== null? null : A_texture.head);
-            map.put(E.O_soil_fertility, O_fertility== null? null : O_fertility.head);
-            map.put(E.A_soil_fertility, A_fertility== null? null : A_fertility.head);
-            map.put(E.O_soil_drainage, O_drainage== null? null : O_drainage.head);
-            map.put(E.A_soil_drainage, A_drainage== null? null : A_drainage.head);
-            map.put("PH", String.valueOf(pH));
-
-            return map;
-        }
-    }
-
-    @Builder
-    public static class GeoParameters implements Parameters {
-        private final E.CLIMATE iklim;
-        private final int latitude;
-        private final int longitude;
-        private final int altitude;
-        private final int rainfall;
-        private final int temperature;
-
-        @Override
-        public Map<String, String> getParameters() {
-            Map<String, String> map = new HashMap<>();
-            map.put(E.Climate_zone, iklim == null? null : iklim.head);
-            map.put("LAT", String.valueOf(latitude));
-            map.put("LONG", String.valueOf(longitude));
-            map.put("ALT", String.valueOf(altitude));
-            map.put("RAIN", String.valueOf(rainfall));
-            map.put("TEMP", String.valueOf(temperature));
-            return map;
-        }
-    }
-
-    @Builder
-    public static class UserParameters implements Parameters {
-        private final E.CATEGORY category;
-        private final E.LIFESPAM lifeSpan;
-        private final String query;
-        private final int panen;
-        @Override
-        public Map<String, String> getParameters() {
-            Map<String, String> map = new HashMap<>();
-            map.put(E.Category, category == null ? null : category.head);
-            map.put(E.Life_span, lifeSpan == null ? null : lifeSpan.head);
-            map.put("PANEN", String.valueOf(panen));
-            map.put("QUERY", query);
-            return map;
         }
     }
 }
