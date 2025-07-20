@@ -1,8 +1,5 @@
-package com.tbear9.plants_api;
+package com.tbear9.plants_api2;
 
-import com.tbear9.plants_api2.DB;
-import com.tbear9.plants_api2.E;
-import com.tbear9.plants_api2.Parameters;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.*;
-import java.net.URL;
 import java.util.List;
 
 @SpringBootTest(classes = DB.class)

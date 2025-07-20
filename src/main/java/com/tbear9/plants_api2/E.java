@@ -27,7 +27,7 @@ public final class E {
     public static final String O_maximum_latitude = "LATOPMX";
     public static final String A_minimum_latitude = "LATMN";
     public static final String A_maximum_latitude = "LATMX";
-    public static final String A_minimum_altitude = "ALTMX";
+    public static final String O_maximum_altitude = "ALTMX";
     public static final String O_minimum_light_intentsity = "LIOPMN";
     public static final String O_maximum_light_intentsity = "LIOPMX";
     public static final String A_minimum_light_intensity = "LIMN";
@@ -119,6 +119,11 @@ public final class E {
         }
     }
     public enum TEXTURE{
+        heavy("heavy"),
+        medium("medium"),
+        light("light"),
+        wide("wide"),
+        organic("organic")
         ;
         public static final String absolute = A_soil_texture;
         public static final String optimal = O_soil_texture;
