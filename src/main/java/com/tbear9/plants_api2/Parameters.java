@@ -10,35 +10,29 @@ public interface Parameters {
     Map<String, String> getParameters();
 
     @Builder
+    @Setter
     public static class SoilParameters implements Parameters {
+        /// source: [wikipedia](https://en.wikipedia.org/wiki/Laterite#Agriculture)
         public static final SoilParameters LATERITE = SoilParameters.builder()
                 .O_fertility(E.FERTILITY.low)
-                .A_fertility(E.FERTILITY.low)
-                .O_texture(E.TEXTURE.)
-                .O_drainage(E.DRAINAGE.well).build();
+                .O_texture(E.TEXTURE.heavy)
+                .O_drainage(E.DRAINAGE.well)
+                .build();
 
 
-        @Setter public E.DEPTH O_depth;
-        @Setter public E.DEPTH A_depth;
-        public final E.TEXTURE O_texture;
-        public final E.TEXTURE A_texture;
-        public final E.FERTILITY O_fertility; // tingkat kesuburan
-        public final E.FERTILITY A_fertility;
-        public final E.DRAINAGE O_drainage;
-        public final E.DRAINAGE A_drainage;
-        public final int pH;
+        public E.DEPTH O_depth;
+        public E.TEXTURE O_texture;
+        public E.FERTILITY O_fertility; // tingkat kesuburan
+        public E.DRAINAGE O_drainage;
+        public int pH;
 
         @Override
         public Map<String, String> getParameters() {
             Map<String, String> map = new HashMap<>();
             map.put(E.O_soil_depth, O_depth== null? null : O_depth.head);
-            map.put(E.A_soil_depth, A_depth== null? null : A_depth.head);
             map.put(E.O_soil_texture, O_texture== null? null : O_texture.head);
-            map.put(E.A_soil_texture, A_texture== null? null : A_texture.head);
             map.put(E.O_soil_fertility, O_fertility== null? null : O_fertility.head);
-            map.put(E.A_soil_fertility, A_fertility== null? null : A_fertility.head);
             map.put(E.O_soil_drainage, O_drainage== null? null : O_drainage.head);
-            map.put(E.A_soil_drainage, A_drainage== null? null : A_drainage.head);
             map.put("PH", String.valueOf(pH));
 
             return map;

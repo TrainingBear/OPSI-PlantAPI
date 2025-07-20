@@ -13,11 +13,17 @@ import java.util.*;
 
 public class DB {
     public static int explored_fields = 0;
-
     public static final Logger log = LoggerFactory.getLogger("DATASET LOG");
-    public static String getScienceName(CSVRecord record){return record.get(E.Science_name);}
-    public static String[] getCommonName(CSVRecord record){return record.get(E.Common_names).split(",");}
 
+    public static boolean isAuthored(CSVRecord record){
+        return record.get(E.Authority) != null || !record.get(E.Authority).isEmpty();
+    }
+    public static String getScienceName(CSVRecord record){
+        return record.get(E.Science_name);
+    }
+    public static Set<String> getCommonName(CSVRecord record){
+        return new HashSet<>(Arrays.asList(record.get(E.Common_names).split(",")));
+    }
     public static Map<CSVRecord,  Integer> getRecords(UserVariable userVariable){
         Map<CSVRecord, Integer> map = new HashMap<>();
         Set<? extends Parameters> parameters = userVariable.getParameters();
@@ -30,9 +36,8 @@ public class DB {
                 Map<String, String> par_ = parameter.getParameters();
                 for (String col : par_.keySet()) {
                     final String var = par_.get(col);
-                    if(var==null) continue;
+                    if(var==null || var.equals("NA")) continue;
                     float float_val = Float.MAX_VALUE;
-                    if(var.equals("NA")) continue;
                     try {
                         float_val = Float.parseFloat(var);
                     } catch (NumberFormatException ignored) {}
@@ -129,6 +134,13 @@ public class DB {
 
                         default -> {
                             String row = record.get(col);
+                            if((col.equals(E.O_soil_texture) || col.equals(E.A_soil_texture)) &&
+                                    record.get(col).equals("wide")) {
+                                score += 2;
+                                flag = true;
+                                continue;
+                            }
+
                             if(row.contains(var)){
                                 if(col.equals(E.Climate_zone)) score += 3;
                                 else score += 2;
@@ -137,24 +149,24 @@ public class DB {
                             else if(col.equals(E.Climate_zone)) {
                                 score -= 354;
                                 flag = false;
-                            } else if(col.equals(E.O_soil_drainage)){
+                            } else if(col.equals(E.O_soil_drainage) &&
+                            E.DRAINAGE.valueOf(row).ordinal() - E.DRAINAGE.valueOf(var).ordinal() >= 2){
                                 score -= 9;
                                 flag = false;
                             } else if(col.equals(E.Category)) {
                                 score -= 12;
+                                flag = false;
                             }
                         }
                     }
                 }
             }
-            if(flag && score > 0) map.put(record, score);
-            if(record.get(E.Science_name).contains("Oryza")){
-                log.info("{}, score: {}", record.get(E.Science_name),  score);
-            }
+            if(isAuthored(record) && flag && score > 0) map.put(record, score);
         }
         return map;
     }
 
+    @Deprecated
     public static CSVRecord getRecord(Parameters parameters){
         Map<String, String> par = parameters.getParameters();
         log.info("finding... ");
@@ -172,6 +184,7 @@ public class DB {
         }
         return null;
     }
+
     public static CSVRecord getRecord(String query, String column){
         log.info("finding {} in {}", query, column);
         for (CSVRecord i : getRecords()) {

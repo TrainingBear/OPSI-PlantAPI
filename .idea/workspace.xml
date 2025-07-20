@@ -4,14 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="par">
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/tbear9/tes.java" afterDir="false" />
+    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="revamped score searching">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/DB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/DB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/E.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/E.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/Parameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/Parameters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/tbear9/plants_api/ApplicationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/tbear9/plants_api2/ApplicationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/tbear9/plants_api2/DBTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/tbear9/plants_api2/DBTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,42 +85,42 @@
     <option name="sortByType" value="true" />
     <option name="sortKey" value="BY_TYPE" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.APIControllerTest.executor": "Run",
-    "Gradle.APIControllerTest.getPlantGuideList.executor": "Debug",
-    "Gradle.APIControllerTest.getSpecificPlantGuide.executor": "Debug",
-    "Gradle.ApplicationTest.DB.executor": "Run",
-    "Gradle.ApplicationTest.accesfile.executor": "Run",
-    "Gradle.ApplicationTest.find.executor": "Run",
-    "Gradle.ApplicationTest.find2.executor": "Run",
-    "Gradle.Build OPSI-PlantAPI.executor": "Run",
-    "Gradle.DBTest.executor": "Run",
-    "Gradle.DBTest.getRecordWithParameters.executor": "Run",
-    "Gradle.Download Sources.executor": "Run",
-    "Gradle.OPSI-PlantAPI [:com.tbear9.plants_api2.Application.main()].executor": "Run",
-    "Gradle.plants-api [:com.tbear9.plants_api.PlantsApiApplication.main()].executor": "Run",
-    "Gradle.plants-api [bootRun].executor": "Run",
-    "Gradle.plants-api [build].executor": "Run",
-    "Gradle.tes.test2.executor": "Run",
-    "Python.rag_handler.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/kujatic/IdeaProjects/OPSI-PlantAPI",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.APIControllerTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.APIControllerTest.getPlantGuideList.executor&quot;: &quot;Debug&quot;,
+    &quot;Gradle.APIControllerTest.getSpecificPlantGuide.executor&quot;: &quot;Debug&quot;,
+    &quot;Gradle.ApplicationTest.DB.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ApplicationTest.accesfile.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ApplicationTest.find.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ApplicationTest.find2.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build OPSI-PlantAPI.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.DBTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.DBTest.getRecordWithParameters.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.OPSI-PlantAPI [:com.tbear9.plants_api2.Application.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.plants-api [:com.tbear9.plants_api.PlantsApiApplication.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.plants-api [bootRun].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.plants-api [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.tes.test2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.rag_handler.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/kujatic/IdeaProjects/OPSI-PlantAPI&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
@@ -393,7 +389,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752582121083</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="revamped score searching">
+      <option name="closed" value="true" />
+      <created>1752985205702</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1752985205702</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -418,19 +422,20 @@
     <MESSAGE value="minor" />
     <MESSAGE value="a" />
     <MESSAGE value="par" />
-    <option name="LAST_COMMIT_MESSAGE" value="par" />
+    <MESSAGE value="revamped score searching" />
+    <option name="LAST_COMMIT_MESSAGE" value="revamped score searching" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/DB.java</url>
-          <line>111</line>
+          <line>116</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/DB.java</url>
-          <line>130</line>
+          <line>135</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
