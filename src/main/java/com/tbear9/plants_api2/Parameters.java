@@ -13,8 +13,6 @@ public interface Parameters {
     @Setter
     /// top source: [FAO](https://wrb.isric.org/files/WRB_fourth_edition_2022-12-18_errata_correction_2024-09-24.pdf)
     public static class SoilParameters implements Parameters {
-
-
         /// sources:
         /// - https://www.sciencedirect.com/topics/agricultural-and-biological-sciences/alluvial-soil
         /// - https://amoghavarshaiaskas.in/alluvial-soil/
@@ -23,13 +21,6 @@ public interface Parameters {
                 .O_fertility(E.FERTILITY.high)
                 .O_drainage(E.DRAINAGE.well)
                 .pH(6f)
-                .build();
-
-        public static final SoilParameters Andosol = SoilParameters.builder()
-                .O_texture(E.TEXTURE.medium)
-                .O_fertility(E.FERTILITY.high)
-                .O_drainage(E.DRAINAGE.well)
-                .pH(5f)
                 .build();
 
         /// sources:
