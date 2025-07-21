@@ -11,20 +11,47 @@ public interface Parameters {
 
     @Builder
     @Setter
+    /// top source: [FAO](https://wrb.isric.org/files/WRB_fourth_edition_2022-12-18_errata_correction_2024-09-24.pdf)
     public static class SoilParameters implements Parameters {
-        /// source: [wikipedia](https://en.wikipedia.org/wiki/Laterite#Agriculture)
+
+
+        /// sources:
+        /// - https://www.sciencedirect.com/topics/agricultural-and-biological-sciences/alluvial-soil
+        /// - https://amoghavarshaiaskas.in/alluvial-soil/
+        public static final SoilParameters ALLUVIAL = SoilParameters.builder()
+                .O_texture(E.TEXTURE.medium)
+                .O_fertility(E.FERTILITY.high)
+                .O_drainage(E.DRAINAGE.well)
+                .pH(6f)
+                .build();
+
+        public static final SoilParameters Andosol = SoilParameters.builder()
+                .O_texture(E.TEXTURE.medium)
+                .O_fertility(E.FERTILITY.high)
+                .O_drainage(E.DRAINAGE.well)
+                .pH(5f)
+                .build();
+
+        /// sources:
+        /// - [wikipedia](https://en.wikipedia.org/wiki/Laterite#Agriculture)
+        /// - JURNAL KINGDOM The Journal of Biological Studies
+        /// Volume 9 No 2, Agustus, 2023, 131-137
+        /// https://journal.student.uny.ac.id/
+        ///
         public static final SoilParameters LATERITE = SoilParameters.builder()
                 .O_fertility(E.FERTILITY.low)
                 .O_texture(E.TEXTURE.heavy)
                 .O_drainage(E.DRAINAGE.well)
+                .pH(5.5f)
                 .build();
+
 
 
         public E.DEPTH O_depth;
         public E.TEXTURE O_texture;
         public E.FERTILITY O_fertility; // tingkat kesuburan
         public E.DRAINAGE O_drainage;
-        public int pH;
+        public float pH;
 
         @Override
         public Map<String, String> getParameters() {
