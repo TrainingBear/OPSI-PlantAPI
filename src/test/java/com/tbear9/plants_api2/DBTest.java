@@ -35,20 +35,12 @@ class DBTest {
                 .build();
 
         DB.explored_fields = 0;
-        Map<CSVRecord, Integer> records = DB.getRecords(userVariable);
-        int score = Integer.MIN_VALUE;
-        Set<CSVRecord> best_values = new HashSet<>();
-        for(CSVRecord i : records.keySet()){
-            int skor = records.get(i);
-            if(skor >= score){
-                score = skor;
-                best_values.add(i);
-            }
-            log.info("Score= {}, Science Name= {} ", skor, DB.getScienceName(i));
-        }
+        Map<Integer, Set<CSVRecord>> records = DB.getRecords(userVariable);
         log.info("Explored fields: {}", DB.explored_fields);
-        for (CSVRecord bestValue : best_values) {
-            log.info("Best Value: {}", DB.getScienceName(bestValue));
+        log.info("Best score with descending order");
+        for (int score : records.keySet()) {
+            for(CSVRecord bestValue : records.get(score))
+                log.info("Best Value: {} with score of {}", DB.getScienceName(bestValue), score);
         }
     }
 }

@@ -8,6 +8,9 @@ import java.util.Stack;
 
 public class Util {
 
+    private void test(){
+    }
+
     public static void took(Logger logger, String message, Runnable runnable){
         long startTime = System.nanoTime();
         runnable.run();

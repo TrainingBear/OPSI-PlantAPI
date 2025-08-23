@@ -24,8 +24,8 @@ public class DB {
     public static Set<String> getCommonName(CSVRecord record){
         return new HashSet<>(Arrays.asList(record.get(E.Common_names).split(",")));
     }
-    public static Map<CSVRecord,  Integer> getRecords(UserVariable userVariable){
-        Map<CSVRecord, Integer> map = new HashMap<>();
+    public static Map<Integer, Set<CSVRecord>> getRecords(UserVariable userVariable){
+        Map<Integer, Set<CSVRecord>> map = new TreeMap<>(Comparator.reverseOrder());
         Set<? extends Parameters> parameters = userVariable.getParameters();
 
         for (CSVRecord record : getRecords()) {
@@ -102,7 +102,6 @@ public class DB {
                             else score -= (int) // minus 1 per temperatur yang diluar jangkauan
                                     (float_val < min ? Math.abs(float_val - min) : Math.abs(max - float_val));
                         }
-
                         case "PANEN" -> {
                             if(record.get(E.MIN_crop_cycle).equals("NA") || record.get(E.MAX_crop_cycle).equals("NA")) continue;
                             float min = Float.parseFloat(record.get(E.MIN_crop_cycle));
@@ -112,14 +111,12 @@ public class DB {
                                 flag = true;
                             }
                         }
-
                         case "QUERY" -> {
                             if (record.get(E.Common_names).contains(var)) {
                                 score++;
                                 flag = true;
                             }
                         }
-
                         case "PH" -> {
                             if(record.get(E.O_minimum_ph).equals("NA") || record.get(E.A_minimum_ph).equals("NA")) continue;
                             float min = Float.parseFloat(record.get(E.O_minimum_ph));
@@ -133,7 +130,7 @@ public class DB {
                         }
 
                         default -> {
-                            String row = record.get(col);
+                            String value = record.get(col);
                             if((col.equals(E.O_soil_texture) || col.equals(E.A_soil_texture)) &&
                                     record.get(col).equals("wide")) {
                                 score += 2;
@@ -141,7 +138,7 @@ public class DB {
                                 continue;
                             }
 
-                            if(row.contains(var)){
+                            if(value.contains(var)){
                                 if(col.equals(E.Climate_zone)) score += 3;
                                 else score += 2;
                                 flag = true;
@@ -149,11 +146,23 @@ public class DB {
                             else if(col.equals(E.Climate_zone)) {
                                 score -= 354;
                                 flag = false;
-                            } else if(col.equals(E.O_soil_drainage) &&
-                            E.DRAINAGE.valueOf(row).ordinal() - E.DRAINAGE.valueOf(var).ordinal() >= 2){
-                                score -= 9;
-                                flag = false;
-                            } else if(col.equals(E.Category)) {
+                            }
+                            else if(col.equals(E.O_soil_drainage)){
+                                String[] split = value.split(", ");
+                                if(split.length > 1) continue;
+                                E.DRAINAGE drainage = switch (value){
+                                    case "well (dry spells)" -> E.DRAINAGE.well;
+                                    case "poorly (saturated >50% of year)" -> E.DRAINAGE.poorly;
+                                    case "excessive (dry/moderately dry)" -> E.DRAINAGE.excessive;
+                                    default -> null;
+                                };
+                                if(drainage==null) continue;
+                                if (split.length == 1 && drainage.ordinal() - E.DRAINAGE.valueOf(var).ordinal() >= 2) {
+                                    score -= 9;
+                                    flag = false;
+                                }
+                            }
+                            else if(col.equals(E.Category)) {
                                 score -= 12;
                                 flag = false;
                             }
@@ -161,7 +170,7 @@ public class DB {
                     }
                 }
             }
-            if(isAuthored(record) && flag && score > 0) map.put(record, score);
+            if(isAuthored(record) && flag && score > 0) map.computeIfAbsent(score, k->new HashSet<>()).add(record);
         }
         return map;
     }

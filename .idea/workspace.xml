@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="laterite">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/Parameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/Parameters.java" afterDir="false" />
-    </list>
+    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="model" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -44,8 +41,8 @@
         <option value="DBN - JDBC Connector" />
         <option value="Enum" />
         <option value="JUnit5 Test Class" />
-        <option value="Python Script" />
         <option value="Class" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -66,12 +63,9 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/TrainingBear/OPSI-PlantAPI.git&quot;,
-    &quot;accountId&quot;: &quot;515801a6-83af-4f3f-8112-94991c9faad4&quot;
+    &quot;accountId&quot;: &quot;ecb9fa9e-d317-48e4-99b4-b2d813255f4b&quot;
   }
 }</component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/6.2.8/7b6a4ffb12639779721bc5adbc7f5ba80db72ff9/spring-web-6.2.8.jar!/org/springframework/web/client/RestTemplate.class" root0="SKIP_INSPECTION" />
-  </component>
   <component name="JvmLoggingSettingsStorage">
     <option name="loggerId" value="Lombok Slf4j" />
   </component>
@@ -95,17 +89,19 @@
     &quot;Gradle.ApplicationTest.find2.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Build OPSI-PlantAPI.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.DBTest.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.DBTest.getRecordWithParameters.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.DBTest.getRecordWithParameters.executor&quot;: &quot;Debug&quot;,
     &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.OPSI-PlantAPI [:com.tbear9.plants_api2.Application.main()].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.plants-api [:com.tbear9.plants_api.PlantsApiApplication.main()].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.plants-api [bootRun].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.plants-api [build].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.tes.test2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.interpret.executor&quot;: &quot;Run&quot;,
     &quot;Python.rag_handler.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
     &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
@@ -116,7 +112,11 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.splitter.proportion&quot;: &quot;0.25361514&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -134,7 +134,7 @@
       <recent name="com.tbear9.plants_api" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.DBTest">
+  <component name="RunManager" selected="Gradle.DBTest.getRecordWithParameters">
     <configuration name="ApplicationTest.find" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -275,6 +275,17 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="plants-api" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="plants-api" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
     <configuration name="rag_handler" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="OPSI-PlantAPI" />
       <option name="ENV_FILES" value="" />
@@ -305,12 +316,13 @@
       <item itemvalue="Gradle.tes.test2" />
       <item itemvalue="Gradle.DBTest.getRecordWithParameters" />
       <item itemvalue="Gradle.ApplicationTest.find" />
+      <item itemvalue="Python.rag_handler" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.DBTest.getRecordWithParameters" />
         <item itemvalue="Gradle.DBTest" />
         <item itemvalue="Gradle.tes.test2" />
-        <item itemvalue="Gradle.DBTest.getRecordWithParameters" />
       </list>
     </recent_temporary>
   </component>
@@ -404,7 +416,47 @@
       <option name="project" value="LOCAL" />
       <updated>1753009726019</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="c">
+      <option name="closed" value="true" />
+      <created>1753094300474</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1753094300474</updated>
+    </task>
+    <task id="LOCAL-00012" summary="some soil parameters">
+      <option name="closed" value="true" />
+      <created>1755783230771</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1755783230771</updated>
+    </task>
+    <task id="LOCAL-00013" summary="model">
+      <option name="closed" value="true" />
+      <created>1755954591903</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1755954591914</updated>
+    </task>
+    <task id="LOCAL-00014" summary="model">
+      <option name="closed" value="true" />
+      <created>1755956623732</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1755956623732</updated>
+    </task>
+    <task id="LOCAL-00015" summary="model">
+      <option name="closed" value="true" />
+      <created>1755957029649</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1755957029649</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -431,23 +483,10 @@
     <MESSAGE value="par" />
     <MESSAGE value="revamped score searching" />
     <MESSAGE value="laterite" />
-    <option name="LAST_COMMIT_MESSAGE" value="laterite" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/DB.java</url>
-          <line>116</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/DB.java</url>
-          <line>135</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="c" />
+    <MESSAGE value="some soil parameters" />
+    <MESSAGE value="model" />
+    <option name="LAST_COMMIT_MESSAGE" value="model" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/plants_api$rag_handler.coverage" NAME="rag_handler Coverage Results" MODIFIED="1752497504330" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/RAG" />

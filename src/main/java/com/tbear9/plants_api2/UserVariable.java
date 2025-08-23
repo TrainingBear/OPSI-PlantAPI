@@ -12,7 +12,7 @@ import java.util.Set;
 @Builder
 public class UserVariable implements Serializable {
     @Serial private static final long serialVersionUID = 1L;
-
+    private byte[] image;
     private final String tanah;
     @Singular private final Set<? extends Parameters> parameters;
 }

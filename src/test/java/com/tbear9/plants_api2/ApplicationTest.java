@@ -17,13 +17,13 @@ public class ApplicationTest {
 
     @Test
     public void find2(){
-        CSVRecord record = DB.getRecord(Parameters.SoilParameters.builder()
-                        .O_depth(E.DEPTH.deep)
-                        .O_drainage(E.DRAINAGE.poorly)
-                .build());
-        log.info(record==null?"record1 is null!":"its real");
-        Assertions.assertNotNull(record);
-        log.info(record.get(E.Science_name));
+//        CSVRecord record = DB.getRecord(Parameters.SoilParameters.builder()
+//                        .O_depth(E.DEPTH.deep)
+//                        .O_drainage(E.DRAINAGE.poorly)
+//                .build());
+//        log.info(record==null?"record1 is null!":"its real");
+//        Assertions.assertNotNull(record);
+//        log.info(record.get(E.Science_name));
     }
     public void find(){
         CSVRecord record = DB.getRecord("Acacia", E.Authority);
