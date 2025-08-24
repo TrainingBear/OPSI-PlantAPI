@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArraySequence;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.ByteBuffer;
 
@@ -15,9 +18,15 @@ class TFServiceTest {
     void process() {
         File file = new File("humus.jpg");
         try {
-            BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-            byte[] bytes = inputStream.readAllBytes();
-            NdArraySequence<FloatNdArray> result = TFService.process(bytes);
+            BufferedImage image = ImageIO.read(file);
+            Image temp = image.getScaledInstance(320, 320, BufferedImage.SCALE_SMOOTH);
+            BufferedImage resized = new BufferedImage(320, 320, BufferedImage.TYPE_INT_RGB);
+            Graphics2D grpic = resized.createGraphics();
+            grpic.drawImage(temp, 0, 0, null);
+            float[] result = TFService.process(bytes);
+            for(int i = 0; i < result.length; i++){
+                TFService.log.info("{}: {}", TFService.soil[i], result[i]);
+            }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
