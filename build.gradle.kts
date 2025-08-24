@@ -28,7 +28,7 @@ dependencies {
 	implementation("org.apache.commons:commons-csv:1.10.0")
 	implementation ("com.fasterxml.jackson.core:jackson-databind")
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
-	implementation("org.tensorflow:tensorflow-core-platform:0.3.3")
+	implementation("org.tensorflow:tensorflow-core-platform:1.1.0")
 	implementation("com.mysql:mysql-connector-j:8.3.0")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	compileOnly("org.projectlombok:lombok")
