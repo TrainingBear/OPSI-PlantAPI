@@ -5,19 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="c">
-      <change afterPath="$PROJECT_DIR$/export.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fast_api/rag_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/discordrp.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/discordrp.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules/plants-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/plants-api.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RAG/rag_handler.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interpret.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/TFService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/TFService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/tbear9/plants_api2/TFServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/tbear9/plants_api2/TFServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fast_api/rag_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/fast_api/rag_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/humus.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +117,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "meja-kerja1",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/kujatic/IdeaProjects/OPSI-PlantAPI",
     "node.js.detected.package.eslint": "true",
