@@ -2,6 +2,9 @@ from typing import Union
 from fastapi import FastAPI, UploadFile, File
 
 import tensorflow as tf
+import numpy as np
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 model = tf.keras.models.load_model('model_4gap.keras')
 model.summary()
@@ -21,11 +24,12 @@ async def predict(file: UploadFile = File(...)):
     contents = await file.read()
     with open(dir + file.filename, "wb") as f:
         f.write(contents)
-    tf.image.resize(
-        contents,
-        (320, 320),
-    )
-    tf.image.convert_image_dtype(contents, tf.float32)
+
+    contents = tf.image.decode_jpeg(contents, channels=3);
+    contents = tf.expand_dims(contents, axis=1);
+    contents = tf.image.resize(contents, [320, 320]);
+    contents = tf.image.convert_image_dtype(contents, tf.float32);
+
     predictions = model.predict(contents)
     return predictions[0].tolist()
 

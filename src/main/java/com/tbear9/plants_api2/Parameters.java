@@ -3,10 +3,13 @@ package com.tbear9.plants_api2;
 import lombok.Builder;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public interface Parameters {
+public interface Parameters extends Serializable {
+    @Serial long serialVersionUID = 2025L;
     Map<String, String> getParameters();
 
     @Builder

@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/upload/")
-public class Request {
-//    @PostMapping()
-//    public String postSoil(@RequestBody UserVariable data){
-//    }
+public class Poster {
+    @PostMapping()
+    public String postSoil(@RequestBody UserVariable data){
+
+    }
 }
