@@ -15,4 +15,11 @@ public class UserVariable implements Serializable {
     private byte[] image;
     private final String tanah;
     @Singular private final Set<? extends Parameters> parameters;
+    public void modify(Parameters.SoilParameters par){
+        for (Parameters parameter : parameters) {
+            if(parameter instanceof Parameters.SoilParameters){
+                ((Parameters.SoilParameters) parameter).modify(par);
+            }
+        }
+    }
 }

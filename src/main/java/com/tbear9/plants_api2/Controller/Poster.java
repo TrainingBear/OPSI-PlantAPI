@@ -1,6 +1,7 @@
 package com.tbear9.plants_api2.Controller;
 
 import com.tbear9.plants_api2.DB;
+import com.tbear9.plants_api2.FAService;
 import com.tbear9.plants_api2.Parameters;
 import com.tbear9.plants_api2.UserVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,8 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/upload/")
 public class Poster {
-    @PostMapping()
+    @PostMapping("predoct")
     public String postSoil(@RequestBody UserVariable data){
-
+        byte[] image = data.getImage();
+        Parameters.SoilParameters soil = FAService.process(image);
+        data.modify(soil);
+        FAService.
     }
 }
