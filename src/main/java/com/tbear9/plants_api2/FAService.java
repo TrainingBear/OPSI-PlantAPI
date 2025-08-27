@@ -23,14 +23,14 @@ public final class FAService {
     public static final RestTemplate template = new RestTemplate();
     public static final Logger log = LoggerFactory.getLogger("FAService");
     public final static String[] label = {
-            "01-Aluvial",
-            "02-Andosol",
-            "03-Entisol",
-            "04-Humus",
-            "05-Inceptisol",
-            "06-Laterit",
-            "07-Kapur",
-            "08-Pasir"
+            "Aluvial",
+            "Andosol",
+            "Entisol",
+            "Humus",
+            "Inceptisol",
+            "Laterit",
+            "Kapur",
+            "Pasir"
     };
 
     public static final Parameters.SoilParameters[] soil = {
@@ -47,7 +47,7 @@ public final class FAService {
 
     public static Parameters.SoilParameters process(byte[] image){
         float[] prediction = predict(image);
-        return argmax(prediction);
+        return soil[argmax(prediction)];
     }
 
     public static float[] predict(File file) throws IOException {
@@ -85,7 +85,7 @@ public final class FAService {
         return logits;
     }
 
-    public static Parameters.SoilParameters argmax(float[] prediction){
+    public static int argmax(float[] prediction){
         float max = Float.MIN_VALUE;
         int ans = -1;
         for (int i = 0; i < prediction.length; i++) {
@@ -94,9 +94,8 @@ public final class FAService {
                 ans = i;
             }
         }
-        return soil[ans];
+        return ans;
     }
-
     /**
      * @param logits output dari prediksi linear. yang akan di normalisasi dengan softmax function
      */

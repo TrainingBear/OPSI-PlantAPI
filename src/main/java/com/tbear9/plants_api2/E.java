@@ -1,6 +1,10 @@
 package com.tbear9.plants_api2;
 
 public final class E {
+    public static final String NAME = "NAME";
+    public static final String PERAWATAN = "PERAWATAN";
+    public static final String PENYAKIT = "PENYAKIT";
+
     public static final String Authority = "AUTH";
     public static final String Family = "FAMNAME";
     public static final String Synonyms = "SYNO";
