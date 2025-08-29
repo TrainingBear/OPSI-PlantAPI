@@ -2,6 +2,8 @@ package com.tbear9.plants_api2;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,15 +24,16 @@ import java.util.*;
 public final class FAService {
     public static final RestTemplate template = new RestTemplate();
     public static final Logger log = LoggerFactory.getLogger("FAService");
+    public static final String key = "?";
     public final static String[] label = {
-            "01-Aluvial",
-            "02-Andosol",
-            "03-Entisol",
-            "04-Humus",
-            "05-Inceptisol",
-            "06-Laterit",
-            "07-Kapur",
-            "08-Pasir"
+            "Aluvial",
+            "Andosol",
+            "Entisol",
+            "Humus",
+            "Inceptisol",
+            "Laterit",
+            "Kapur",
+            "Pasir"
     };
 
     public static final Parameters.SoilParameters[] soil = {
@@ -44,10 +47,19 @@ public final class FAService {
             Parameters.SoilParameters.PASIR
     };
 
+    public static void rag(String input){
+        D
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth();
+        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+
+        template.postForEntity("https://api.openai.com/v1/responses",)
+    }
 
     public static Parameters.SoilParameters process(byte[] image){
         float[] prediction = predict(image);
-        return argmax(prediction);
+        return soil[argmax(prediction)];
     }
 
     public static float[] predict(File file) throws IOException {
@@ -68,7 +80,6 @@ public final class FAService {
         params.add("file", imgResource);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "multipart/form-data");
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
@@ -85,7 +96,7 @@ public final class FAService {
         return logits;
     }
 
-    public static Parameters.SoilParameters argmax(float[] prediction){
+    public static int argmax(float[] prediction){
         float max = Float.MIN_VALUE;
         int ans = -1;
         for (int i = 0; i < prediction.length; i++) {
@@ -94,9 +105,8 @@ public final class FAService {
                 ans = i;
             }
         }
-        return soil[ans];
+        return ans;
     }
-
     /**
      * @param logits output dari prediksi linear. yang akan di normalisasi dengan softmax function
      */
@@ -115,6 +125,17 @@ public final class FAService {
             }
             for(int i = 0; i < logits.length; i++)
                 logits[i] = (float) (logits[i] / sumExp);
+        }
+    }
+
+    public static class Data {
+        JSONObject data = new JSONObject();
+        public Data(String model, String input) throws JSONException {
+            JSONObject tools = new JSONObject();
+            tools.
+            data.put("model", model);
+            data.put("tools", tools);
+            data.put("input", input);
         }
     }
 }

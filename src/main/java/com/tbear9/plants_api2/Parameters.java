@@ -114,6 +114,13 @@ public interface Parameters extends Serializable {
         public E.DRAINAGE O_drainage;
         public float pH;
 
+        public void modify(SoilParametergtgts soil){
+            O_texture = soil.O_texture;
+            O_fertility = soil.O_fertility;
+            O_drainage = soil.O_drainage;
+            pH = soil.pH;
+        }
+
         @Override
         public Map<String, String> getParameters() {
             Map<String, String> map = new HashMap<>();

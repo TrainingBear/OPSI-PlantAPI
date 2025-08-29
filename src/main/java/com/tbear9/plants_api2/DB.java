@@ -1,6 +1,5 @@
 package com.tbear9.plants_api2;
 
-import lombok.Builder;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
@@ -24,11 +23,11 @@ public class DB {
     public static Set<String> getCommonName(CSVRecord record){
         return new HashSet<>(Arrays.asList(record.get(E.Common_names).split(",")));
     }
-    public static Map<Integer, Set<CSVRecord>> getRecords(UserVariable userVariable){
+    public static Map<Integer, Set<CSVRecord>> ecoCropDB_csv(UserVariable userVariable){
         Map<Integer, Set<CSVRecord>> map = new TreeMap<>(Comparator.reverseOrder());
         Set<? extends Parameters> parameters = userVariable.getParameters();
 
-        for (CSVRecord record : getRecords()) {
+        for (CSVRecord record : ecoCropDB_csv()) {
             explored_fields++;
             int score = 0;
             boolean flag = false;
@@ -175,11 +174,29 @@ public class DB {
         return map;
     }
 
+    public static CSVRecord perawatan(CSVRecord record){
+        List<CSVRecord> perawatan = perawatan_csv();
+        for (CSVRecord i : perawatan) {
+            String s = i.get(record.get(E.Science_name));
+            if(s != null) return i;
+        }
+        return null;
+    }
+    public static String qperawatan(CSVRecord record){
+        return record.get(E.PERAWATAN);
+//        StringBuilder stringBuilder = new StringBuilder();
+//        for(String s : perawatan)
+//            stringBuilder.append(s).append(", ");
+    }
+    public static String qpenyakit(CSVRecord record){
+        return record.get(E.PENYAKIT);
+    }
+
     @Deprecated
     public static CSVRecord getRecord(Parameters parameters){
         Map<String, String> par = parameters.getParameters();
         log.info("finding... ");
-        for (CSVRecord record : getRecords()) {
+        for (CSVRecord record : ecoCropDB_csv()) {
             boolean flag = false;
             for (String col : par.keySet()) {
                 String val = par.get(col);
@@ -196,7 +213,7 @@ public class DB {
 
     public static CSVRecord getRecord(String query, String column){
         log.info("finding {} in {}", query, column);
-        for (CSVRecord i : getRecords()) {
+        for (CSVRecord i : ecoCropDB_csv()) {
 //            log.info("checking {}", i.get(column));
             if (i.get(column).contains(query)) {
                 return i;
@@ -206,8 +223,29 @@ public class DB {
         return null;
     }
 
-    public static List<CSVRecord> getRecords(){
+    public static List<CSVRecord> ecoCropDB_csv(){
         try (Reader in = new FileReader("EcoCrop_DB.csv")) {
+            return CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(in).getRecords();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    private final static Map<String, CSVRecord> science_perawatancsv = new HashMap<>();
+    public static CSVRecord perawatan_csv(CSVRecord ecocropcsv){
+        if(science_perawatancsv.containsKey(ecocropcsv.get(E.Science_name)))
+            return science_perawatancsv.get(ecocropcsv.get(E.Science_name));
+        for (CSVRecord i : perawatan_csv()) {
+            if(i.get(E.Science_name).contains(ecocropcsv.get(E.Science_name))) {
+                science_perawatancsv.put(ecocropcsv.get(E.Science_name), i);
+                return i;
+            }
+        }
+        return null;
+    }
+    public static List<CSVRecord> perawatan_csv(){
+        try (Reader in = new FileReader("perawatan.csv")) {
             return CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(in).getRecords();
         } catch (IOException e) {
             e.printStackTrace();

@@ -35,7 +35,7 @@ class DBTest {
                 .build();
 
         DB.explored_fields = 0;
-        Map<Integer, Set<CSVRecord>> records = DB.getRecords(userVariable);
+        Map<Integer, Set<CSVRecord>> records = DB.ecoCropDB_csv(userVariable);
         log.info("Explored fields: {}", DB.explored_fields);
         log.info("Best score with descending order");
         for (int score : records.keySet()) {

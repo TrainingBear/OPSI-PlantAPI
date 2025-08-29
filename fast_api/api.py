@@ -19,6 +19,11 @@ def read_root():
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
 
+model = "o3-deep-research"
+@app.get("/rag")
+async def rag(query: str):
+    r
+
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     contents = await file.read()
