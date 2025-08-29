@@ -2,6 +2,8 @@ package com.tbear9.plants_api2;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +24,7 @@ import java.util.*;
 public final class FAService {
     public static final RestTemplate template = new RestTemplate();
     public static final Logger log = LoggerFactory.getLogger("FAService");
+    public static final String key = "?";
     public final static String[] label = {
             "Aluvial",
             "Andosol",
@@ -44,6 +47,15 @@ public final class FAService {
             Parameters.SoilParameters.PASIR
     };
 
+    public static void rag(String input){
+        D
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth();
+        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+
+        template.postForEntity("https://api.openai.com/v1/responses",)
+    }
 
     public static Parameters.SoilParameters process(byte[] image){
         float[] prediction = predict(image);
@@ -68,7 +80,6 @@ public final class FAService {
         params.add("file", imgResource);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "multipart/form-data");
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
@@ -114,6 +125,17 @@ public final class FAService {
             }
             for(int i = 0; i < logits.length; i++)
                 logits[i] = (float) (logits[i] / sumExp);
+        }
+    }
+
+    public static class Data {
+        JSONObject data = new JSONObject();
+        public Data(String model, String input) throws JSONException {
+            JSONObject tools = new JSONObject();
+            tools.
+            data.put("model", model);
+            data.put("tools", tools);
+            data.put("input", input);
         }
     }
 }

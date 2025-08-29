@@ -29,6 +29,7 @@ public class Poster {
                 CSVRecord perawatanrecord = DB.perawatan_csv(ecorecord);
                 StringBuilder querry = new StringBuilder("Tolong buat kesimpulan perawatan tanaman sesuai dengan data yang kita peroleh:  \n");
                 querry.append('\n');
+                String nama_ilmiah = ecorecord.get(E.Science_name);
                 if(perawatanrecord != null){
                     String perawatan = perawatanrecord.get(E.PERAWATAN);
                     String penyakit = perawatanrecord.get(E.PENYAKIT);
@@ -38,10 +39,11 @@ public class Poster {
                     querry.append("Penyakit: ").append(penyakit).append("\n");
                 }
                 else {
-                    String nama_ilmiah = ecorecord.get(E.Science_name);
+                    querry.append("Nama ilmiah: ").append(nama_ilmiah).append("\n");
                 }
+                String respon = FAService.rag(querry);
+                response.getPerawatan().add(Map.entry(nama_ilmiah, respon));
             }
         }
-        response.getParameters().put("query", querry.toString());
     }
 }
