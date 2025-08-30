@@ -1,5 +1,7 @@
-package com.tbear9.plants_api2;
+package com.tbear9.plants;
 
+import com.tbear9.plants.api.Parameters;
+import com.tbear9.plants.api.UserVariable;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;

@@ -1,7 +1,8 @@
-package com.tbear9.plants_api2;
+package com.tbear9.plants.api;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.Singular;
 
 import java.io.Serial;
@@ -9,16 +10,17 @@ import java.io.Serializable;
 import java.util.Set;
 
 @Getter
+@Setter
 @Builder
 public class UserVariable implements Serializable {
     @Serial private static final long serialVersionUID = 1L;
     private byte[] image;
-    private final String tanah;
+    private String tanah;
     @Singular private final Set<? extends Parameters> parameters;
-    public void modify(Parameters.SoilParameters par){
+    public void modify(SoilParameters par){
         for (Parameters parameter : parameters) {
-            if(parameter instanceof Parameters.SoilParameters){
-                ((Parameters.SoilParameters) parameter).modify(par);
+            if(parameter instanceof SoilParameters){
+                ((SoilParameters) parameter).modify(par);
             }
         }
     }

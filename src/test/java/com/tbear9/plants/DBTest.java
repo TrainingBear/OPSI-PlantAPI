@@ -1,5 +1,6 @@
-package com.tbear9.plants_api2;
+package com.tbear9.plants;
 
+import com.tbear9.plants.api.*;
 import org.apache.commons.csv.CSVRecord;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -13,17 +14,17 @@ class DBTest {
     @Test
     public void getRecordWithParameters(){
         E.CLIMATE iklim = E.CLIMATE.tropical_wet;
-        Parameters par1 = Parameters.UserParameters.builder()
+        Parameters par1 = CustomParameters.builder()
                 .category(E.CATEGORY.cereals_pseudocereals)
                 .lifeSpan(E.LIFESPAM.annual)
                 .panen(90)
                 .query("Oryza")
                 .build();
-        Parameters par2 = Parameters.SoilParameters.builder()
+        Parameters par2 = SoilParameters.builder()
                 .O_drainage(E.DRAINAGE.poorly)
                 .O_fertility(E.FERTILITY.high)
                 .build();
-        Parameters par3 = Parameters.GeoParameters.builder()
+        Parameters par3 = GeoParameters.builder()
                 .altitude(2000)
                 .iklim(iklim)
                 .temperature(25)

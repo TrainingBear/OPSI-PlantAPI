@@ -1,20 +1,15 @@
-package com.tbear9.plants_api2;
+package com.tbear9.plants.api;
 
+import com.tbear9.plants.E;
 import lombok.Builder;
 import lombok.Setter;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public interface Parameters extends Serializable {
-    @Serial long serialVersionUID = 2025L;
-    Map<String, String> getParameters();
-
-    @Builder
-    @Setter
-    public static class SoilParameters implements Parameters {
+@Builder
+@Setter
+public class SoilParameters implements Parameters {
         /// sources:
         /// - https://www.sciencedirect.com/topics/agricultural-and-biological-sciences/alluvial-soil
         /// - https://amoghavarshaiaskas.in/alluvial-soil/
@@ -114,7 +109,7 @@ public interface Parameters extends Serializable {
         public E.DRAINAGE O_drainage;
         public float pH;
 
-        public void modify(SoilParametergtgts soil){
+        public void modify(SoilParameters soil){
             O_texture = soil.O_texture;
             O_fertility = soil.O_fertility;
             O_drainage = soil.O_drainage;
@@ -133,45 +128,3 @@ public interface Parameters extends Serializable {
             return map;
         }
     }
-
-    @Builder
-    public static class GeoParameters implements Parameters {
-        private final E.CLIMATE iklim;
-        private final int latitude;
-//        private final int longitude;
-        private final int altitude;
-        private final int rainfall;
-        private final int temperature;
-
-        @Override
-        public Map<String, String> getParameters() {
-            Map<String, String> map = new HashMap<>();
-            map.put(E.Climate_zone, iklim == null? null : iklim.head);
-            map.put("LAT", String.valueOf(latitude));
-//            map.put("LONG", String.valueOf(longitude));
-            if(altitude == 0) throw new IllegalArgumentException("Altitude cannot be zero");
-            map.put("ALT", String.valueOf(altitude));
-            if(rainfall == 0) throw new IllegalArgumentException("Rainfall cannot be zero");
-            map.put("RAIN", String.valueOf(rainfall));
-            map.put("TEMP", String.valueOf(temperature));
-            return map;
-        }
-    }
-
-    @Builder
-    public static class UserParameters implements Parameters {
-        private final E.CATEGORY category;
-        private final E.LIFESPAM lifeSpan;
-        private final String query;
-        private final int panen;
-        @Override
-        public Map<String, String> getParameters() {
-            Map<String, String> map = new HashMap<>();
-            map.put(E.Category, category == null ? null : category.head);
-            map.put(E.Life_span, lifeSpan == null ? null : lifeSpan.head);
-            map.put("PANEN", String.valueOf(panen));
-            map.put("QUERY", query);
-            return map;
-        }
-    }
-}

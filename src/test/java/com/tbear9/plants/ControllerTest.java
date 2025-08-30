@@ -1,9 +1,7 @@
-package com.tbear9.plants_api2;
+package com.tbear9.plants;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = Application.class)
 class ControllerTest {

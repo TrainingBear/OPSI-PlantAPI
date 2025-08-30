@@ -1,4 +1,4 @@
-package com.tbear9.plants_api2;
+package com.tbear9.plants;
 
 public final class E {
     public static final String NAME = "NAME";
@@ -62,7 +62,7 @@ public final class E {
     public static final String Science_name = "ScientificName";
     public static final String PORT = "EcoPortCode";
 
-    enum LIFESPAM{
+    public enum LIFESPAM{
         ephemeral("ephemeral"),
         annual("annual"),
         perennial("perennial"),
@@ -74,7 +74,7 @@ public final class E {
         }
     }
 
-    enum CATEGORY{
+    public enum CATEGORY{
         other("other"),
         cereals_pseudocereals("cereals & pseudocereals"),
         pulls("pulses (grain legumes)"),

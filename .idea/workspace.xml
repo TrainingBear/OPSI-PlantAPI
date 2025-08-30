@@ -4,11 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="changes">
+    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="moving on">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants/Application.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants/Poster.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants/api/CustomParameters.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants/api/GeoParameters.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants/api/Parameters.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants/api/Response.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/tbear9/plants/FAServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/plants-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/plants-api.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/fast_api/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/fast_api/api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/Controller/Poster.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/Controller/Poster.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/FAService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/FAService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/Application.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/Controller/Poster.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/Controller/Response.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/DB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants/DB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/E.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants/E.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/FAService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants/FAService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/Parameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants/api/SoilParameters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tbear9/plants_api2/UserVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tbear9/plants/api/UserVariable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/tbear9/plants_api2/ApplicationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/tbear9/plants/ApplicationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/tbear9/plants_api2/ControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/tbear9/plants/ControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/tbear9/plants_api2/DBTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/tbear9/plants/DBTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/tbear9/plants_api2/FAServiceTest.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +65,7 @@
         <option value="Enum" />
         <option value="JUnit5 Test Class" />
         <option value="Python Script" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -87,53 +106,66 @@
     <option name="sortByType" value="true" />
     <option name="sortKey" value="BY_TYPE" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.APIControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.APIControllerTest.getPlantGuideList.executor&quot;: &quot;Debug&quot;,
-    &quot;Gradle.APIControllerTest.getSpecificPlantGuide.executor&quot;: &quot;Debug&quot;,
-    &quot;Gradle.ApplicationTest.DB.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ApplicationTest.accesfile.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ApplicationTest.find.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ApplicationTest.find2.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build OPSI-PlantAPI.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ControllerTest.send.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.DBTest (1).executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.DBTest.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.DBTest.getRecordWithParameters.executor&quot;: &quot;Debug&quot;,
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.FAServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.FAServiceTest.process.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.OPSI-PlantAPI [:com.tbear9.plants_api2.Application.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.TFServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.TFServiceTest.process.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.plants-api [:com.tbear9.plants_api.PlantsApiApplication.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.plants-api [bootRun].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.plants-api [build].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.tes.test2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.interpret.executor&quot;: &quot;Run&quot;,
-    &quot;Python.rag_handler.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;meja-kerja1&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/kujatic/IdeaProjects/OPSI-PlantAPI&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;io.github.pandier.intellijdiscordrp.settings.project.DiscordProjectSettingsConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Gradle.APIControllerTest.executor": "Run",
+    "Gradle.APIControllerTest.getPlantGuideList.executor": "Debug",
+    "Gradle.APIControllerTest.getSpecificPlantGuide.executor": "Debug",
+    "Gradle.ApplicationTest.DB.executor": "Run",
+    "Gradle.ApplicationTest.accesfile.executor": "Run",
+    "Gradle.ApplicationTest.find.executor": "Run",
+    "Gradle.ApplicationTest.find2.executor": "Run",
+    "Gradle.Build OPSI-PlantAPI.executor": "Run",
+    "Gradle.ControllerTest.send.executor": "Run",
+    "Gradle.DBTest (1).executor": "Run",
+    "Gradle.DBTest.executor": "Run",
+    "Gradle.DBTest.getRecordWithParameters.executor": "Debug",
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.FAServiceTest.createTerminal.executor": "Run",
+    "Gradle.FAServiceTest.executor": "Run",
+    "Gradle.FAServiceTest.process.executor": "Debug",
+    "Gradle.FAServiceTest.runCommand.executor": "Run",
+    "Gradle.FAServiceTest.runPython.executor": "Run",
+    "Gradle.OPSI-PlantAPI [:com.tbear9.plants_api2.Application.main()].executor": "Run",
+    "Gradle.OPSI-PlantAPI [bootRun test].executor": "Run",
+    "Gradle.OPSI-PlantAPI [bootRun].executor": "Run",
+    "Gradle.OPSI-PlantAPI [bootTestRun].executor": "Run",
+    "Gradle.TFServiceTest.executor": "Run",
+    "Gradle.TFServiceTest.process.executor": "Run",
+    "Gradle.plants-api [:com.tbear9.plants_api.PlantsApiApplication.main()].executor": "Run",
+    "Gradle.plants-api [bootRun].executor": "Run",
+    "Gradle.plants-api [build].executor": "Run",
+    "Gradle.tes.test2.executor": "Run",
+    "Python.interpret.executor": "Run",
+    "Python.rag_handler.executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/kujatic/IdeaProjects/OPSI-PlantAPI",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.tbear9.plants" />
+    </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
@@ -149,8 +181,8 @@
       <recent name="com.tbear9.plants_api" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.FAServiceTest.process">
-    <configuration name="DBTest.getRecordWithParameters" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+  <component name="RunManager" selected="Gradle.OPSI-PlantAPI [bootRun]">
+    <configuration name="FAServiceTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -163,7 +195,31 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;com.tbear9.plants_api2.DBTest.getRecordWithParameters&quot;" />
+            <option value="&quot;com.tbear9.plants_api2.FAServiceTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="FAServiceTest.createTerminal" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.tbear9.plants_api2.FAServiceTest.createTerminal&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -198,7 +254,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="TFServiceTest.process" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="FAServiceTest.runCommand" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -211,7 +267,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;com.tbear9.plants_api2.TFServiceTest.process&quot;" />
+            <option value="&quot;com.tbear9.plants_api2.FAServiceTest.runCommand&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -222,7 +278,31 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="plants-api [bootRun]" type="GradleRunConfiguration" factoryName="Gradle" nameIsGenerated="true">
+    <configuration name="FAServiceTest.runPython" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.tbear9.plants_api2.FAServiceTest.runPython&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="OPSI-PlantAPI [bootRun]" type="GradleRunConfiguration" factoryName="Gradle" nameIsGenerated="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -234,6 +314,28 @@
         <option name="taskNames">
           <list>
             <option value="bootRun" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="OPSI-PlantAPI [bootTestRun]" type="GradleRunConfiguration" factoryName="Gradle" nameIsGenerated="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="bootTestRun" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -266,66 +368,23 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="tes.test2" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.tbear9.tes.test2&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="rag_handler" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="OPSI-PlantAPI" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/RAG" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/RAG/rag_handler.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <list>
-      <item itemvalue="Gradle.plants-api [bootRun]" />
+      <item itemvalue="Gradle.OPSI-PlantAPI [bootRun]" />
+      <item itemvalue="Gradle.OPSI-PlantAPI [bootTestRun]" />
       <item itemvalue="Gradle.plants-api [build]" />
+      <item itemvalue="Gradle.FAServiceTest.createTerminal" />
+      <item itemvalue="Gradle.FAServiceTest" />
+      <item itemvalue="Gradle.FAServiceTest.runCommand" />
+      <item itemvalue="Gradle.FAServiceTest.runPython" />
       <item itemvalue="Gradle.FAServiceTest.process" />
-      <item itemvalue="Gradle.DBTest.getRecordWithParameters" />
-      <item itemvalue="Gradle.TFServiceTest.process" />
-      <item itemvalue="Gradle.tes.test2" />
-      <item itemvalue="Python.rag_handler" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.FAServiceTest.createTerminal" />
+        <item itemvalue="Gradle.FAServiceTest" />
         <item itemvalue="Gradle.FAServiceTest.process" />
-        <item itemvalue="Python.rag_handler" />
+        <item itemvalue="Gradle.FAServiceTest.runPython" />
+        <item itemvalue="Gradle.FAServiceTest.runCommand" />
       </list>
     </recent_temporary>
   </component>
@@ -468,7 +527,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756278924488</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="moving on">
+      <option name="closed" value="true" />
+      <created>1756597171742</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1756597171742</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -499,7 +566,8 @@
     <MESSAGE value="hasil kerja" />
     <MESSAGE value="perawatan" />
     <MESSAGE value="changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="changes" />
+    <MESSAGE value="moving on" />
+    <option name="LAST_COMMIT_MESSAGE" value="moving on" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -508,6 +576,11 @@
           <url>file://$PROJECT_DIR$/fast_api/api.py</url>
           <line>14</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/tbear9/plants/FAService.java</url>
+          <line>106</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

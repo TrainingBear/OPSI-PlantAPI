@@ -1,8 +1,7 @@
-package com.tbear9.plants_api2;
+package com.tbear9.plants;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +38,7 @@ public class ApplicationTest {
     public void DB() {
         try (Reader in = new FileReader("EcoCrop_DB.csv")) {
             List<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(in).getRecords();
-            records.forEach(record -> {
-                log.info(record.get("AUTH"));
-            });
+            assert records != null;
         } catch (IOException e) {
             e.printStackTrace();
         }

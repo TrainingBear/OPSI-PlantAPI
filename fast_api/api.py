@@ -6,23 +6,18 @@ import numpy as np
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
-model = tf.keras.models.load_model('model_4gap.keras')
+model = tf.keras.models.load_model('fast_api/model_4gap.keras')
 model.summary()
 
 app = FastAPI()
 
-dir = "uploaded_images/"
+dir = "fast_api/uploaded_images/"
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
-
-model = "o3-deep-research"
-@app.get("/rag")
-async def rag(query: str):
-    r
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
