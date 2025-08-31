@@ -18,9 +18,9 @@ api untuk mengirimkan request ke restapi ini. sehingga post & response sudah ter
 	</repositories>
 
 	<dependency>
-	    <groupId>com.github.TrainingBear</groupId>
+	    <groupId>com.github.TrainingBear.OPSI-PlantAPI</groupId>
 	    <artifactId>api</artifactId>
-	    <version>1.1.0</version>
+	    <version>1.1.3</version>
 	</dependency>
 
 # Gradle
@@ -34,7 +34,7 @@ api untuk mengirimkan request ke restapi ini. sehingga post & response sudah ter
 	}
 
 	dependencies {
-	        implementation 'com.github.TrainingBear:api:1.1.0'
+	        implementation 'com.github.TrainingBear.OPSI-PlantAPI:api:1.1.3'
 	}
 
 # Gradle kotlin-dsl
@@ -48,6 +48,6 @@ api untuk mengirimkan request ke restapi ini. sehingga post & response sudah ter
 	}
 
 	dependencies {
-	        implementation("com.github.TrainingBear:api:1.1.0")
+	        implementation("com.github.TrainingBear.OPSI-PlantAPI:api:1.1.3")
 	}
 
