@@ -1,7 +1,7 @@
 # PlantAPI
 [![](https://jitpack.io/v/TrainingBear/OPSI-PlantAPI.svg)](https://jitpack.io/#TrainingBear/OPSI-PlantAPI)
 
-Projek ini di buat oleh salah satu tim OPSI dari SMA Negeri 1 Ambarawa. api ini menggunakan springboot 
+RESTAPI ini di di bangun oleh salah satu tim OPSI dari SMA Negeri 1 Ambarawa. RestApi ini menggunakan springboot 
 dan fastapi (untuk memproses model CNN). POST Request yang di kirimkan ke REST API bertipe application/json, lalu proses oleh 
 model CNN yang sudah di latih. Response juga berbentuk Application/json.
 
