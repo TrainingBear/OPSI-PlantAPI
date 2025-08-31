@@ -10,7 +10,6 @@ import java.util.Map;
     public class GeoParameters implements Parameters {
         private final E.CLIMATE iklim;
         private final int latitude;
-//        private final int longitude;
         private final int altitude;
         private final int rainfall;
         private final int temperature;

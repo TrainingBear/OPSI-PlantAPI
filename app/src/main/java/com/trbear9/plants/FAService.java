@@ -2,7 +2,7 @@
 
 package com.trbear9.plants;
 
-import com.trbear9.api.SoilParameters;
+import com.trbear9.plants.api.SoilParameters;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,26 +49,40 @@ public final class FAService {
     };
     public static void start() throws IOException, InterruptedException {
         log.info("Starting fastapi service... ");
-        ProcessBuilder pb = new ProcessBuilder("fastapi", "run", "fast_api/api.py");
 //        ProcessBuilder pb = new ProcessBuilder("gnome-terminal", "--", "bash", "-c", "fastapi run fast_api/api.py");
         long start = System.nanoTime();
-        process = pb.start();
-        if(!process.isAlive()){
+        Thread thread = new Thread(() -> {
+        ProcessBuilder pb = new ProcessBuilder("fastapi", "run", "fast_api/api.py");
+            try {
+                process = pb.start();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            if(!process.isAlive()){
             log.error("API failed to start");
             return;
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line;
-        while((line= reader.readLine())!= null) {
+        while(true) {
+            try { if ((line = reader.readLine()) == null) break;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             if(line.contains("Server started")){
                 String[] s = line.split(" ");
                 url = s[10];
                 String took = String.format("%.2fms", (System.nanoTime() - start) / 1_000_000.0);
                 log.info("API {} started in {}", url, took);
-                Application.process();
+                try {Application.process();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
             log.info(line);
         }
+        });
+        thread.start();
     }
 
     public static void stop(){
