@@ -23,6 +23,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters" />
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="plants-api" options="" />
       <module name="plants-api.api" options="" />
       <module name="plants-api.api.main" options="" />
       <module name="plants-api.api.test" options="" />

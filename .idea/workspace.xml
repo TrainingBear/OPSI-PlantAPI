@@ -4,12 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="depedencies fix">
+    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="README.md">
       <change afterPath="$PROJECT_DIR$/app/fast_api/model_4gap.keras" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/model/variables/variables.data-00000-of-00001" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/model/variables/variables.index" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -626,7 +628,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756621471990</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="README.md">
+      <option name="closed" value="true" />
+      <created>1756625123007</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1756625123007</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -668,7 +678,8 @@
     <MESSAGE value="moving on" />
     <MESSAGE value="created modules" />
     <MESSAGE value="depedencies fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="depedencies fix" />
+    <MESSAGE value="README.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="README.md" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
