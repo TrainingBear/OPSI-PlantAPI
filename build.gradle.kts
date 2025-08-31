@@ -2,6 +2,8 @@ plugins {
 //	id("java") apply false
 }
 
+
+
 allprojects {
 	group = "com.github.TrainingBear"
 	version = "1.0.0"

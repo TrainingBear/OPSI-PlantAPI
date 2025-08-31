@@ -4,6 +4,8 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
+tasks.register("prepareKotlinBuildScriptModel"){}
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
