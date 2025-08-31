@@ -6,11 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="ver fix">
       <change afterPath="$PROJECT_DIR$/app/fast_api/model_4gap.keras" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/fingerprint.pb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/saved_model.pb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/FAServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/FAServiceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -643,7 +639,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756628088825</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="ver fix">
+      <option name="closed" value="true" />
+      <created>1756631131656</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1756631131656</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

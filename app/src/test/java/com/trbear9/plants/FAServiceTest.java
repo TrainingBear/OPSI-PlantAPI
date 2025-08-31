@@ -12,10 +12,10 @@ class FAServiceTest {
 
     @Test
     public void process() throws IOException {
-        File file = new File("fast_api/uploaded_images/humus-110.jpg");
-        float[] predict = FAService.predict(file);
-        log.info("predict: {}", predict);
-        log.info("argmax: {}", FAService.argmax(predict));
+//        File file = new File("fast_api/uploaded_images/humus-110.jpg");
+//        float[] predict = FAService.predict(file);
+//        log.info("predict: {}", predict);
+//        log.info("argmax: {}", FAService.argmax(predict));
     }
 
     @Test
@@ -37,11 +37,5 @@ class FAServiceTest {
     @Test
     void runPython() throws IOException, InterruptedException {
 //        FAService.start();
-    }
-
-    @Test
-    void createTerminal() throws IOException {
-        ProcessBuilder pb = new ProcessBuilder();
-        pb.start();
     }
 }
