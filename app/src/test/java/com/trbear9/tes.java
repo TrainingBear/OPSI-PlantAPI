@@ -39,7 +39,7 @@ public class tes {
     @Test
     public void test3 (){
         System.getenv().forEach((k, v) -> log.info("{} = {}", k, v));
-        String key = System.getenv("API_KEY");
+        String key = System.getenv("OPEN_AI_KEY");
         assert key != null;
         log.info("OPEN_AI_KEY = {}", key);
     }

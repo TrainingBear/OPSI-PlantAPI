@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="ver fix">
-      <change afterPath="$PROJECT_DIR$/app/fast_api/model_4gap.keras" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_8_29_25,_5_24 PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_8_29_25__5_24PM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/FAService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/FAService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Poster.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Poster.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/FAServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/FAServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/tes.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/tes.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -88,10 +89,10 @@
       <list>
         <option value="DBN - JDBC Connector" />
         <option value="Enum" />
-        <option value="JUnit5 Test Class" />
         <option value="Python Script" />
         <option value="Interface" />
         <option value="Class" />
+        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
@@ -216,11 +217,12 @@
       <recent name="com.trbear9.plants.api" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.trbear9.plants" />
       <recent name="com.tbear9.plants_api2" />
       <recent name="com.tbear9.plants_api" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.tes.test3">
+  <component name="RunManager" selected="Gradle.app [bootRun]">
     <configuration name="FAServiceTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />

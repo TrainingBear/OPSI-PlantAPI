@@ -3,9 +3,11 @@ package com.trbear9.plants;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.*;
 
+@SpringBootTest
 class FAServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(FAServiceTest.class);

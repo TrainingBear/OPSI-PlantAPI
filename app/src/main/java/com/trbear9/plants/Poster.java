@@ -11,23 +11,33 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.util.*;
 
 @RestController
-@RequestMapping("api/upload/")
 public class Poster {
     public static final String key = System.getenv("OPEN_AI_KEY");
     private final static RestTemplate template = new RestTemplate();
     private final static ObjectMapper objectMapper = new ObjectMapper();
 
-    @PostMapping("predoct")
-    public Response postSoil(@RequestBody UserVariable data) throws JsonProcessingException {
+    @GetMapping("/who")
+    public String who(){
+        return """
+                            TIM OPSI SMANEGA 2025: Kukuh & Refan.
+                \n            
+                \nweb api built by jiter (me/kukuh) -> https://github.com/TrainingBear (opensource? yes)
+                \n
+                \nBIG SHOUTOUT TO JASPER PROJECT!!!     vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+                \nJoin komunitas discord kami (Jasper): https://discord.gg/fbAZSd
+                \n                \n""";
+    }
+
+
+    @PostMapping("/predict")
+    public Response postVar(@RequestBody UserVariable data) throws JsonProcessingException {
         byte[] image = data.getImage();
         float[] prediction = FAService.predict(image);
         int max = FAService.argmax(prediction);
@@ -60,6 +70,13 @@ public class Poster {
                 querry.append("generate the output in indonesian language");
                 String respon = rag(querry.toString());
                 response.put(i, Map.of(nama_ilmiah, respon));
+                File file = new File("open_ai/responses", System.nanoTime()+".json");
+                file.mkdirs();
+                try {
+                    objectMapper.writeValue(file, response);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         return response;
     }
