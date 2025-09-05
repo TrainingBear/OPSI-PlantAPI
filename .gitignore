@@ -20,6 +20,5 @@ gradle-app.setting
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
-
 /app/fast_api/model_4gap.keras
 /app/model/

@@ -23,7 +23,7 @@ import java.util.*;
 public final class FAService {
     public static final RestTemplate template = new RestTemplate();
     public static final Logger log = LoggerFactory.getLogger("FAService");
-    public static final String key = "?";
+    public static final String key = System.getenv("OPEN_AI_KEY");
     public static String url = null;
     private static Process process = null;
     public final static String[] label = {

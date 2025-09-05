@@ -36,6 +36,14 @@ public class tes {
         string2.contains(sub4);
     }
 
+    @Test
+    public void test3 (){
+        System.getenv().forEach((k, v) -> log.info("{} = {}", k, v));
+        String key = System.getenv("API_KEY");
+        assert key != null;
+        log.info("OPEN_AI_KEY = {}", key);
+    }
+
     public enum Enumerate {
         A, B, C;
     }
