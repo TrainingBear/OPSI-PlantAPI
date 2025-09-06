@@ -2,6 +2,8 @@
 
 package com.trbear9.plants;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.trbear9.plants.api.SoilParameters;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -42,7 +44,7 @@ public final class FAService {
             "Pasir"
     };
 
-    public FAService(RestTemplate template){
+    public FAService(RestTemplate template) {
         FAService.template = template;
     }
 
@@ -56,51 +58,54 @@ public final class FAService {
             SoilParameters.KAPUR,
             SoilParameters.PASIR
     };
-    public static void start() throws IOException, InterruptedException {
+
+    public static void start() {
         log.info("Starting fastapi service... ");
 //        ProcessBuilder pb = new ProcessBuilder("gnome-terminal", "--", "bash", "-c", "fastapi run fast_api/api.py");
         long start = System.nanoTime();
         Thread thread = new Thread(() -> {
-        ProcessBuilder pb = new ProcessBuilder("fastapi", "run", "fast_api/api.py");
+            ProcessBuilder pb = new ProcessBuilder("fastapi", "run", "fast_api/api.py");
             try {
                 process = pb.start();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            if(!process.isAlive()){
-            log.error("API failed to start");
-            return;
-        }
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line;
-        while(true) {
-            try { if ((line = reader.readLine()) == null) break;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if (!process.isAlive()) {
+                log.error("API failed to start");
+                return;
             }
-            if(line.contains("Server started")){
-                String[] s = line.split(" ");
-                url = s[10];
-                String took = String.format("%.2fms", (System.nanoTime() - start) / 1_000_000.0);
-                log.info("API {} started in {}", url, took);
-                try {Application.process();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while (true) {
+                try {
+                    if ((line = reader.readLine()) == null) break;
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+                if (line.contains("Server started")) {
+                    String[] s = line.split(" ");
+                    url = s[10];
+                    String took = String.format("%.2fms", (System.nanoTime() - start) / 1_000_000.0);
+                    log.info("API {} started in {}", url, took);
+                    try {
+                        Application.process();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                log.info(line);
             }
-            log.info(line);
-        }
         });
         thread.start();
     }
 
-    public static void stop(){
-        if(process != null)
+    public static void stop() {
+        if (process != null)
             process.destroy();
     }
-    public static SoilParameters process(byte[] image){
-        float[] prediction = predict(image);
-        return soil[argmax(prediction)];
+
+    public static SoilParameters process(byte[] image) {
+        return soil[argmax(predict(image))];
     }
 
     public static float[] predict(File file) throws IOException {
@@ -109,32 +114,35 @@ public final class FAService {
         ImageIO.write(img, "jpg", bos);
         return predict(bos.toByteArray());
     }
-    public static float @NonNull [] predict(byte[] img){
-        ByteArrayResource imgResource = new ByteArrayResource(img){
+
+    public static float @NonNull [] predict(byte[] img) {
+        ByteArrayResource imgResource = new ByteArrayResource(img) {
             @Override
             public String getFilename() {
                 return "request.jpg";
             }
         };
 
-        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
-        params.add("file", imgResource);
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_JPEG);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity<ByteArrayResource> image = new HttpEntity<>(imgResource, headers);
 
-        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(params, headers);
+        HttpHeaders body = new HttpHeaders();
+        MultiValueMap<String, Object> file = new LinkedMultiValueMap<>();
+        file.add("file", image);
+        body.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(file, headers);
         ResponseEntity<String> response;
         try {
-             response = template.postForEntity(url+"/predict", request, String.class);
-        } catch (IllegalArgumentException e){
+            response = template.postForEntity(url + "/predict", request, String.class);
+        } catch (IllegalArgumentException e) {
             log.error("need the actual api, but url expected {}", url);
             throw e;
         }
         String sjson = response.getBody();
 
-        if(sjson==null) return null;
+        if (sjson == null) return null;
         float[] logits = new float[soil.length];
         sjson = sjson.replaceAll("[\\[\\]]", "");
         String[] farray = sjson.split(",");
@@ -143,75 +151,36 @@ public final class FAService {
         return logits;
     }
 
-    public static int argmax(float[] prediction){
+    public static int argmax(float[] prediction) {
         float max = Float.MIN_VALUE;
         int ans = -1;
         for (int i = 0; i < prediction.length; i++) {
-            if(prediction[i] > max){
+            if (prediction[i] > max) {
                 max = prediction[i];
                 ans = i;
             }
         }
         return ans;
     }
+
     /**
      * @param logits output dari prediksi linear. yang akan di normalisasi dengan softmax function
      */
-    public static void soft(float[] logits){
+    public static void soft(float[] logits) {
         {
             /* SOFT MAX
-            * SoftMax(i) = (e[Z[i]]) / sum(exp(logits))) */
+             * SoftMax(i) = (e[Z[i]]) / sum(exp(logits))) */
             float max = Float.MIN_VALUE;
-            for(float i : logits)
+            for (float i : logits)
                 max = Math.max(i, max);
 
             double sumExp = 0d;
-            for(int i = 0; i < logits.length; i++){
+            for (int i = 0; i < logits.length; i++) {
                 logits[i] = (float) Math.exp(logits[i] - max);
                 sumExp += logits[i];
             }
-            for(int i = 0; i < logits.length; i++)
+            for (int i = 0; i < logits.length; i++)
                 logits[i] = (float) (logits[i] / sumExp);
         }
     }
-
-        public static float @NonNull [] pre2(byte[] img) {
-    ByteArrayResource imgResource = new ByteArrayResource(img) {
-        @Override
-        public String getFilename() {
-            return "request.jpg"; // required for multipart
-        }
-    };
-
-    // headers for the file part
-    HttpHeaders fileHeaders = new HttpHeaders();
-    fileHeaders.setContentType(MediaType.IMAGE_JPEG);
-
-    HttpEntity<ByteArrayResource> fileEntity = new HttpEntity<>(imgResource, fileHeaders);
-
-    // build the multipart body
-    MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
-    params.add("file", fileEntity);
-
-    // headers for the whole request
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-    HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(params, headers);
-
-    ResponseEntity<String> response = template.postForEntity(url + "/predict", request, String.class);
-
-    String sjson = response.getBody();
-    if (sjson == null) return null;
-
-    // parse JSON array like [0.1, 0.5, 0.4]
-    float[] logits = new float[soil.length];
-    sjson = sjson.replaceAll("[\\[\\]]", "");
-    String[] farray = sjson.split(",");
-    for (int i = 0; i < soil.length; i++) {
-        logits[i] = Float.parseFloat(farray[i].trim());
-    }
-    return logits;
-}
 }

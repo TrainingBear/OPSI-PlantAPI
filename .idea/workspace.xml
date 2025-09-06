@@ -5,20 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="ver fix">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Config.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/api/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/CustomParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/CustomParameters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/GeoParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/GeoParameters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Parameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Parameters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Response.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Response.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/SoilParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/SoilParameters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/UserVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/UserVariable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/fast_api/uploaded_images/request.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/fast_api/uploaded_images/request.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/FAService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/FAService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Poster.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Poster.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
