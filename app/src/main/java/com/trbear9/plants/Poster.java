@@ -7,20 +7,23 @@ import com.trbear9.plants.api.Response;
 import com.trbear9.plants.api.SoilParameters;
 import com.trbear9.plants.api.UserVariable;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.util.*;
 
+@Service
 @RestController
 public class Poster {
     public static final String key = System.getenv("OPEN_AI_KEY");
-    private final static RestTemplate template = new RestTemplate();
+    @Autowired private static RestTemplate template;
     private final static ObjectMapper objectMapper = new ObjectMapper();
 
     @GetMapping("/who")

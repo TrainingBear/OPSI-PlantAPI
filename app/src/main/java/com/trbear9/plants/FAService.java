@@ -6,11 +6,14 @@ import com.trbear9.plants.api.SoilParameters;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -18,10 +21,12 @@ import org.springframework.web.client.RestTemplate;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.time.Duration;
 import java.util.*;
 
+@Service
 public final class FAService {
-    public static final RestTemplate template = new RestTemplate();
+    static private RestTemplate template;
     public static final Logger log = LoggerFactory.getLogger("FAService");
     public static final String key = System.getenv("OPEN_AI_KEY");
     public static String url = null;
@@ -36,6 +41,10 @@ public final class FAService {
             "Kapur",
             "Pasir"
     };
+
+    public FAService(RestTemplate template){
+        FAService.template = template;
+    }
 
     public static final SoilParameters[] soil = {
             SoilParameters.ALLUVIAL,
@@ -112,7 +121,7 @@ public final class FAService {
         params.add("file", imgResource);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.setContentType(MediaType.IMAGE_JPEG);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(params, headers);
@@ -165,4 +174,44 @@ public final class FAService {
                 logits[i] = (float) (logits[i] / sumExp);
         }
     }
+
+        public static float @NonNull [] pre2(byte[] img) {
+    ByteArrayResource imgResource = new ByteArrayResource(img) {
+        @Override
+        public String getFilename() {
+            return "request.jpg"; // required for multipart
+        }
+    };
+
+    // headers for the file part
+    HttpHeaders fileHeaders = new HttpHeaders();
+    fileHeaders.setContentType(MediaType.IMAGE_JPEG);
+
+    HttpEntity<ByteArrayResource> fileEntity = new HttpEntity<>(imgResource, fileHeaders);
+
+    // build the multipart body
+    MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+    params.add("file", fileEntity);
+
+    // headers for the whole request
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+    HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(params, headers);
+
+    ResponseEntity<String> response = template.postForEntity(url + "/predict", request, String.class);
+
+    String sjson = response.getBody();
+    if (sjson == null) return null;
+
+    // parse JSON array like [0.1, 0.5, 0.4]
+    float[] logits = new float[soil.length];
+    sjson = sjson.replaceAll("[\\[\\]]", "");
+    String[] farray = sjson.split(",");
+    for (int i = 0; i < soil.length; i++) {
+        logits[i] = Float.parseFloat(farray[i].trim());
+    }
+    return logits;
+}
 }

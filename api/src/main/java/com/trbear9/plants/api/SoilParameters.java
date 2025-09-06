@@ -1,14 +1,16 @@
 package com.trbear9.plants.api;
 
 import com.trbear9.plants.E;
-import lombok.Builder;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Builder
+@Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SoilParameters implements Parameters {
         /// sources:
         /// - https://www.sciencedirect.com/topics/agricultural-and-biological-sciences/alluvial-soil

@@ -5,13 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="ver fix">
-      <change afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_8_29_25,_5_24 PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_8_29_25__5_24PM__Changes_.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/api/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/CustomParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/CustomParameters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/GeoParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/GeoParameters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Parameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Parameters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Response.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Response.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/SoilParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/SoilParameters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/UserVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/UserVariable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/fast_api/uploaded_images/request.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/fast_api/uploaded_images/request.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/FAService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/FAService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Poster.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Poster.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/FAServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/FAServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/tes.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/tes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,17 +58,6 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="plants-api" type="f1a62948:ProjectNode" />
-                <item name="api" type="2d1252cf:ModuleNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="plants-api" type="f1a62948:ProjectNode" />
-                <item name="api" type="2d1252cf:ModuleNode" />
-                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="plants-api" type="f1a62948:ProjectNode" />
                 <item name="app" type="2d1252cf:ModuleNode" />
               </path>
               <path>
@@ -91,8 +87,8 @@
         <option value="Enum" />
         <option value="Python Script" />
         <option value="Interface" />
-        <option value="Class" />
         <option value="JUnit5 Test Class" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -158,6 +154,9 @@
     &quot;Gradle.OPSI-PlantAPI [bootRun test].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.OPSI-PlantAPI [bootRun].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.OPSI-PlantAPI [bootTestRun].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PosterTest (1).executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PosterTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PosterTest.postVar.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.TFServiceTest.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.TFServiceTest.process.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.app [bootRun].executor&quot;: &quot;Run&quot;,
@@ -223,30 +222,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Gradle.app [bootRun]">
-    <configuration name="FAServiceTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.tbear9.plants_api2.FAServiceTest&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
     <configuration name="FAServiceTest.createTerminal" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -261,54 +236,6 @@
             <option value=":test" />
             <option value="--tests" />
             <option value="&quot;com.tbear9.plants_api2.FAServiceTest.createTerminal&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="FAServiceTest.process" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.tbear9.plants_api2.FAServiceTest.process&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="FAServiceTest.runPython" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.tbear9.plants_api2.FAServiceTest.runPython&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -339,6 +266,78 @@
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
       <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="PosterTest (1)" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":app:test" />
+            <option value="--tests" />
+            <option value="&quot;com.trbear9.plants.PosterTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="PosterTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":app:test" />
+            <option value="--tests" />
+            <option value="&quot;com.trbear9.plants.PosterTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="PosterTest.postVar" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":app:test" />
+            <option value="--tests" />
+            <option value="&quot;com.trbear9.plants.PosterTest.postVar&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
     <configuration name="app [bootRun]" type="GradleRunConfiguration" factoryName="Gradle" nameIsGenerated="true">
@@ -436,19 +435,19 @@
       <item itemvalue="Gradle.app [bootRun]" />
       <item itemvalue="Gradle.OPSI-PlantAPI [bootTestRun]" />
       <item itemvalue="Gradle.plants-api [build]" />
+      <item itemvalue="Gradle.PosterTest" />
+      <item itemvalue="Gradle.PosterTest (1)" />
+      <item itemvalue="Gradle.PosterTest.postVar" />
       <item itemvalue="Gradle.tes.test3" />
       <item itemvalue="Gradle.FAServiceTest.createTerminal" />
-      <item itemvalue="Gradle.FAServiceTest" />
-      <item itemvalue="Gradle.FAServiceTest.runPython" />
-      <item itemvalue="Gradle.FAServiceTest.process" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.PosterTest (1)" />
+        <item itemvalue="Gradle.PosterTest" />
+        <item itemvalue="Gradle.PosterTest.postVar" />
         <item itemvalue="Gradle.tes.test3" />
         <item itemvalue="Gradle.FAServiceTest.createTerminal" />
-        <item itemvalue="Gradle.FAServiceTest" />
-        <item itemvalue="Gradle.FAServiceTest.process" />
-        <item itemvalue="Gradle.FAServiceTest.runPython" />
       </list>
     </recent_temporary>
   </component>
