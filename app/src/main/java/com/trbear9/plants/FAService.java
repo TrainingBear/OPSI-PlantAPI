@@ -2,8 +2,6 @@
 
 package com.trbear9.plants;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.trbear9.plants.api.SoilParameters;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -15,6 +13,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -28,8 +28,20 @@ import java.util.*;
 
 @Service
 public final class FAService {
-    static private RestTemplate template;
-    public static final Logger log = LoggerFactory.getLogger("FAService");
+    static private final SimpleClientHttpRequestFactory factory;
+    static private final RestTemplate template;
+    static {
+        factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(Duration.ofMinutes(2));
+        factory.setReadTimeout(Duration.ofMinutes(2));
+        template = new RestTemplate(factory);
+    }
+    static private final RestTemplate template1 = new RestTemplateBuilder()
+            .additionalMessageConverters(new FormHttpMessageConverter())
+            .connectTimeout(Duration.ofMinutes(2))
+            .readTimeout(Duration.ofMinutes(2))
+            .build();;
+    public static final Logger log = LoggerFactory.getLogger("FastAPI");
     public static final String key = System.getenv("OPEN_AI_KEY");
     public static String url = null;
     private static Process process = null;
@@ -44,10 +56,6 @@ public final class FAService {
             "Pasir"
     };
 
-    public FAService(RestTemplate template) {
-        FAService.template = template;
-    }
-
     public static final SoilParameters[] soil = {
             SoilParameters.ALLUVIAL,
             SoilParameters.ANDOSOL,
@@ -59,7 +67,7 @@ public final class FAService {
             SoilParameters.PASIR
     };
 
-    public static void start() {
+    public static void start() throws IOException, InterruptedException {
         log.info("Starting fastapi service... ");
 //        ProcessBuilder pb = new ProcessBuilder("gnome-terminal", "--", "bash", "-c", "fastapi run fast_api/api.py");
         long start = System.nanoTime();
@@ -76,13 +84,15 @@ public final class FAService {
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
+            boolean flag = true;
             while (true) {
                 try {
                     if ((line = reader.readLine()) == null) break;
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                if (line.contains("Server started")) {
+                if (flag && line.contains("Server started")) {
+                    flag = false;
                     String[] s = line.split(" ");
                     url = s[10];
                     String took = String.format("%.2fms", (System.nanoTime() - start) / 1_000_000.0);
@@ -96,6 +106,7 @@ public final class FAService {
                 log.info(line);
             }
         });
+        thread.setName("FAService");
         thread.start();
     }
 
@@ -123,16 +134,14 @@ public final class FAService {
             }
         };
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG);
-        HttpEntity<ByteArrayResource> image = new HttpEntity<>(imgResource, headers);
+        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+        params.add("file", imgResource);
 
-        HttpHeaders body = new HttpHeaders();
-        MultiValueMap<String, Object> file = new LinkedMultiValueMap<>();
-        file.add("file", image);
-        body.setContentType(MediaType.MULTIPART_FORM_DATA);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(file, headers);
+
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(params, headers);
         ResponseEntity<String> response;
         try {
             response = template.postForEntity(url + "/predict", request, String.class);

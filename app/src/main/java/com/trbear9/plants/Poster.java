@@ -12,30 +12,39 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.*;
 
 @Service
 @RestController
 public class Poster {
+    static private final SimpleClientHttpRequestFactory factory;
+    static private final RestTemplate template;
+    static {
+        factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(Duration.ofMinutes(2));
+        factory.setReadTimeout(Duration.ofMinutes(2));
+        template = new RestTemplate(factory);
+    }
     public static final String key = System.getenv("OPEN_AI_KEY");
-    @Autowired private static RestTemplate template;
     private final static ObjectMapper objectMapper = new ObjectMapper();
 
     @GetMapping("/who")
     public String who(){
         return """
+                            \n \n \n
                             TIM OPSI SMANEGA 2025: Kukuh & Refan.
-                \n            
-                \nweb api built by jiter (me/kukuh) -> https://github.com/TrainingBear (opensource? yes)
-                \n
-                \nBIG SHOUTOUT TO JASPER PROJECT!!!     vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-                \nJoin komunitas discord kami (Jasper): https://discord.gg/fbAZSd
-                \n                \n""";
+                web api built by jiter (me/kukuh) -> https://github.com/TrainingBear (opensource? yes)
+                BIG SHOUTOUT TO JASPER PROJECT!!!     vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+                Join komunitas discord kami (Jasper): https://discord.gg/fbAZSd
+                \n \n \n
+                """;
     }
 
 

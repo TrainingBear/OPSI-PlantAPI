@@ -14,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,18 +23,25 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
 import static com.trbear9.plants.E.CLIMATE.*;
 import static com.trbear9.plants.E.DEPTH.*;
 
-@Service
-@SpringBootTest
 public class PosterTest {
     private static final Logger log = LoggerFactory.getLogger(PosterTest.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
-    @Autowired RestTemplate template;
+    private final static SimpleClientHttpRequestFactory requestFactory;
+    private final static RestTemplate template;
+    static {
+        requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setReadTimeout(Duration.ofMinutes(2));
+        requestFactory.setConnectTimeout(Duration.ofMinutes(2));
+        template = new RestTemplate(requestFactory);
+    }
 
     @Test
     void test(){
@@ -44,7 +52,7 @@ public class PosterTest {
 
     @Test
     void postVar(){
-        File file = new File("fast_api/uploaded_mages/aluvial-001.jpg");
+        File file = new File("fast_api/uploaded_images/aluvial-001.jpg");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             BufferedImage img = ImageIO.read(file);
@@ -81,7 +89,7 @@ public class PosterTest {
                 return;
             }
         } catch (Exception e){
-            log.error(Arrays.toString(e.getStackTrace()));
+            e.printStackTrace();
             throw new RuntimeException(e);
         };
         log.error("Cant get a response from your request!");
