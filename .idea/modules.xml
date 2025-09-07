@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/api/com.github.TrainingBear.plants-api.api.main.iml" filepath="$PROJECT_DIR$/.idea/modules/api/com.github.TrainingBear.plants-api.api.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/com.github.TrainingBear.plants-api.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/com.github.TrainingBear.plants-api.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/api/plants-api.api.main.iml" filepath="$PROJECT_DIR$/.idea/modules/api/plants-api.api.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/plants-api.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/plants-api.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/plants-api.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/plants-api.app.main.iml" />
     </modules>
   </component>
 </project>

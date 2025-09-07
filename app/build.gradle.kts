@@ -14,6 +14,8 @@ java {
 
 dependencies {
 	implementation(project(":api"))
+//	https://mvnrepository.com/artifact/com.google.guava/guava
+	implementation("com.google.guava:guava:33.4.8-jre")
 	implementation("org.apache.commons:commons-lang3:3.18.0")
 //	implementation("org.tensorflow:tensorflow-core-platform:1.1.0")
 	implementation ("com.fasterxml.jackson.core:jackson-databind")

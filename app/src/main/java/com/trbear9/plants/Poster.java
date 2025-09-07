@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trbear9.plants.api.Response;
 import com.trbear9.plants.api.SoilParameters;
 import com.trbear9.plants.api.UserVariable;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -15,12 +16,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 @RestController
 public class Poster {
@@ -28,8 +33,8 @@ public class Poster {
     static private final RestTemplate template;
     static {
         factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(Duration.ofMinutes(2));
-        factory.setReadTimeout(Duration.ofMinutes(2));
+        factory.setConnectTimeout(Duration.ofMinutes(5));
+        factory.setReadTimeout(Duration.ofMinutes(5));
         template = new RestTemplate(factory);
     }
     public static final String key = System.getenv("OPEN_AI_KEY");
@@ -39,75 +44,120 @@ public class Poster {
     public String who(){
         return """
                             \n \n \n
-                            TIM OPSI SMANEGA 2025: Kukuh & Refan.
-                web api built by jiter (me/kukuh) -> https://github.com/TrainingBear (opensource? yes)
-                BIG SHOUTOUT TO JASPER PROJECT!!!     vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-                Join komunitas discord kami (Jasper): https://discord.gg/fbAZSd
+                            TIM OPSI SMANEGA 2025
+                            oleh Kukuh & Refan.
+                RestAPI has been built by kujatic (trbear) -> https://github.com/TrainingBear (opensource)
+                BIG SHOUTOUT TO JASPER                vvvvvvvvvvvvvvvvvvvvvvvvv
+                Join komunitas discord kami (Jasper): https://discord.gg/fbAZSd3Hf2
                 \n \n \n
                 """;
     }
 
 
     @PostMapping("/predict")
-    public Response postVar(@RequestBody UserVariable data) throws JsonProcessingException {
+    public String postVar(@RequestBody UserVariable data) throws IOException {
+        log.info("POST /predict");
         byte[] image = data.getImage();
         float[] prediction = FAService.predict(image);
         int max = FAService.argmax(prediction);
         SoilParameters soil = FAService.soil[max];
         String soilName = FAService.label[max];
+        log.info("Soil: {}", soilName);
         data.modify(soil);
 
         Map<Integer, Set<CSVRecord>> result = DB.ecoCropDB_csv(data);
-        Response response = Response.builder().soilName(soilName).build();
+        Response response = new Response();
+        response.setSoilName(soilName);
         for (int i : result.keySet())
             for (CSVRecord ecorecord : result.get(i)) {
                 CSVRecord perawatanrecord = DB.perawatan_csv(ecorecord);
                 String nama_ilmiah = ecorecord.get(E.Science_name);
-                StringBuilder querry;
-                if(perawatanrecord != null){
-                    querry = new StringBuilder("generate a plants guide & car, that include watering, pruning, fertilization, sunlight, pest management, the common name in indonesia, and level of difficulty of care. for this specified plant \n");
-                    String perawatan = perawatanrecord.get(E.PERAWATAN);
-                    String penyakit = perawatanrecord.get(E.PENYAKIT);
-                    String nama_tanaman = perawatanrecord.get(E.NAME);
-                    querry.append("Nama ilmiah: ").append(nama_ilmiah).append("\n");
-                    querry.append("Nama tanaman: ").append(nama_tanaman).append("\n");
-                    querry.append("Perawatan: ").append(perawatan).append("\n");
-                    querry.append("Penyakit: ").append(penyakit).append("\n");
-                }
-                else {
-                    querry = new StringBuilder("generate a plants guide & care, that include watering, pruning, fertilization, sunlight, pest management, the common name, and level of difficulty of care. for this plant ");
-                    querry.append(nama_ilmiah).append('\n');
-                }
-                querry.append("generate them in JSON, with format {plant_care:\"response\", difficulty:EASY or MEDIUM or HARD, common_name: \"the common name in indonesia\", prune_guide: \"the youtube/blog link that refer prune method for this plant\"}").append('\n');
-                querry.append("generate the output in indonesian language");
-                String respon = rag(querry.toString());
-                response.put(i, Map.of(nama_ilmiah, respon));
-                File file = new File("open_ai/responses", System.nanoTime()+".json");
-                file.mkdirs();
-                try {
-                    objectMapper.writeValue(file, response);
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+                File dir = new File("open_ai/responses");
+                if (dir.mkdirs())
+                    log.info("Directory created: {}", dir.getAbsolutePath());
+                File file = new File(dir, nama_ilmiah + ".json");
+                if (!file.exists()) {
+                    StringBuilder query;
+                    query = new StringBuilder("generate a plants guide & care, that include watering, pruning, fertilization, sunlight, pest management, the common name, and level of difficulty of care. for this plant ");
+                    if (perawatanrecord != null) {
+                        String perawatan = perawatanrecord.get(E.PERAWATAN);
+                        String penyakit = perawatanrecord.get(E.PENYAKIT);
+                        String nama_tanaman = perawatanrecord.get(E.NAME);
+                        query.append("Nama ilmiah: ").append(nama_ilmiah).append("\n");
+                        query.append("Nama tanaman: ").append(nama_tanaman).append("\n");
+                        query.append("Perawatan: ").append(perawatan).append("\n");
+                        query.append("Penyakit: ").append(penyakit).append("\n");
+                    } else {
+                        query.append(nama_ilmiah).append('\n');
+                    }
+                    query.append("generate them in JSON, with format {plant_care:\"response\", difficulty:EASY or MEDIUM or HARD, common_name: \"the common name in indonesia\", prune_guide: \"the youtube/blog link that refer prune method for this plant or either just say this plant cant be pruned\"}").append('\n');
+                    query.append("generate the output in indonesian language");
+                    String respon = rag(query.toString());
+                    JsonNode node = objectMapper.readTree(respon);
+                    objectMapper.writeValue(file, respon);
+                    node = node.get("output").get(1).get("content").get(0).get("text");
+                    response.put(i, Map.of(nama_ilmiah, node.asText()));
+                } else{
+                    JsonNode node = objectMapper.readTree(file);
+                    node = objectMapper.readTree(node.asText());
+                    node = node.get("output").get(1).get("content").get(0).get("text");
+                    response.put(i, Map.of(nama_ilmiah, node.asText()));
                 }
             }
-        return response;
+        File dir = new File("open_ai/cache");
+        dir.mkdirs();
+        File file = new File(dir, System.nanoTime()+".json");
+        String value = objectMapper.writeValueAsString(response);
+        objectMapper.writeValue(file, value);
+        return value;
     }
 
-    private String rag(String input) throws JsonProcessingException {
+    private String rag(String input) {
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_JSON);
         header.setBearerAuth(key);
 
         Map<String, Object> body = new HashMap<>();
-        Map<String, Object> message = new HashMap<>();
-        body.put("model", "o4-mini-deep-research");
-        message.put("role", "user");
-        message.put("content", input);
-        body.put("input", List.of(message));
+        body.put("model", "o3");
+        body.put("input", input);
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, header);
-        ResponseEntity<String> response = template.postForEntity("https://api.openai.com/v1/responses", request, String.class);
-        JsonNode root = objectMapper.readTree(response.getBody());
-        return root.get("output").get(0).get("content").get(0).get("text").asText();
+//        int attempt = 0;
+        return template.postForEntity("https://api.openai.com/v1/responses", request, String.class).getBody();
+//        while (true) {
+//            try {
+//                return template.postForEntity("https://api.openai.com/v1/responses", request, String.class).getBody();
+//            } catch (HttpClientErrorException.TooManyRequests e) {
+//                e.printStackTrace();
+//                attempt++;
+//                if (attempt > 7) {
+//                    throw new RuntimeException("Exceeded max retries after hitting rate limits", e);
+//                }
+//
+//                // Check if OpenAI returned Retry-After header
+//                String retryAfterHeader = e.getResponseHeaders() != null ?
+//                        e.getResponseHeaders().getFirst("Retry-After") : null;
+//
+//                long sleepMillis;
+//                if (retryAfterHeader != null) {
+//                    // OpenAI sometimes suggests how long to wait
+//                    sleepMillis = Long.parseLong(retryAfterHeader) * 1000L;
+//                } else {
+//                    // Fallback: exponential backoff
+//                    sleepMillis = (long) Math.pow(2, attempt) * 1000L;
+//                }
+//
+//                System.err.printf("Rate limit hit (429). Retrying in %d ms (attempt %d/%d)%n",
+//                        sleepMillis, attempt, 7);
+//
+//                try {
+//                    TimeUnit.MILLISECONDS.sleep(sleepMillis);
+//                } catch (InterruptedException ex) {
+//                    Thread.currentThread().interrupt();
+//                    throw new RuntimeException("Retry interrupted", ex);
+//                }
+//            }
+//        }
     }
 }

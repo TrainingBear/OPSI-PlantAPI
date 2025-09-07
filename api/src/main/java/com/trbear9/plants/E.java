@@ -1,10 +1,11 @@
 package com.trbear9.plants;
 
 public final class E {
-    public static final String NAME = "NAME";
     public static final String PERAWATAN = "PERAWATAN";
+    public static final String NAME = "NAME";
     public static final String PENYAKIT = "PENYAKIT";
 
+    public static final String Science_name = "ScientificName";
     public static final String Authority = "AUTH";
     public static final String Family = "FAMNAME";
     public static final String Synonyms = "SYNO";
@@ -59,7 +60,6 @@ public final class E {
     public static final String MIN_crop_cycle = "GMIN";
     public static final String MAX_crop_cycle = "GMAX";
 
-    public static final String Science_name = "ScientificName";
     public static final String PORT = "EcoPortCode";
 
     public enum LIFESPAM{

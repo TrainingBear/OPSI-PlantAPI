@@ -1,4 +1,4 @@
-COMNAME,NAME,PERAWATAN,PENYAKIT
+ScientificName,NAME,PERAWATAN,PENYAKIT
 Brassica oleracea,Brokoli,"Penyiraman=low, matahari=6-7, prunning=”Kepala brokoli sudah padat dan berwarna hijau segar”, pupuk=”2 pon pupuk setiap bulan”","penyakit=”Alternaria brassicae”,”Xanthomonas campestris”,”Phyllotreta cruciferae”,” Rhizoctonia solani”,”Sclerotinia sclerotiorum”,” Plutella xylostella”"
 Brassica juncea,Sawi Hijau,"penyiraman=average, matahari=6-8, prunning=”Sebelum tanaman berbunga”, pupuk=”2minggu sekali”","penyakit=”Plutella xylostella”,“Plasmodiphopra brassicae”,“Spodoptera litura”,”Agrotis sp”,” Liriomyza sp”"
 Daucus carota,Wortel,"Penyiraman=average, matahari=6, prunning=”Daun wortel mulai menguning dan bagian atas umbi terlihat menonjol dari tanah”, pupuk=”2 minggu sekali”","penyakit=”Alternaria dauci”,”Sclerotinia sclerotiorum”,”Listronotus oregonensis”,”Meloidogyne spp”,”Xanthomonas campestris”"

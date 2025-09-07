@@ -4,9 +4,17 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="laptop">
+    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="api json support">
+      <change afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/JsonReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/E.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/E.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Response.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Response.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Perawatan.csv" beforeDir="false" afterPath="$PROJECT_DIR$/app/Perawatan.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/fast_api/uploaded_images/request.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/fast_api/uploaded_images/request.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/DB.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/DB.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/FAService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/FAService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Poster.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Poster.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" afterDir="false" />
@@ -63,6 +71,14 @@
                 <item name="app" type="2d1252cf:ModuleNode" />
                 <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
                 <item name="compileClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="plants-api" type="f1a62948:ProjectNode" />
+                <item name="app" type="2d1252cf:ModuleNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="compileClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
+                <item name="com.google.guava:guava:33.4.8-jre" type="b3323d55:ExternalSystemViewDefaultContributor$DependencyExternalSystemNode" />
               </path>
             </expand>
             <select />
@@ -131,6 +147,7 @@
     "Gradle.ApplicationTest.find.executor": "Run",
     "Gradle.ApplicationTest.find2.executor": "Run",
     "Gradle.Build OPSI-PlantAPI.executor": "Run",
+    "Gradle.Build app.executor": "Run",
     "Gradle.ControllerTest.send.executor": "Run",
     "Gradle.DBTest (1).executor": "Run",
     "Gradle.DBTest.executor": "Run",
@@ -141,15 +158,16 @@
     "Gradle.FAServiceTest.process.executor": "Debug",
     "Gradle.FAServiceTest.runCommand.executor": "Run",
     "Gradle.FAServiceTest.runPython.executor": "Run",
+    "Gradle.JsonReader.read.executor": "Run",
     "Gradle.OPSI-PlantAPI [:com.tbear9.plants_api2.Application.main()].executor": "Run",
     "Gradle.OPSI-PlantAPI [bootRun test].executor": "Run",
     "Gradle.OPSI-PlantAPI [bootRun].executor": "Run",
     "Gradle.OPSI-PlantAPI [bootTestRun].executor": "Run",
     "Gradle.PosterTest (1).executor": "Run",
-    "Gradle.PosterTest (2).executor": "Run",
     "Gradle.PosterTest.executor": "Run",
-    "Gradle.PosterTest.postVar (1).executor": "Run",
+    "Gradle.PosterTest.makeDir.executor": "Run",
     "Gradle.PosterTest.postVar.executor": "Run",
+    "Gradle.PosterTest.predict.executor": "Debug",
     "Gradle.TFServiceTest.executor": "Run",
     "Gradle.TFServiceTest.process.executor": "Run",
     "Gradle.app [bootRun].executor": "Run",
@@ -214,7 +232,31 @@
       <recent name="com.tbear9.plants_api" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.app [bootRun]">
+  <component name="RunManager" selected="Gradle.PosterTest">
+    <configuration name="JsonReader.read" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":app:test" />
+            <option value="--tests" />
+            <option value="&quot;com.trbear9.JsonReader.read&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="OPSI-PlantAPI [bootTestRun]" type="GradleRunConfiguration" factoryName="Gradle" nameIsGenerated="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -285,7 +327,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="PosterTest.postVar (1)" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="PosterTest.makeDir" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
@@ -298,7 +340,7 @@
           <list>
             <option value=":app:test" />
             <option value="--tests" />
-            <option value="&quot;com.trbear9.plants.PosterTest.postVar&quot;" />
+            <option value="&quot;com.trbear9.plants.PosterTest.makeDir&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -399,48 +441,24 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="tes.test3" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":app:test" />
-            <option value="--tests" />
-            <option value="&quot;com.trbear9.tes.test3&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Gradle.clean build" />
       <item itemvalue="Gradle.app [bootRun]" />
       <item itemvalue="Gradle.OPSI-PlantAPI [bootTestRun]" />
       <item itemvalue="Gradle.plants-api [build]" />
-      <item itemvalue="Gradle.PosterTest.postVar (1)" />
+      <item itemvalue="Gradle.JsonReader.read" />
+      <item itemvalue="Gradle.PosterTest.makeDir" />
       <item itemvalue="Gradle.PosterTest" />
       <item itemvalue="Gradle.PosterTest (1)" />
       <item itemvalue="Gradle.PosterTest.postVar" />
-      <item itemvalue="Gradle.tes.test3" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.PosterTest" />
-        <item itemvalue="Gradle.PosterTest.postVar (1)" />
+        <item itemvalue="Gradle.JsonReader.read" />
         <item itemvalue="Gradle.PosterTest (1)" />
+        <item itemvalue="Gradle.PosterTest.makeDir" />
         <item itemvalue="Gradle.PosterTest.postVar" />
-        <item itemvalue="Gradle.tes.test3" />
       </list>
     </recent_temporary>
   </component>
@@ -663,13 +681,13 @@
       <option name="project" value="LOCAL" />
       <updated>1756631425194</updated>
     </task>
-    <task id="LOCAL-00027" summary="laptop">
+    <task id="LOCAL-00027" summary="api json support">
       <option name="closed" value="true" />
-      <created>1757166416305</created>
+      <created>1757163535644</created>
       <option name="number" value="00027" />
       <option name="presentableId" value="LOCAL-00027" />
       <option name="project" value="LOCAL" />
-      <updated>1757166416305</updated>
+      <updated>1757163535644</updated>
     </task>
     <option name="localTasksCounter" value="28" />
     <servers />
@@ -715,8 +733,8 @@
     <MESSAGE value="depedencies fix" />
     <MESSAGE value="README.md" />
     <MESSAGE value="ver fix" />
-    <MESSAGE value="laptop" />
-    <option name="LAST_COMMIT_MESSAGE" value="laptop" />
+    <MESSAGE value="api json support" />
+    <option name="LAST_COMMIT_MESSAGE" value="api json support" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -731,6 +749,15 @@
           <line>11</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/FAService.java</url>
+          <line>157</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.IllegalArgumentException" package="java.lang" />
+          <option name="timeStamp" value="5" />
+        </breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

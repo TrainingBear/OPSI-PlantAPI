@@ -16,6 +16,15 @@ public class DB {
     public static int explored_fields = 0;
     public static final Logger log = LoggerFactory.getLogger("DATASET LOG");
 
+    public static final List<CSVRecord> perawatancsv;
+    static {
+         try (Reader in = new FileReader("Perawatan.csv")) {
+            perawatancsv = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(in).getRecords();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
     public static boolean isAuthored(CSVRecord record){
         return record.get(E.Authority) != null || !record.get(E.Authority).isEmpty();
     }
@@ -177,8 +186,7 @@ public class DB {
     }
 
     public static CSVRecord perawatan(CSVRecord record){
-        List<CSVRecord> perawatan = perawatan_csv();
-        for (CSVRecord i : perawatan) {
+        for (CSVRecord i : perawatancsv) {
             String s = i.get(record.get(E.Science_name));
             if(s != null) return i;
         }
@@ -238,7 +246,8 @@ public class DB {
     public static CSVRecord perawatan_csv(CSVRecord ecocropcsv){
         if(science_perawatancsv.containsKey(ecocropcsv.get(E.Science_name)))
             return science_perawatancsv.get(ecocropcsv.get(E.Science_name));
-        for (CSVRecord i : perawatan_csv()) {
+
+        for (CSVRecord i : perawatancsv) {
             if(i.get(E.Science_name).contains(ecocropcsv.get(E.Science_name))) {
                 science_perawatancsv.put(ecocropcsv.get(E.Science_name), i);
                 return i;
@@ -246,12 +255,6 @@ public class DB {
         }
         return null;
     }
-    public static List<CSVRecord> perawatan_csv(){
-        try (Reader in = new FileReader("perawatan.csv")) {
-            return CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(in).getRecords();
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
+
+
 }
