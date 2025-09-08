@@ -6,6 +6,11 @@ repositories {
     mavenCentral()
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
 dependencies {
     /* https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations */
     implementation("com.fasterxml.jackson.core:jackson-annotations:3.0-rc5")

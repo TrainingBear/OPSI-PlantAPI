@@ -6,12 +6,6 @@ plugins {
 
 tasks.register("prepareKotlinBuildScriptModel"){}
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
-}
-
 dependencies {
 	implementation(project(":api"))
 //	https://mvnrepository.com/artifact/com.google.guava/guava
