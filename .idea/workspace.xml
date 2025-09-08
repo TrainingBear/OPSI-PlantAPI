@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="succesful test &amp; better model">
+    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="springboottest">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/api/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/UserVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/UserVariable.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -687,7 +687,23 @@
       <option name="project" value="LOCAL" />
       <updated>1757245812229</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="java ver fix for android">
+      <option name="closed" value="true" />
+      <created>1757340087999</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1757340087999</updated>
+    </task>
+    <task id="LOCAL-00030" summary="springboottest">
+      <option name="closed" value="true" />
+      <created>1757340133387</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1757340133387</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -733,7 +749,9 @@
     <MESSAGE value="ver fix" />
     <MESSAGE value="api json support" />
     <MESSAGE value="succesful test &amp; better model" />
-    <option name="LAST_COMMIT_MESSAGE" value="succesful test &amp; better model" />
+    <MESSAGE value="java ver fix for android" />
+    <MESSAGE value="springboottest" />
+    <option name="LAST_COMMIT_MESSAGE" value="springboottest" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
