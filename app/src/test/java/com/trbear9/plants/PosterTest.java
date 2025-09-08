@@ -32,6 +32,7 @@ import java.util.Collections;
 import static com.trbear9.plants.E.CLIMATE.*;
 import static com.trbear9.plants.E.DEPTH.*;
 
+@SpringBootTest
 public class PosterTest {
     private static final Logger log = LoggerFactory.getLogger(PosterTest.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
