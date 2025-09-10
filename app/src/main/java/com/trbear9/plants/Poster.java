@@ -97,12 +97,12 @@ public class Poster {
                     JsonNode node = objectMapper.readTree(respon);
                     objectMapper.writeValue(file, respon);
                     node = node.get("output").get(1).get("content").get(0).get("text");
-                    response.put(i, Map.of(nama_ilmiah, node.asText()));
+                    response.put(i, nama_ilmiah, node.asText());
                 } else{
                     JsonNode node = objectMapper.readTree(file);
                     node = objectMapper.readTree(node.asText());
                     node = node.get("output").get(1).get("content").get(0).get("text");
-                    response.put(i, Map.of(nama_ilmiah, node.asText()));
+                    response.put(i, nama_ilmiah, node.asText());
                 }
             }
         File dir = new File("open_ai/cache");

@@ -4,6 +4,11 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
 tasks.register("prepareKotlinBuildScriptModel"){}
 
 dependencies {
