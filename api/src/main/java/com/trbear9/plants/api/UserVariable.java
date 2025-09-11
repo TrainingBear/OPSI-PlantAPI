@@ -2,9 +2,6 @@ package com.trbear9.plants.api;
 
 import lombok.*;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -12,8 +9,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserVariable implements Serializable {
-    @Serial private static final long serialVersionUID = 1L;
+public class UserVariable {
     private byte[] image;
     private String tanah;
     @Singular private Set<Parameters> parameters;

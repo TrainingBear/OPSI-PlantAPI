@@ -1,5 +1,6 @@
 package com.trbear9.plants;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trbear9.plants.api.GeoParameters;
@@ -31,6 +32,7 @@ import java.util.Collections;
 import static com.trbear9.plants.E.CLIMATE.*;
 import static com.trbear9.plants.E.DEPTH.*;
 
+@SpringBootTest
 public class PosterTest {
     private static final Logger log = LoggerFactory.getLogger(PosterTest.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -38,8 +40,8 @@ public class PosterTest {
     private final static RestTemplate template;
     static {
         requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setReadTimeout(Duration.ofMinutes(2));
-        requestFactory.setConnectTimeout(Duration.ofMinutes(2));
+        requestFactory.setReadTimeout(Duration.ofDays(10));
+        requestFactory.setConnectTimeout(Duration.ofDays(10));
         template = new RestTemplate(requestFactory);
     }
 
@@ -51,7 +53,7 @@ public class PosterTest {
     }
 
     @Test
-    void postVar(){
+    void postVar() throws JsonProcessingException {
         File file = new File("fast_api/uploaded_images/aluvial-001.jpg");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
@@ -77,20 +79,43 @@ public class PosterTest {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         HttpEntity<UserVariable> request = new HttpEntity<>(userVariable, headers);
+
         try {
             ResponseEntity<String> response = template.postForEntity("http://localhost:8080"+"/predict", request, String.class);
             JsonNode root = objectMapper.readTree(response.getBody());
-            File output = new File("restapi_outputs", file.getName() + ".json");
-            output.mkdirs();
-            if(!output.exists()) {
-                objectMapper.writeValue(output, root);
-                log.info("Object has been written at {}", output.getAbsolutePath());
-                return;
-            }
-        } catch (Exception e){
+            System.out.println(response.getBody());
+            log.info(root.toPrettyString());
+        } catch (Exception e) {
+            log.error("Cant procces your request");
+            log.error("Error: {}", e.getMessage());
             e.printStackTrace();
             throw new RuntimeException(e);
-        };
-        log.error("Cant get a response from your request!");
+        }
+
+    }
+
+    @Test
+    public void predict() throws IOException {
+//        File file = new File("fast_api/uploaded_images/aluvial-001.jpg");
+//        float[] predict = FAService.predict(file);
+//        log.info("predicts: {}", predict);
+    }
+
+    @Test
+    public void makeDir(){
+        File dir = new File("open_ai/responses");
+        File file = new File(dir, System.nanoTime()+".json");
+        if (dir.mkdirs()) {
+            log.info("Directory created: {}", dir.getAbsolutePath());
+        }
+        else {
+            log.info("Directory already exists: {}", dir.getAbsolutePath());
+        }
+        String json = "{\"state\": \"\test\"}";
+//        if(!file.exists()) try {
+//            objectMapper.writeValue(file, json);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }

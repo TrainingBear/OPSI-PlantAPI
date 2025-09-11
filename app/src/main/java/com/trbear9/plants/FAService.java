@@ -40,10 +40,13 @@ public final class FAService {
             .additionalMessageConverters(new FormHttpMessageConverter())
             .connectTimeout(Duration.ofMinutes(2))
             .readTimeout(Duration.ofMinutes(2))
-            .build();;
+            .build();
+
+    // logger provider/framework
     public static final Logger log = LoggerFactory.getLogger("FastAPI");
+
     public static final String key = System.getenv("OPEN_AI_KEY");
-    public static String url = null;
+    public static String url = "http://0.0.0.0:8000";
     private static Process process = null;
     public final static String[] label = {
             "Aluvial",
@@ -69,9 +72,13 @@ public final class FAService {
 
     public static void start() throws IOException, InterruptedException {
         log.info("Starting fastapi service... ");
-//        ProcessBuilder pb = new ProcessBuilder("gnome-terminal", "--", "bash", "-c", "fastapi run fast_api/api.py");
         long start = System.nanoTime();
         Thread thread = new Thread(() -> {
+            //yang ini juga, tapi ngerun di separate terminal
+            //gnome-terminal = terminal di linux gw. smh
+//            ProcessBuilder pb = new ProcessBuilder("gnome-terminal", "--", "bash", "-c", "fastapi run fast_api/api.py");
+
+            //ini ngerun python. yaya
             ProcessBuilder pb = new ProcessBuilder("fastapi", "run", "fast_api/api.py");
             try {
                 process = pb.start();
@@ -85,6 +92,10 @@ public final class FAService {
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             boolean flag = true;
+
+            //ini buat logging, logging apaan?
+            // logger hoooo, apa pula slf4j
+            // sama aja = log
             while (true) {
                 try {
                     if ((line = reader.readLine()) == null) break;
@@ -92,16 +103,16 @@ public final class FAService {
                     throw new RuntimeException(e);
                 }
                 if (flag && line.contains("Server started")) {
-                    flag = false;
                     String[] s = line.split(" ");
                     url = s[10];
                     String took = String.format("%.2fms", (System.nanoTime() - start) / 1_000_000.0);
-                    log.info("API {} started in {}", url, took);
-                    try {
-                        Application.process();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    log.info("FastAPI has been started in {} took {}", url, took);
+                    flag = false;
+//                    try {
+//                        Application.process();
+//                    } catch (IOException e) {
+//                        throw new RuntimeException(e);
+//                    }
                 }
                 log.info(line);
             }

@@ -1,8 +1,10 @@
 plugins {
-//	id("java") apply false
+	id("java")
 }
 
-
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+}
 
 allprojects {
 	group = "com.github.TrainingBear"

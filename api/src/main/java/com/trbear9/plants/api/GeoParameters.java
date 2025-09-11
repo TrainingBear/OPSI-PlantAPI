@@ -6,9 +6,14 @@ import lombok.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public record GeoParameters(E.CLIMATE iklim, int latitude, int altitude, int rainfall,
-                            int temperature) implements Parameters {
+public class GeoParameters implements Parameters {
+    E.CLIMATE iklim;
+    int latitude, altitude, rainfall, temperature;
     @Override
     public Map<String, String> getParameters() {
         Map<String, String> map = new HashMap<>();

@@ -6,9 +6,16 @@ import lombok.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public record CustomParameters(E.CATEGORY category, E.LIFESPAM lifeSpan, String query,
-                               int panen) implements Parameters {
+public class CustomParameters implements Parameters {
+    E.CATEGORY category;
+    E.LIFESPAM lifeSpan;
+    String query;
+    int panen;
     @Override
     public Map<String, String> getParameters() {
         Map<String, String> map = new HashMap<>();
