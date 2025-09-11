@@ -1,5 +1,11 @@
 package com.trbear9.plants;
 
+import com.github.alexdlaird.ngrok.NgrokClient;
+import com.github.alexdlaird.ngrok.conf.JavaNgrokConfig;
+import com.github.alexdlaird.ngrok.process.NgrokProcess;
+import com.github.alexdlaird.ngrok.protocol.CreateTunnel;
+import com.github.alexdlaird.ngrok.protocol.Proto;
+import com.github.alexdlaird.ngrok.protocol.Tunnel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -14,6 +20,13 @@ public class Application implements CommandLineRunner {
     public static final Logger log = LoggerFactory.getLogger("Application");
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
+        NgrokClient ngrokClient = new NgrokClient.Builder().build();
+
+        Tunnel tunnel = ngrokClient.connect();
+        CreateTunnel createTunnel = new CreateTunnel.Builder()
+                .withAddr(8080)
+                .withProto(Proto.HTTP)
+                .build();
     }
 
     @Override

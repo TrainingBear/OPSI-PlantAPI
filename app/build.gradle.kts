@@ -14,14 +14,13 @@ java {
 
 dependencies {
 	implementation(project(":api"))
+	implementation("com.github.alexdlaird:java-ngrok:1.7.0")
 	implementation("org.apache.commons:commons-lang3:3.18.0")
-//	implementation("org.tensorflow:tensorflow-core-platform:1.1.0")
 	implementation ("com.fasterxml.jackson.core:jackson-databind")
 	implementation("org.apache.commons:commons-csv:1.10.0")
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
 	implementation("com.mysql:mysql-connector-j:8.3.0")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-//	compileOnly("org.tensorflow", "tensorflow-core-platform", "1.1.0")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

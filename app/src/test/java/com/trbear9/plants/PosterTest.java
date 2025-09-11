@@ -69,8 +69,7 @@ public class PosterTest {
                 .build();
         UserVariable userVariable = UserVariable.builder()
                 .parameter(geoParameters)
-                .parameter(soilParameters)
-                .image(bos.toByteArray())
+                .parameter(soilParameters).image(bos.toByteArray())
                 .build();
 
         HttpHeaders headers = new HttpHeaders();
