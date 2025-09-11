@@ -4,12 +4,18 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="pre-fix RestTemplate timeout">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/fast_api/uploaded_images/request.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/fast_api/uploaded_images/request.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" afterDir="false" />
+    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="unversioned files">
+      <change afterPath="$PROJECT_DIR$/.idea/modules/api/com.github.TrainingBear.plants-api.api.main.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/app/com.github.TrainingBear.plants-api.app.main.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Changes.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Changes/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_6_25,_7_44 AM_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_6_25,_8_19 PM_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_6_25__7_44AM__Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_6_25__8_19PM__Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/allfiles.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/humus-020.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model_4gap.keras" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -680,7 +686,23 @@
       <option name="project" value="LOCAL" />
       <updated>1757212924395</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="ngrok">
+      <option name="closed" value="true" />
+      <created>1757582253006</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1757582253006</updated>
+    </task>
+    <task id="LOCAL-00030" summary="unversioned files">
+      <option name="closed" value="true" />
+      <created>1757582338994</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1757582338994</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -726,7 +748,9 @@
     <MESSAGE value="ver fix" />
     <MESSAGE value="laptop" />
     <MESSAGE value="pre-fix RestTemplate timeout" />
-    <option name="LAST_COMMIT_MESSAGE" value="pre-fix RestTemplate timeout" />
+    <MESSAGE value="ngrok" />
+    <MESSAGE value="unversioned files" />
+    <option name="LAST_COMMIT_MESSAGE" value="unversioned files" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
