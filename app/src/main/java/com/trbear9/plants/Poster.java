@@ -45,8 +45,11 @@ public class Poster {
     }
     public static final String key = System.getenv("OPEN_AI_KEY");
     private final static ObjectMapper objectMapper = new ObjectMapper();
+    private static final String gist_id = "84d0e105aaabce26c8dfbaff74b2280e";
+    private static final String git_token = System.getenv("GITHUB_TOKEN");
     static NgrokClient ngrokClient;
     static Tunnel tunnel;
+    private static long startTime = -1;
 
     public static String getUrl(){
         if(tunnel != null)
@@ -63,16 +66,70 @@ public class Poster {
                     .build();
             tunnel = ngrokClient.connect(address);
             String publicUrl = tunnel.getPublicUrl();
+            startTime = System.currentTimeMillis();
             log.info("ngrok tunnel \"{}\" -> \"{}\"", tunnel.getName(), publicUrl);
+
+            Map<String, String> content = new HashMap<>();
+            content.put("content",
+                    "{" +
+                        "\"content\": \"" + publicUrl + "\"," +
+                        "\"started\": " + Poster.startTime + "," +
+                        "\"stopped\": " + "\"N/A\"" +
+                    "}");
+            Map<String, Object> json = new HashMap<>();
+            json.put("url.json", content);
+
+            Map<String, Object> file = new HashMap<>();
+            file.put("files", json);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(git_token);
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(file, headers);
+
+            ResponseEntity<String> response =
+                    template.postForEntity
+                            ("https://api.github.com/gists/" + gist_id, request, String.class);
+            if(response.getStatusCode().is2xxSuccessful()){
+                log.info("Gist updated: {}", response.getBody());
+            } else {
+                log.error("Gist update failed: {}", response.getBody());
+            }
         }
     }
 
     public static void stop(){
-        if(tunnel != null && ngrokClient != null){
+        if(tunnel != null && ngrokClient != null) {
             ngrokClient.disconnect(tunnel.getPublicUrl());
             tunnel = null;
             ngrokClient.kill();
             ngrokClient = null;
+
+            Map<String, String> content = new HashMap<>();
+            content.put("content",
+                    "{" +
+                            "\"content\": \"http://localhost:8080\"," +
+                            "\"started\": " + Poster.startTime + "," +
+                            "\"stopped\": " + System.currentTimeMillis() + "," +
+                            "}");
+            Map<String, Object> json = new HashMap<>();
+            json.put("url.json", content);
+            Map<String, Object> file = new HashMap<>();
+            file.put("files", json);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(git_token);
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(file, headers);
+
+            ResponseEntity<String> response =
+                    template.postForEntity
+                            ("https://api.github.com/gists/" + gist_id, request, String.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                log.info("Gist updated: {}", response.getBody());
+            } else {
+                log.error("Gist update failed: {}", response.getBody());
+            }
         }
     }
 
