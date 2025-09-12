@@ -20,21 +20,16 @@ public class Application implements CommandLineRunner {
     public static final Logger log = LoggerFactory.getLogger("Application");
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-        NgrokClient ngrokClient = new NgrokClient.Builder().build();
-
-        Tunnel tunnel = ngrokClient.connect();
-        CreateTunnel createTunnel = new CreateTunnel.Builder()
-                .withAddr(8080)
-                .withProto(Proto.HTTP)
-                .build();
     }
 
     @Override
     public void run(String... args) throws Exception {
         FAService.start();
+        Poster.start();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             log.info("Shutting down... ");
             FAService.stop();
+            Poster.stop();
         }));
     }
 

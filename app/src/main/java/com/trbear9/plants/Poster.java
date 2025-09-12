@@ -3,9 +3,14 @@ package com.trbear9.plants;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.alexdlaird.ngrok.NgrokClient;
+import com.github.alexdlaird.ngrok.protocol.CreateTunnel;
+import com.github.alexdlaird.ngrok.protocol.Proto;
+import com.github.alexdlaird.ngrok.protocol.Tunnel;
 import com.trbear9.plants.api.Response;
 import com.trbear9.plants.api.SoilParameters;
 import com.trbear9.plants.api.UserVariable;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 @RestController
+@Getter
 public class Poster {
     static private final SimpleClientHttpRequestFactory factory;
     static private final RestTemplate template;
@@ -39,6 +45,36 @@ public class Poster {
     }
     public static final String key = System.getenv("OPEN_AI_KEY");
     private final static ObjectMapper objectMapper = new ObjectMapper();
+    static NgrokClient ngrokClient;
+    static Tunnel tunnel;
+
+    public static String getUrl(){
+        if(tunnel != null)
+        return tunnel.getPublicUrl();
+        return "http://localhost:8080";
+    }
+
+    public static void start(){
+        if(ngrokClient==null) {
+            ngrokClient = new NgrokClient.Builder().build();
+            CreateTunnel address = new CreateTunnel.Builder()
+                    .withAddr(8080)
+                    .withProto(Proto.HTTP)
+                    .build();
+            tunnel = ngrokClient.connect(address);
+            String publicUrl = tunnel.getPublicUrl();
+            log.info("ngrok tunnel \"{}\" -> \"{}\"", tunnel.getName(), publicUrl);
+        }
+    }
+
+    public static void stop(){
+        if(tunnel != null && ngrokClient != null){
+            ngrokClient.disconnect(tunnel.getPublicUrl());
+            tunnel = null;
+            ngrokClient.kill();
+            ngrokClient = null;
+        }
+    }
 
     @GetMapping("/who")
     public String who(){

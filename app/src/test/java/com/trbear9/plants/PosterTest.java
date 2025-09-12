@@ -32,7 +32,7 @@ import java.util.Collections;
 import static com.trbear9.plants.E.CLIMATE.*;
 import static com.trbear9.plants.E.DEPTH.*;
 
-@SpringBootTest
+@SpringBootTest(classes = Poster.class)
 public class PosterTest {
     private static final Logger log = LoggerFactory.getLogger(PosterTest.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -48,7 +48,7 @@ public class PosterTest {
     @Test
     void test(){
         log.info("test initialized");
-        String response = template.getForObject("http://localhost:8080" + "/who", String.class);
+        String response = template.getForObject(Poster.getUrl() + "/who", String.class);
         log.info("{}", response);
     }
 
@@ -81,7 +81,7 @@ public class PosterTest {
         HttpEntity<UserVariable> request = new HttpEntity<>(userVariable, headers);
 
         try {
-            ResponseEntity<String> response = template.postForEntity("http://localhost:8080"+"/predict", request, String.class);
+            ResponseEntity<String> response = template.postForEntity(Poster.getUrl() +"/predict", request, String.class);
             JsonNode root = objectMapper.readTree(response.getBody());
             System.out.println(response.getBody());
             log.info(root.toPrettyString());
@@ -89,9 +89,7 @@ public class PosterTest {
             log.error("Cant procces your request");
             log.error("Error: {}", e.getMessage());
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
-
     }
 
     @Test

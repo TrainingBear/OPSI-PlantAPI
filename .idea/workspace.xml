@@ -4,24 +4,19 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="java ver fix for android">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules/510992693/plants-api.api.main.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules/api/com.github.TrainingBear.plants-api.api.main.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules/app/com.github.TrainingBear.plants-api.app.main.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/api/plants-api.api.main.iml" beforeDir="false" />
+    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="java version fix">
+      <change afterPath="$PROJECT_DIR$/app/open_ai/cache/7439296931707.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/open_ai/responses/Arctostaphylos uva-ursi.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/open_ai/responses/Bellis perennis.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/open_ai/responses/Capsella bursa-pastoris.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/open_ai/responses/Convolvulus arvensis.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/open_ai/responses/Urtica urens.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/open_ai/responses/Utricularia vulgaris.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/api/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/CustomParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/CustomParameters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/GeoParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/GeoParameters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Response.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Response.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/UserVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/UserVariable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Application.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Poster.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Poster.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,6 +144,7 @@
     &quot;Gradle.TFServiceTest.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.TFServiceTest.process.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.app [bootRun].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.app [bootTestRun].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.clean build.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.plants-api [:com.tbear9.plants_api.PlantsApiApplication.main()].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.plants-api [bootRun].executor&quot;: &quot;Run&quot;,
@@ -212,6 +208,11 @@
     </key>
   </component>
   <component name="RunManager" selected="Gradle.app [bootRun]">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="JsonReader.read" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -376,6 +377,28 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="app [bootTestRun]" type="GradleRunConfiguration" factoryName="Gradle" nameIsGenerated="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--stacktrace" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="bootTestRun" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="clean build" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -421,6 +444,8 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Application.Unnamed" />
+      <item itemvalue="Gradle.app [bootTestRun]" />
       <item itemvalue="Gradle.clean build" />
       <item itemvalue="Gradle.app [bootRun]" />
       <item itemvalue="Gradle.OPSI-PlantAPI [bootTestRun]" />
@@ -433,9 +458,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.PosterTest (1)" />
         <item itemvalue="Gradle.PosterTest" />
         <item itemvalue="Gradle.JsonReader.read" />
-        <item itemvalue="Gradle.PosterTest (1)" />
         <item itemvalue="Gradle.PosterTest.makeDir" />
         <item itemvalue="Gradle.PosterTest.postVar" />
       </list>
@@ -700,7 +725,15 @@
       <option name="project" value="LOCAL" />
       <updated>1757340795386</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="java version fix">
+      <option name="closed" value="true" />
+      <created>1757509007381</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1757509007381</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -748,7 +781,8 @@
     <MESSAGE value="succesful test &amp; better model" />
     <MESSAGE value="springboottest" />
     <MESSAGE value="java ver fix for android" />
-    <option name="LAST_COMMIT_MESSAGE" value="java ver fix for android" />
+    <MESSAGE value="java version fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="java version fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

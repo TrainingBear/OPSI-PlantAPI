@@ -14,7 +14,7 @@ java {
 
 dependencies {
 	implementation(project(":api"))
-	implementation("com.github.alexdlaird:java-ngrok:1.7.0")
+	implementation("com.github.alexdlaird:java-ngrok:2.3.16")
 	implementation("org.apache.commons:commons-lang3:3.18.0")
 	implementation ("com.fasterxml.jackson.core:jackson-databind")
 	implementation("org.apache.commons:commons-csv:1.10.0")
