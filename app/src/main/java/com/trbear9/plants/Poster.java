@@ -51,10 +51,14 @@ public class Poster {
     static Tunnel tunnel;
     private static long startTime = -1;
 
-    public static String getUrl(){
+    public static String getUrl() throws JsonProcessingException {
         if(tunnel != null)
-        return tunnel.getPublicUrl();
-        return "http://localhost:8080";
+            return tunnel.getPublicUrl();
+
+        String gist = "https://gist.githubusercontent.com/TrainingBear/84d0e105aaabce26c8dfbaff74b2280e/raw/url.json";
+        ResponseEntity<String> response = template.getForEntity(gist, String.class);
+        JsonNode json = objectMapper.readTree(response.getBody());
+        return json.get("content").asText();
     }
 
     public static void start(){

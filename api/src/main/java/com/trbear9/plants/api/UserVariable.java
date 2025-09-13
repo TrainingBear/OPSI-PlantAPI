@@ -2,22 +2,23 @@ package com.trbear9.plants.api;
 
 import lombok.*;
 
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserVariable {
     private byte[] image;
     private String tanah;
-    @Singular private Set<Parameters> parameters;
+    @Singular private Map<Class<? extends Parameters>, Parameters> parameters = new HashMap<>();
     public void modify(SoilParameters par){
-        for (Parameters parameter : parameters) {
-            if(parameter instanceof SoilParameters){
-                ((SoilParameters) parameter).modify(par);
-            }
-        }
+        ((SoilParameters) parameters.get(SoilParameters.class)).modify(par);
+    }
+
+    public void add(Parameters... parms){
+        for (Parameters par : parms)
+            parameters.put(par.getClass(), par);
+
     }
 }

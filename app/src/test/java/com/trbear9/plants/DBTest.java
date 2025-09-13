@@ -31,9 +31,8 @@ class DBTest {
                 .rainfall(1700)
                 .altitude(2300)
                 .build();
-        UserVariable userVariable = UserVariable.builder()
-                .parameters(List.of(par1, par2, par3))
-                .build();
+        UserVariable userVariable = new UserVariable();
+        userVariable.add(par1, par2, par3);
 
         DB.explored_fields = 0;
         Map<Integer, Set<CSVRecord>> records = DB.ecoCropDB_csv(userVariable);

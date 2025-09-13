@@ -46,7 +46,7 @@ public class PosterTest {
     }
 
     @Test
-    void test(){
+    void test() throws JsonProcessingException {
         log.info("test initialized");
         String response = template.getForObject(Poster.getUrl() + "/who", String.class);
         log.info("{}", response);
@@ -69,10 +69,9 @@ public class PosterTest {
         SoilParameters soilParameters = SoilParameters.builder()
                 .O_depth(deep)
                 .build();
-        UserVariable userVariable = UserVariable.builder()
-                .parameter(geoParameters)
-                .parameter(soilParameters).image(bos.toByteArray())
-                .build();
+        UserVariable userVariable = new UserVariable();
+        userVariable.add(geoParameters, soilParameters);
+        userVariable.setImage(bos.toByteArray());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

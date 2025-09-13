@@ -36,7 +36,7 @@ public class DB {
     }
     public static Map<Integer, Set<CSVRecord>> ecoCropDB_csv(UserVariable userVariable){
         Map<Integer, Set<CSVRecord>> map = new TreeMap<>(Comparator.reverseOrder());
-        Set<? extends Parameters> parameters = userVariable.getParameters();
+        Collection<Parameters> parameters = userVariable.getParameters().values();
 
         for (CSVRecord record : ecoCropDB_csv()) {
             explored_fields++;
