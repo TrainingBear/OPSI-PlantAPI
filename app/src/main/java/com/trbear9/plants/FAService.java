@@ -6,7 +6,6 @@ import com.trbear9.plants.api.SoilParameters;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
@@ -119,6 +118,10 @@ public final class FAService {
         });
         thread.setName("FAService");
         thread.start();
+    }
+
+    public static ResponseEntity<String> pykew_search(String q){
+        return template1.getForEntity(url + "/plants/" + q, String.class);
     }
 
     public static void stop() {

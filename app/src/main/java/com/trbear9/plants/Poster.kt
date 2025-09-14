@@ -1,260 +1,376 @@
-package com.trbear9.plants;
+package com.trbear9.plants
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.alexdlaird.ngrok.NgrokClient;
-import com.github.alexdlaird.ngrok.protocol.CreateTunnel;
-import com.github.alexdlaird.ngrok.protocol.Proto;
-import com.github.alexdlaird.ngrok.protocol.Tunnel;
-import com.trbear9.plants.api.Response;
-import com.trbear9.plants.api.SoilParameters;
-import com.trbear9.plants.api.UserVariable;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.csv.CSVRecord;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.File;
-import java.io.IOException;
-import java.time.Duration;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.alexdlaird.ngrok.NgrokClient
+import com.github.alexdlaird.ngrok.protocol.CreateTunnel
+import com.github.alexdlaird.ngrok.protocol.Proto
+import com.github.alexdlaird.ngrok.protocol.Tunnel
+import com.trbear9.plants.E.*
+import com.trbear9.plants.api.Plant
+import com.trbear9.plants.api.Response
+import com.trbear9.plants.api.UserVariable
+import lombok.Getter
+import lombok.extern.slf4j.Slf4j
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.http.client.SimpleClientHttpRequestFactory
+import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.client.RestTemplate
+import java.io.ByteArrayInputStream
+import java.io.File
+import java.io.IOException
+import java.net.URI
+import java.time.Duration
+import javax.imageio.ImageIO
+import kotlin.collections.HashMap
+import kotlin.collections.MutableMap
 
 @Slf4j
 @Service
 @RestController
 @Getter
-public class Poster {
-    static private final SimpleClientHttpRequestFactory factory;
-    static private final RestTemplate template;
-    static {
-        factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(Duration.ofMinutes(5));
-        factory.setReadTimeout(Duration.ofMinutes(5));
-        template = new RestTemplate(factory);
-    }
-    public static final String key = System.getenv("OPEN_AI_KEY");
-    private final static ObjectMapper objectMapper = new ObjectMapper();
-    private static final String gist_id = "84d0e105aaabce26c8dfbaff74b2280e";
-    private static final String git_token = System.getenv("GITHUB_TOKEN");
-    static NgrokClient ngrokClient;
-    static Tunnel tunnel;
-    private static long startTime = -1;
-
-    public static String getUrl() throws JsonProcessingException {
-        if(tunnel != null)
-            return tunnel.getPublicUrl();
-
-        String gist = "https://gist.githubusercontent.com/TrainingBear/84d0e105aaabce26c8dfbaff74b2280e/raw/url.json";
-        ResponseEntity<String> response = template.getForEntity(gist, String.class);
-        JsonNode json = objectMapper.readTree(response.getBody());
-        return json.get("content").asText();
-    }
-
-    public static void start(){
-        if(ngrokClient==null) {
-            ngrokClient = new NgrokClient.Builder().build();
-            CreateTunnel address = new CreateTunnel.Builder()
-                    .withAddr(8080)
-                    .withProto(Proto.HTTP)
-                    .build();
-            tunnel = ngrokClient.connect(address);
-            String publicUrl = tunnel.getPublicUrl();
-            startTime = System.currentTimeMillis();
-            log.info("ngrok tunnel \"{}\" -> \"{}\"", tunnel.getName(), publicUrl);
-
-            Map<String, String> content = new HashMap<>();
-            content.put("content",
-                    "{" +
-                        "\"content\": \"" + publicUrl + "\"," +
-                        "\"started\": " + Poster.startTime + "," +
-                        "\"stopped\": " + "\"N/A\"" +
-                    "}");
-            Map<String, Object> json = new HashMap<>();
-            json.put("url.json", content);
-
-            Map<String, Object> file = new HashMap<>();
-            file.put("files", json);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(git_token);
-            HttpEntity<Map<String, Object>> request = new HttpEntity<>(file, headers);
-
-            ResponseEntity<String> response =
-                    template.postForEntity
-                            ("https://api.github.com/gists/" + gist_id, request, String.class);
-            if(response.getStatusCode().is2xxSuccessful()){
-                log.info("Gist updated: {}", response.getBody());
-            } else {
-                log.error("Gist update failed: {}", response.getBody());
-            }
-        }
-    }
-
-    public static void stop(){
-        if(tunnel != null && ngrokClient != null) {
-            ngrokClient.disconnect(tunnel.getPublicUrl());
-            tunnel = null;
-            ngrokClient.kill();
-            ngrokClient = null;
-
-            Map<String, String> content = new HashMap<>();
-            content.put("content",
-                    "{" +
-                            "\"content\": \"http://localhost:8080\"," +
-                            "\"started\": " + Poster.startTime + "," +
-                            "\"stopped\": " + System.currentTimeMillis() + "," +
-                            "}");
-            Map<String, Object> json = new HashMap<>();
-            json.put("url.json", content);
-            Map<String, Object> file = new HashMap<>();
-            file.put("files", json);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(git_token);
-            HttpEntity<Map<String, Object>> request = new HttpEntity<>(file, headers);
-
-            ResponseEntity<String> response =
-                    template.postForEntity
-                            ("https://api.github.com/gists/" + gist_id, request, String.class);
-            if (response.getStatusCode().is2xxSuccessful()) {
-                log.info("Gist updated: {}", response.getBody());
-            } else {
-                log.error("Gist update failed: {}", response.getBody());
-            }
-        }
-    }
-
+class Poster {
     @GetMapping("/who")
-    public String who(){
+    fun who(): String {
         return """
-                            \n \n \n
+                            
+                             
+                             
+                            
                             TIM OPSI SMANEGA 2025
                             oleh Kukuh & Refan.
                 RestAPI has been built by kujatic (trbear) -> https://github.com/TrainingBear (opensource)
                 BIG SHOUTOUT TO JASPER                vvvvvvvvvvvvvvvvvvvvvvvvv
                 Join komunitas discord kami (Jasper): https://discord.gg/fbAZSd3Hf2
-                \n \n \n
-                """;
+                
+                 
+                 
+                
+                
+                
+                 
+                
+                
+                """.trimIndent()
     }
 
 
     @PostMapping("/predict")
-    public String postVar(@RequestBody UserVariable data) throws IOException {
-        log.info("POST /predict");
-        byte[] image = data.getImage();
-        float[] prediction = FAService.predict(image);
-        int max = FAService.argmax(prediction);
-        SoilParameters soil = FAService.soil[max];
-        String soilName = FAService.label[max];
-        log.info("Soil: {}", soilName);
-        data.modify(soil);
+    @Throws(IOException::class)
+    fun postVar(@RequestBody data: UserVariable): String? {
+        val hashCode = data.hash
+        val file = File("cache/$hashCode.json")
+        if(file.exists()){
+            return objectMapper.readTree(file).toPrettyString()
+        }
 
-        Map<Integer, Set<CSVRecord>> result = DB.ecoCropDB_csv(data);
-        Response response = new Response();
-        response.setSoilName(soilName);
-        for (int i : result.keySet())
-            for (CSVRecord ecorecord : result.get(i)) {
-                CSVRecord perawatanrecord = DB.perawatan_csv(ecorecord);
-                String nama_ilmiah = ecorecord.get(E.Science_name);
+        var totalTime = 0.0
+        log.info("POST /predict")
+        val image = data.image
+        var start = System.currentTimeMillis()
+        val prediction = FAService.predict(image)
+        var took = (System.currentTimeMillis() - start).toDouble() / 1000000.0
+        totalTime += took
+        val max = FAService.argmax(prediction)
+        val soil = FAService.soil[max]
+        val soilName = FAService.label[max]
+        log.info("Soil: {}", soilName)
+        data.modify(soil)
 
-                File dir = new File("open_ai/responses");
-                if (dir.mkdirs())
-                    log.info("Directory created: {}", dir.getAbsolutePath());
-                File file = new File(dir, nama_ilmiah + ".json");
-                if (!file.exists()) {
-                    StringBuilder query;
-                    query = new StringBuilder("generate a plants guide & care, that include watering, pruning, fertilization, sunlight, pest management, the common name, and level of difficulty of care. for this plant ");
-                    if (perawatanrecord != null) {
-                        String perawatan = perawatanrecord.get(E.PERAWATAN);
-                        String penyakit = perawatanrecord.get(E.PENYAKIT);
-                        String nama_tanaman = perawatanrecord.get(E.NAME);
-                        query.append("Nama ilmiah: ").append(nama_ilmiah).append("\n");
-                        query.append("Nama tanaman: ").append(nama_tanaman).append("\n");
-                        query.append("Perawatan: ").append(perawatan).append("\n");
-                        query.append("Penyakit: ").append(penyakit).append("\n");
-                    } else {
-                        query.append(nama_ilmiah).append('\n');
-                    }
-                    query.append("generate them in JSON, with format {plant_care:\"response\", difficulty:EASY or MEDIUM or HARD, common_name: \"the common name in indonesia\", prune_guide: \"the youtube/blog link that refer prune method for this plant or either just say this plant cant be pruned\"}").append('\n');
-                    query.append("generate the output in indonesian language");
-                    String respon = rag(query.toString());
-                    JsonNode node = objectMapper.readTree(respon);
-                    objectMapper.writeValue(file, respon);
-                    node = node.get("output").get(1).get("content").get(0).get("text");
-                    response.put(i, nama_ilmiah, node.asText());
-                } else{
-                    JsonNode node = objectMapper.readTree(file);
-                    node = objectMapper.readTree(node.asText());
-                    node = node.get("output").get(1).get("content").get(0).get("text");
-                    response.put(i, nama_ilmiah, node.asText());
+        val result = DataHandler.ecoCropDB_csv(data)
+        val response = Response()
+        response.soilPrediction = prediction
+        response.predict_time = took
+        response.soilName = soilName
+        start = System.currentTimeMillis()
+
+        var total = 0
+        for (i in result.keys) {
+            for (ecorecord in result[i]!!) {
+                total++
+                val plant = Plant()
+                val namaIlmiah = ecorecord.get(Science_name)
+                plant.nama_ilmiah = namaIlmiah
+                plant.min_panen = ecorecord.get(MIN_crop_cycle).toInt()
+                plant.max_panen = ecorecord.get(MAX_crop_cycle).toInt()
+                plant.family = ecorecord.get(Family)
+                plant.kategori = ecorecord.get(Category)
+
+                val dir = File("cache/responses")
+                if (dir.mkdirs()) log.info("Directory created: {}", dir.getAbsolutePath())
+                val file = File(dir, "$namaIlmiah.json")
+                val node: JsonNode = if (!file.exists()) {
+                    val query = StringBuilder(
+                       "$namaIlmiah, generate this plants description, Crop production system(categorized by their scale and objectives)," +
+                       " guide & care (include watering, pruning, fertilization, sunlight, pest & disease" +
+                       " management), common name(in indonesia), and level of difficulty of care(MEDIUM, EASY, HARD).\n"
+                    )
+                    query.append(
+                        "generate them in JSON, with format of: {" +
+                        "plant_care: {\"watering:output, pruning:output, ..:output\"}," +
+                        " difficulty:output," +
+                        " description:output," +
+                        " product_sytem:{" +
+                                "rumah_tangga:output," +
+                                "komersial:output," +
+                                "industri:output}," +
+                        " common_name:output," +
+                        " prune_guide: \"a youtube(or blog as alternative) link that refer prune method for this plant or either just say this plant cant be pruned\"" +
+                        "}"
+                    ).append('\n')
+                    query.append("generate the output in indonesian language")
+                    val respon = rag(query.toString())
+                    objectMapper.writeValue(file, respon)
+                    objectMapper.readTree(respon);
+                } else {
+                    val node = objectMapper.readTree(file)
+                    objectMapper.readTree(node.asText())
+                }
+                write(plant, node)
+                response.put(i!!, plant)
+            }
+        }
+        took = (System.currentTimeMillis() - start).toDouble() / 1000000.0
+        response.process_time = took
+        response.took = took + totalTime
+        response.total = total
+        response.hashCode = hashCode
+
+        val value: String? = objectMapper.writeValueAsString(response)
+        objectMapper.writeValue(file, value!!)
+        return value
+    }
+
+    /**
+     *
+     * @param plant objek yang akan di tulis
+     * @param tree rag response
+     */
+    private fun write(plant: Plant, tree: JsonNode) {
+        val node = objectMapper.readTree(tree["output"][1]["content"][0]["text"].asText());
+        val kew = getKew(plant.nama_ilmiah)
+        plant.image = getImage(plant, kew = kew)
+        plant.kingdom = kew["kingdom"].asText()
+        plant.family = kew["family"].asText()
+        plant.genus = plant.nama_ilmiah.split(" ")[0]
+
+        log.info(node.toPrettyString())
+
+        plant.prune_url = node["prune_guide"].asText()
+        plant.difficulty = node["difficulty"].asText()
+        plant.nama_umum = node["common_name"].asText()
+        plant.description = node["description"].asText()
+        plant.kultur.put("rumah_tangga", node["product_sytem"]["rumah_tangga"].asText())
+        plant.kultur.put("komersial", node["product_sytem"]["komersial"].asText())
+        plant.kultur.put("industri", node["product_sytem"]["industri"].asText())
+        node["plant_care"].fieldNames().forEach {
+            plant.kultur.put(it, node["plant_care"][it].asText())
+        }
+    }
+
+    private fun rag(input: String?): String? {
+        val header = HttpHeaders()
+        header.contentType = MediaType.APPLICATION_JSON
+        header.setBearerAuth(key)
+
+        val body: MutableMap<String?, Any?> = HashMap()
+        body.put("model", "o3")
+        body.put("input", input)
+
+        val request = HttpEntity(body, header)
+        return template.postForEntity(
+            "https://api.openai.com/v1/responses",
+            request,
+            String::class.java
+        ).body
+    }
+
+    val kewCache = HashMap<String, JsonNode>()
+    fun getKew(q: String): JsonNode {
+        val dir = File("cache/kew_caches"); dir.mkdirs();
+        val file = File(dir, "$q.json")
+        if(kewCache.containsKey(q) && kewCache[q] != null) {
+            log.info("Cache hit: {}", q)
+            return kewCache[q]!!
+        }
+
+        var root : JsonNode = if(file.exists()){
+            val root = objectMapper.readTree(file)
+            objectMapper.readTree(root.asText())
+        } else {
+            val url = "https://powo.science.kew.org/api/1/search?q=$q"
+            val response = template.getForEntity(url, String::class.java)
+            objectMapper.writeValue(file, response.body)
+            objectMapper.readTree(response.body)
+        }
+        for (result in root["results"]) {
+            if(result["accepted"].asBoolean()){
+                kewCache[q] = result
+                log.info("Found accepted resource, with author: {}", result["author"].asText())
+                return result
+            }
+        }
+
+        log.info("No accepted resource found, returning first result. author: {}",
+            root["results"][0]["author"].asText())
+        return root["results"][0];
+    }
+
+    @JvmOverloads
+    fun getImage(plant: Plant? = null, kew: JsonNode? = null) : ByteArray? {
+        val q : String? = plant?.nama_ilmiah
+
+        val dir = File("cache/images")
+        dir.mkdirs()
+        val file = File(dir, "$q.jpg")
+        if(file.exists()){
+            return file.readBytes()
+        }
+
+        val url = "http:" +
+            if (kew != null) kew["images"][0]["fullsize"].asText()
+            else             getKew(q!!)["images"][0]["fullsize"].asText()
+        val byte = URI.create(url).toURL().readBytes()
+
+        if(!file.exists()) {
+            Thread {
+                val bufferedImage = ImageIO.read(ByteArrayInputStream(byte));
+                ImageIO.write(bufferedImage, "jpg", file)
+            }.start()
+        }
+        return byte
+    }
+
+    companion object {
+        val log: Logger = LoggerFactory.getLogger(Poster::class.java)!!
+        private val factory: SimpleClientHttpRequestFactory = SimpleClientHttpRequestFactory()
+        private val template: RestTemplate
+
+        init {
+            factory.setConnectTimeout(Duration.ofMinutes(5))
+            factory.setReadTimeout(Duration.ofMinutes(5))
+            template = RestTemplate(factory)
+        }
+
+        val key: String = System.getenv("OPEN_AI_KEY")
+        private val objectMapper = ObjectMapper()
+        private const val gist_id = "84d0e105aaabce26c8dfbaff74b2280e"
+        private val git_token: String = System.getenv("GITHUB_TOKEN")
+        var ngrokClient: NgrokClient? = null
+        var tunnel: Tunnel? = null
+        private var startTime: Long = -1
+
+        @JvmStatic
+        @get:Throws(JsonProcessingException::class)
+        val url: String?
+            get() {
+                if (tunnel != null) return tunnel!!.publicUrl
+
+                val gist =
+                    "https://gist.githubusercontent.com/TrainingBear/84d0e105aaabce26c8dfbaff74b2280e/raw/url.json"
+                val response =
+                    template.getForEntity(gist, String::class.java)
+                val json = objectMapper.readTree(response.getBody())
+                return json.get("content").asText()
+            }
+
+        @JvmStatic
+        fun start() {
+            if (ngrokClient == null) {
+                ngrokClient = NgrokClient.Builder().build()
+                val address = CreateTunnel.Builder()
+                    .withAddr(8080)
+                    .withProto(Proto.HTTP)
+                    .build()
+                tunnel = ngrokClient!!.connect(address)
+                val publicUrl: String? = tunnel!!.getPublicUrl()
+                startTime = System.currentTimeMillis()
+                log.info("ngrok tunnel \"{}\" -> \"{}\"", tunnel!!.getName(), publicUrl)
+
+                val content: MutableMap<String?, String?> = HashMap<String?, String?>()
+                content.put(
+                    "content",
+                    "{" +
+                            "\"content\": \"" + publicUrl + "\"," +
+                            "\"started\": " + startTime + "," +
+                            "\"stopped\": " + "\"N/A\"" +
+                            "}"
+                )
+                val json: MutableMap<String?, Any?> = HashMap<String?, Any?>()
+                json.put("url.json", content)
+
+                val file: MutableMap<String?, Any?> = HashMap<String?, Any?>()
+                file.put("files", json)
+
+                val headers = HttpHeaders()
+                headers.contentType = MediaType.APPLICATION_JSON
+                headers.setBearerAuth(git_token)
+                val request = HttpEntity<MutableMap<String?, Any?>?>(file, headers)
+
+                val response: ResponseEntity<String?> =
+                    template.postForEntity<String?>(
+                        "https://api.github.com/gists/" + gist_id,
+                        request,
+                        String::class.java
+                    )
+                if (response.statusCode.is2xxSuccessful) {
+                    log.info("Gist updated: {}", response.getBody())
+                } else {
+                    log.error("Gist update failed: {}", response.getBody())
                 }
             }
-        File dir = new File("open_ai/cache");
-        dir.mkdirs();
-        File file = new File(dir, System.nanoTime()+".json");
-        String value = objectMapper.writeValueAsString(response);
-        objectMapper.writeValue(file, value);
-        return value;
-    }
+        }
 
-    private String rag(String input) {
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_JSON);
-        header.setBearerAuth(key);
+        @JvmStatic
+        fun stop() {
+            if (tunnel != null && ngrokClient != null) {
+                ngrokClient!!.disconnect(tunnel!!.getPublicUrl())
+                tunnel = null
+                ngrokClient!!.kill()
+                ngrokClient = null
 
-        Map<String, Object> body = new HashMap<>();
-        body.put("model", "o3");
-        body.put("input", input);
+                val content: MutableMap<String?, String?> = HashMap<String?, String?>()
+                content.put(
+                    "content",
+                    "{" +
+                            "\"content\": \"http://localhost:8080\"," +
+                            "\"started\": " + startTime + "," +
+                            "\"stopped\": " + System.currentTimeMillis() + "," +
+                            "}"
+                )
+                val json: MutableMap<String?, Any?> = HashMap<String?, Any?>()
+                json.put("url.json", content)
+                val file: MutableMap<String?, Any?> = HashMap<String?, Any?>()
+                file.put("files", json)
 
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, header);
-//        int attempt = 0;
-        return template.postForEntity("https://api.openai.com/v1/responses", request, String.class).getBody();
-//        while (true) {
-//            try {
-//                return template.postForEntity("https://api.openai.com/v1/responses", request, String.class).getBody();
-//            } catch (HttpClientErrorException.TooManyRequests e) {
-//                e.printStackTrace();
-//                attempt++;
-//                if (attempt > 7) {
-//                    throw new RuntimeException("Exceeded max retries after hitting rate limits", e);
-//                }
-//
-//                // Check if OpenAI returned Retry-After header
-//                String retryAfterHeader = e.getResponseHeaders() != null ?
-//                        e.getResponseHeaders().getFirst("Retry-After") : null;
-//
-//                long sleepMillis;
-//                if (retryAfterHeader != null) {
-//                    // OpenAI sometimes suggests how long to wait
-//                    sleepMillis = Long.parseLong(retryAfterHeader) * 1000L;
-//                } else {
-//                    // Fallback: exponential backoff
-//                    sleepMillis = (long) Math.pow(2, attempt) * 1000L;
-//                }
-//
-//                System.err.printf("Rate limit hit (429). Retrying in %d ms (attempt %d/%d)%n",
-//                        sleepMillis, attempt, 7);
-//
-//                try {
-//                    TimeUnit.MILLISECONDS.sleep(sleepMillis);
-//                } catch (InterruptedException ex) {
-//                    Thread.currentThread().interrupt();
-//                    throw new RuntimeException("Retry interrupted", ex);
-//                }
-//            }
-//        }
+                val headers = HttpHeaders()
+                headers.setContentType(MediaType.APPLICATION_JSON)
+                headers.setBearerAuth(git_token)
+                val request = HttpEntity<MutableMap<String?, Any?>?>(file, headers)
+
+                val response: ResponseEntity<String?> =
+                    template.postForEntity<String?>(
+                        "https://api.github.com/gists/" + gist_id,
+                        request,
+                        String::class.java
+                    )
+                if (response.getStatusCode().is2xxSuccessful()) {
+                    log.info("Gist updated: {}", response.getBody())
+                } else {
+                    log.error("Gist update failed: {}", response.getBody())
+                }
+            }
+        }
     }
 }
+

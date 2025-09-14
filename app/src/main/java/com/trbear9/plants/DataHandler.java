@@ -2,6 +2,7 @@ package com.trbear9.plants;
 
 import com.trbear9.plants.api.Parameters;
 import com.trbear9.plants.api.UserVariable;
+import lombok.val;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
@@ -12,7 +13,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
 
-public class DB {
+public class DataHandler {
     public static int explored_fields = 0;
     public static final Logger log = LoggerFactory.getLogger("DATASET LOG");
 
@@ -54,24 +55,22 @@ public class DB {
 
                     switch (col){
                         case "LAT" -> {
-//                            if(true) continue;
-                            if(
-                                    record.get(E.O_minimum_latitude).equals("NA") ||
-                                    record.get(E.O_maximum_latitude).equals("NA")
-                            ) continue;
+                            val bias = 10;
+                            if(record.get(E.O_minimum_latitude).equals("NA") ||
+                                    record.get(E.O_maximum_latitude).equals("NA")) continue;
+
                             float min = Float.parseFloat(record.get(E.O_minimum_latitude));
                             float max = Float.parseFloat(record.get(E.O_maximum_latitude));
                             if((min <= float_val && max >= float_val)){
                                 score += 1;
                                 flag = true;
                             }
-                            else score += (int) (float_val < min ? float_val - min :
-                                    max - float_val);
+                            else score += (int) (float_val < min ?
+                                    float_val - min - bias : max - float_val - bias);
 
-                            if(
-                                    record.get(E.A_minimum_latitude).equals("NA") ||
-                                    record.get(E.A_maximum_latitude).equals("NA")
-                            ) continue;
+                            if(record.get(E.A_minimum_latitude).equals("NA") ||
+                                    record.get(E.A_maximum_latitude).equals("NA")) continue;
+
                             float amin = Float.parseFloat(record.get(E.A_minimum_latitude));
                             float amax = Float.parseFloat(record.get(E.A_maximum_latitude));
                             if (amin <= float_val && amax >= float_val){
@@ -89,7 +88,6 @@ public class DB {
                             else score -= (int) Math.abs(altitude - float_val);
                         }
                         case "RAIN" -> {
-//                            if(true) continue;
                             if(record.get(E.O_minimum_rainfall).equals("NA") || record.get(E.O_maximum_rainfall).equals("NA")) continue;
                             float min = Float.parseFloat(record.get(E.O_minimum_rainfall));
                             float max = Float.parseFloat(record.get(E.O_maximum_rainfall));

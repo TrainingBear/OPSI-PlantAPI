@@ -15,12 +15,7 @@ public class JsonReader {
     ObjectMapper objectMapper = new ObjectMapper();
     @Test
     void read() throws IOException {
-        File file = new File("open_ai/cache/11327106226062.json");
-        JsonNode jsonNode = objectMapper.readTree(file);
-        String text = jsonNode.asText();
-        System.out.println(text);
-        jsonNode = objectMapper.readTree(text);
-        File responses = new File("open_ai/responses");
+        File responses = new File("cache/responses");
         log.info("Reading responses... ");
         for (File response : Objects.requireNonNull(responses.listFiles())) {
             JsonNode node = objectMapper.readTree(response);
@@ -30,13 +25,30 @@ public class JsonReader {
             log.info("\n With outputs: \n ");
             JsonNode jsonNode1 = node.get("output");
             assert jsonNode1 != null;
-            System.out.println(
-                    jsonNode1
-                            .get(1)
-                            .get("content")
-                            .get(0)
-                            .get("text"));
+            JsonNode text = jsonNode1
+                    .get(1)
+                    .get("content")
+                    .get(0)
+                    .get("text");
+            System.out.println(text.asText());
             log.info("\n \n \n \n \n \n");
+        }
+    }
+
+    @Test
+    void readKew_caches(){
+        File kew_caches = new File("cache/kew_caches");
+        for (File file : kew_caches.listFiles()) {
+            if(file.getName().endsWith(".json")){
+                try {
+                    JsonNode node = objectMapper.readTree(file);
+                    node = objectMapper.readTree(node.asText());
+                    log.info("{} values: ", file.getName());
+                    log.info(node.toPrettyString());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 }

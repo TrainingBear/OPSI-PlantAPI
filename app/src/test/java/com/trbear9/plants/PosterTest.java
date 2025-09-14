@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trbear9.plants.api.GeoParameters;
+import com.trbear9.plants.api.Plant;
 import com.trbear9.plants.api.SoilParameters;
 import com.trbear9.plants.api.UserVariable;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ public class PosterTest {
     @Test
     void test() throws JsonProcessingException {
         log.info("test initialized");
-        String response = template.getForObject(Poster.getUrl() + "/who", String.class);
+        String response = template.<String>getForObject(Poster.getUrl() + "/who", String.class);
         log.info("{}", response);
     }
 
@@ -72,17 +73,17 @@ public class PosterTest {
         UserVariable userVariable = new UserVariable();
         userVariable.add(geoParameters, soilParameters);
         userVariable.setImage(bos.toByteArray());
+        userVariable.computeHash();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setAccept(Collections.<MediaType>singletonList(MediaType.APPLICATION_JSON));
 
         HttpEntity<UserVariable> request = new HttpEntity<>(userVariable, headers);
 
         try {
             ResponseEntity<String> response = template.postForEntity(Poster.getUrl() +"/predict", request, String.class);
             JsonNode root = objectMapper.readTree(response.getBody());
-            System.out.println(response.getBody());
             log.info(root.toPrettyString());
         } catch (Exception e) {
             log.error("Cant procces your request");
@@ -100,7 +101,7 @@ public class PosterTest {
 
     @Test
     public void makeDir(){
-        File dir = new File("open_ai/responses");
+        File dir = new File("cache/responses");
         File file = new File(dir, System.nanoTime()+".json");
         if (dir.mkdirs()) {
             log.info("Directory created: {}", dir.getAbsolutePath());
@@ -115,4 +116,24 @@ public class PosterTest {
 //            throw new RuntimeException(e);
 //        }
     }
+
+    @Test void pykew(){
+//        String urticaUrens = template.getForEntity(FAService.url+"/", String.class).getBody();
+        String urticaUrens = template.<String>getForEntity(FAService.url+"/plants/"+"Urtica", String.class).getBody();
+        log.info("{}", urticaUrens);
+    }
+
+    @Test
+    public void getKewImage() throws JsonProcessingException {
+        Poster poster = new Poster();
+        String url = "https://powo.science.kew.org/api/1/search?q=Urtica";
+        ResponseEntity<String> response = template.getForEntity(url, String.class);
+        String body = response.getBody();
+        JsonNode urtica = poster.getKew("Urtica");
+        assert urtica != null;
+        Plant plant = new Plant();
+        plant.nama_ilmiah = "Urtica";
+        byte[] urticas = poster.getImage(plant);
+    }
+    
 }

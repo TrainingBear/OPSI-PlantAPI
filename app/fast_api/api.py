@@ -16,6 +16,7 @@ from fastapi import FastAPI, UploadFile, File
 
 import tensorflow as tf
 import numpy as np
+import pykew.ipni as ipni
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
@@ -45,4 +46,9 @@ async def predict(file: UploadFile = File(...)):
 
     predictions = model.predict(contents)
     return predictions[0].tolist()
+
+@app.get("/plants/{name}")
+async def powo(name: str):
+    return list(ipni.search(name))
+
 

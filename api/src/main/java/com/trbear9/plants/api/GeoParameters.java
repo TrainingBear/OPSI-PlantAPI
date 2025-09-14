@@ -13,12 +13,12 @@ import java.util.Map;
 @Builder
 public class GeoParameters implements Parameters {
     E.CLIMATE iklim;
-    int latitude, altitude, rainfall, temperature;
+    double latitude, altitude, rainfall, temperature;
     @Override
     public Map<String, String> getParameters() {
         Map<String, String> map = new HashMap<>();
         map.put(E.Climate_zone, iklim == null ? null : iklim.head);
-        map.put("LAT", String.valueOf(latitude));
+        map.put("LAT", String.valueOf(Math.abs(latitude)));
         map.put("ALT", String.valueOf(altitude));
         map.put("RAIN", String.valueOf(rainfall));
         map.put("TEMP", String.valueOf(temperature));

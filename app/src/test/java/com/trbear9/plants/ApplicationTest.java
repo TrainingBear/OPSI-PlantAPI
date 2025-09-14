@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.*;
 import java.util.List;
 
-@SpringBootTest(classes = DB.class)
+@SpringBootTest(classes = DataHandler.class)
 public class ApplicationTest {
     Logger log = LoggerFactory.getLogger("ApplicationTest");
 
@@ -25,9 +25,9 @@ public class ApplicationTest {
 //        log.info(record.get(E.Science_name));
     }
     public void find(){
-        CSVRecord record = DB.getRecord("Acacia", E.Authority);
+        CSVRecord record = DataHandler.getRecord("Acacia", E.Authority);
         log.info(record==null?"record1 is null!":"its real");
-        CSVRecord record2 = DB.getRecord("Acacia", "ScientificName");
+        CSVRecord record2 = DataHandler.getRecord("Acacia", "ScientificName");
         log.info(record2==null?"record1 is null!":"its real");
     }
     @Test

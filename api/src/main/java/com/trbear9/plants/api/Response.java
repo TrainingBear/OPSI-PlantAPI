@@ -13,14 +13,16 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Response {
+    public String hashCode;
     private String soilName;
-    private Map<Integer, List<Pair<String, String>>> tanaman = new HashMap<>();
+    private float[] soilPrediction = new float[8];
+    private int total = 0;
+    private double predict_time, process_time, took;
+    private Map<Integer, List<Plant>> tanaman = new HashMap<>();
     //{score: [{nama tanaman: response rag}, {...}]}
 
-    public void put(int score, String nama_ilmiah, String response){
-        put(score, Pair.of(nama_ilmiah, response));
-    }
-    public void put(int score, Pair<String, String> response){
-        tanaman.computeIfAbsent(score, k -> new ArrayList<>()).add(response);
+    public void put(int score, Plant plant){
+        tanaman.computeIfAbsent(score, k -> new ArrayList<>()).add(plant);
+        total++;
     }
 }

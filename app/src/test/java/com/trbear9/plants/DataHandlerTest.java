@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-class DBTest {
+class DataHandlerTest {
     private static final Logger log = LoggerFactory.getLogger("DATASET TEST");
 
     @Test
@@ -34,13 +34,13 @@ class DBTest {
         UserVariable userVariable = new UserVariable();
         userVariable.add(par1, par2, par3);
 
-        DB.explored_fields = 0;
-        Map<Integer, Set<CSVRecord>> records = DB.ecoCropDB_csv(userVariable);
-        log.info("Explored fields: {}", DB.explored_fields);
+        DataHandler.explored_fields = 0;
+        Map<Integer, Set<CSVRecord>> records = DataHandler.ecoCropDB_csv(userVariable);
+        log.info("Explored fields: {}", DataHandler.explored_fields);
         log.info("Best score with descending order");
         for (int score : records.keySet()) {
             for(CSVRecord bestValue : records.get(score))
-                log.info("Best Value: {} with score of {}", DB.getScienceName(bestValue), score);
+                log.info("Best Value: {} with score of {}", DataHandler.getScienceName(bestValue), score);
         }
     }
 }
