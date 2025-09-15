@@ -102,7 +102,7 @@ public final class API {
         }
         // berarti page = id. bukan page sebenarnya
         if(children.containsKey(page)) return children.get(page);
-        if(table.equals(Table.PLANT_HARDINESS)) throw new IllegalArgumentException("Tipe data ini berbentuk byte buffer, tolong gunakan getHardness() untuk mendapatkan image buffer!");
+        if(table.equals(Table.PLANT_HARDINESS)) throw new IllegalArgumentException("Tipe data ini berbentuk byte buffer, tolong gunakan getHardness() untuk mendapatkan fullsize buffer!");
         JsonNode json = rest.getForObject(table.getUrl(key, String.valueOf(page)), JsonNode.class);
         update(page, json);
         return json;
@@ -113,7 +113,7 @@ public final class API {
         return getChildren(id, byte[].class);
     }
     public JsonNode getChildren(int id) throws IOException {
-        if(table.equals(Table.PLANT_HARDINESS)) throw new IllegalStateException("Tipe data ini tidak berbentuk Json, tolong gunakan getHardness untuk mendapatkan image buffer!");
+        if(table.equals(Table.PLANT_HARDINESS)) throw new IllegalStateException("Tipe data ini tidak berbentuk Json, tolong gunakan getHardness untuk mendapatkan fullsize buffer!");
         return getChildren(id, JsonNode.class);
     }
     public <T> T getChildren(int id, Class<T> clazz) throws IOException {

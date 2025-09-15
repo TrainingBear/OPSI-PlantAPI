@@ -10,14 +10,12 @@ import com.trbear9.plants.api.UserVariable;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.imageio.ImageIO;
@@ -25,15 +23,13 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static com.trbear9.plants.E.CLIMATE.*;
 import static com.trbear9.plants.E.DEPTH.*;
 
-@SpringBootTest(classes = Poster.class)
+@SpringBootTest(classes = ServerHandler.class)
 public class PosterTest {
     private static final Logger log = LoggerFactory.getLogger(PosterTest.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -49,7 +45,7 @@ public class PosterTest {
     @Test
     void test() throws JsonProcessingException {
         log.info("test initialized");
-        String response = template.<String>getForObject(Poster.getUrl() + "/who", String.class);
+        String response = template.<String>getForObject(ServerHandler.getUrl() + "/who", String.class);
         log.info("{}", response);
     }
 
@@ -82,7 +78,7 @@ public class PosterTest {
         HttpEntity<UserVariable> request = new HttpEntity<>(userVariable, headers);
 
         try {
-            ResponseEntity<String> response = template.postForEntity(Poster.getUrl() +"/predict", request, String.class);
+            ResponseEntity<String> response = template.postForEntity(ServerHandler.getUrl() +"/predict", request, String.class);
             JsonNode root = objectMapper.readTree(response.getBody());
             log.info(root.toPrettyString());
         } catch (Exception e) {
@@ -125,15 +121,19 @@ public class PosterTest {
 
     @Test
     public void getKewImage() throws JsonProcessingException {
-        Poster poster = new Poster();
+        ServerHandler serverHandler = new ServerHandler();
         String url = "https://powo.science.kew.org/api/1/search?q=Urtica";
         ResponseEntity<String> response = template.getForEntity(url, String.class);
         String body = response.getBody();
-        JsonNode urtica = poster.getKew("Urtica");
+        JsonNode urtica = serverHandler.getKew("Urtica");
         assert urtica != null;
         Plant plant = new Plant();
         plant.nama_ilmiah = "Urtica";
-        byte[] urticas = poster.getImage(plant);
+        byte[] urticas = serverHandler.getImage(plant);
     }
-    
+
+    @Test
+    public void env(){
+        log.info("{}", System.getenv("GIST_ID"));
+    }
 }

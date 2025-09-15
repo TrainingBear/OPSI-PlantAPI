@@ -39,7 +39,7 @@ import kotlin.collections.MutableMap
 @Service
 @RestController
 @Getter
-class Poster {
+class ServerHandler {
     @GetMapping("/who")
     fun who(): String {
         return """
@@ -159,12 +159,12 @@ class Poster {
     private fun write(plant: Plant, tree: JsonNode) {
         val node = objectMapper.readTree(tree["output"][1]["content"][0]["text"].asText());
         val kew = getKew(plant.nama_ilmiah)
-        plant.image = getImage(plant, kew = kew)
+        plant.taxon = "https://powo.science.kew.org/" + node["url"].asText()
+        plant.fullsize = getImage(plant, kew = kew)
+        plant.thumbnail = getImage(plant, kew = kew, size = "thumbnail")
         plant.kingdom = kew["kingdom"].asText()
         plant.family = kew["family"].asText()
         plant.genus = plant.nama_ilmiah.split(" ")[0]
-
-        log.info(node.toPrettyString())
 
         plant.prune_url = node["prune_guide"].asText()
         plant.difficulty = node["difficulty"].asText()
@@ -227,19 +227,19 @@ class Poster {
     }
 
     @JvmOverloads
-    fun getImage(plant: Plant? = null, kew: JsonNode? = null) : ByteArray? {
+    fun getImage(plant: Plant? = null, kew: JsonNode? = null, size: String? = "fullsize") : ByteArray? {
         val q : String? = plant?.nama_ilmiah
 
         val dir = File("cache/images")
         dir.mkdirs()
-        val file = File(dir, "$q.jpg")
+        val file = File(dir, "$q $size.jpg")
         if(file.exists()){
             return file.readBytes()
         }
 
         val url = "http:" +
-            if (kew != null) kew["images"][0]["fullsize"].asText()
-            else             getKew(q!!)["images"][0]["fullsize"].asText()
+            if (kew != null) kew["images"][0][size].asText()
+            else             getKew(q!!)["images"][0][size].asText()
         val byte = URI.create(url).toURL().readBytes()
 
         if(!file.exists()) {
@@ -252,7 +252,7 @@ class Poster {
     }
 
     companion object {
-        val log: Logger = LoggerFactory.getLogger(Poster::class.java)!!
+        val log: Logger = LoggerFactory.getLogger(ServerHandler::class.java)!!
         private val factory: SimpleClientHttpRequestFactory = SimpleClientHttpRequestFactory()
         private val template: RestTemplate
 
@@ -264,7 +264,7 @@ class Poster {
 
         val key: String = System.getenv("OPEN_AI_KEY")
         private val objectMapper = ObjectMapper()
-        private const val gist_id = "84d0e105aaabce26c8dfbaff74b2280e"
+        private val gistId = System.getenv("GIST_ID")
         private val git_token: String = System.getenv("GITHUB_TOKEN")
         var ngrokClient: NgrokClient? = null
         var tunnel: Tunnel? = null
@@ -293,11 +293,11 @@ class Poster {
                     .withProto(Proto.HTTP)
                     .build()
                 tunnel = ngrokClient!!.connect(address)
-                val publicUrl: String? = tunnel!!.getPublicUrl()
+                val publicUrl: String? = tunnel!!.publicUrl
                 startTime = System.currentTimeMillis()
-                log.info("ngrok tunnel \"{}\" -> \"{}\"", tunnel!!.getName(), publicUrl)
+                log.info("ngrok tunnel \"{}\" -> \"{}\"", tunnel!!.name, publicUrl)
 
-                val content: MutableMap<String?, String?> = HashMap<String?, String?>()
+                val content: MutableMap<String?, String?> = HashMap()
                 content.put(
                     "content",
                     "{" +
@@ -306,20 +306,20 @@ class Poster {
                             "\"stopped\": " + "\"N/A\"" +
                             "}"
                 )
-                val json: MutableMap<String?, Any?> = HashMap<String?, Any?>()
+                val json: MutableMap<String?, Any?> = HashMap()
                 json.put("url.json", content)
 
-                val file: MutableMap<String?, Any?> = HashMap<String?, Any?>()
+                val file: MutableMap<String?, Any?> = HashMap()
                 file.put("files", json)
 
                 val headers = HttpHeaders()
                 headers.contentType = MediaType.APPLICATION_JSON
                 headers.setBearerAuth(git_token)
-                val request = HttpEntity<MutableMap<String?, Any?>?>(file, headers)
+                val request = HttpEntity(file, headers)
 
                 val response: ResponseEntity<String?> =
-                    template.postForEntity<String?>(
-                        "https://api.github.com/gists/" + gist_id,
+                    template.postForEntity(
+                        "https://api.github.com/gists/$gistId",
                         request,
                         String::class.java
                     )
@@ -334,12 +334,12 @@ class Poster {
         @JvmStatic
         fun stop() {
             if (tunnel != null && ngrokClient != null) {
-                ngrokClient!!.disconnect(tunnel!!.getPublicUrl())
+                ngrokClient!!.disconnect(tunnel!!.publicUrl)
                 tunnel = null
                 ngrokClient!!.kill()
                 ngrokClient = null
 
-                val content: MutableMap<String?, String?> = HashMap<String?, String?>()
+                val content: MutableMap<String?, String?> = HashMap()
                 content.put(
                     "content",
                     "{" +
@@ -348,23 +348,23 @@ class Poster {
                             "\"stopped\": " + System.currentTimeMillis() + "," +
                             "}"
                 )
-                val json: MutableMap<String?, Any?> = HashMap<String?, Any?>()
+                val json: MutableMap<String?, Any?> = HashMap()
                 json.put("url.json", content)
-                val file: MutableMap<String?, Any?> = HashMap<String?, Any?>()
+                val file: MutableMap<String?, Any?> = HashMap()
                 file.put("files", json)
 
                 val headers = HttpHeaders()
-                headers.setContentType(MediaType.APPLICATION_JSON)
+                headers.contentType = MediaType.APPLICATION_JSON
                 headers.setBearerAuth(git_token)
-                val request = HttpEntity<MutableMap<String?, Any?>?>(file, headers)
+                val request = HttpEntity(file, headers)
 
                 val response: ResponseEntity<String?> =
-                    template.postForEntity<String?>(
-                        "https://api.github.com/gists/" + gist_id,
+                    template.postForEntity(
+                        "https://api.github.com/gists/$gistId",
                         request,
                         String::class.java
                     )
-                if (response.getStatusCode().is2xxSuccessful()) {
+                if (response.statusCode.is2xxSuccessful) {
                     log.info("Gist updated: {}", response.getBody())
                 } else {
                     log.error("Gist update failed: {}", response.getBody())
