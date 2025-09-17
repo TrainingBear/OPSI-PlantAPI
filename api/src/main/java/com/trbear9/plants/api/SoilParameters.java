@@ -16,9 +16,9 @@ public class SoilParameters implements Parameters {
         /// - https://www.sciencedirect.com/topics/agricultural-and-biological-sciences/alluvial-soil
         /// - https://amoghavarshaiaskas.in/alluvial-soil/
         public static final SoilParameters ALLUVIAL = SoilParameters.builder()
-                .O_texture(E.TEXTURE.medium)
-                .O_fertility(E.FERTILITY.high)
-                .O_drainage(E.DRAINAGE.well)
+                .texture(E.TEXTURE.medium)
+                .fertility(E.FERTILITY.high)
+                .drainage(E.DRAINAGE.well)
                 .pH(6f)
                 .build();
 
@@ -29,9 +29,9 @@ public class SoilParameters implements Parameters {
         /// https://journal.student.uny.ac.id/
         ///
         public static final SoilParameters LATERITE = SoilParameters.builder()
-                .O_fertility(E.FERTILITY.low)
-                .O_texture(E.TEXTURE.heavy)
-                .O_drainage(E.DRAINAGE.well)
+                .fertility(E.FERTILITY.low)
+                .texture(E.TEXTURE.heavy)
+                .drainage(E.DRAINAGE.well)
                 .pH(5.5f)
                 .build();
 
@@ -41,9 +41,9 @@ public class SoilParameters implements Parameters {
 //        kesuburan: Tergantung keasaman pH nak berkisar 6-7 berarti masih subur dan ideal
 //        Drainase: Baik (Well)
         public static final SoilParameters HUMUS = SoilParameters.builder()
-                .O_fertility(E.FERTILITY.moderate)
-                .O_texture(E.TEXTURE.organic)
-                .O_drainage(E.DRAINAGE.well)
+                .fertility(E.FERTILITY.moderate)
+                .texture(E.TEXTURE.organic)
+                .drainage(E.DRAINAGE.well)
                 .pH(6f)
                 .build();
 //        Inceptisol
@@ -53,9 +53,9 @@ public class SoilParameters implements Parameters {
 //        Kesuburan: Sedang hingga tinggi (sedang)
 //        Drainase: Karena termasuk tanah muda, drainase alamiahnya tergolong jelek
         public static final SoilParameters INCEPTISOL = SoilParameters.builder()
-                .O_fertility(E.FERTILITY.moderate)
-                .O_texture(E.TEXTURE.heavy)
-                .O_drainage(E.DRAINAGE.poorly)
+                .fertility(E.FERTILITY.moderate)
+                .texture(E.TEXTURE.heavy)
+                .drainage(E.DRAINAGE.poorly)
                 .pH(5.9f)
                 .build();
 //        Tanah kapur (rendzina)
@@ -64,9 +64,9 @@ public class SoilParameters implements Parameters {
 //        Kesuburan: Rendah
 //        Drainase: Tidak terlalu baik
         public static final SoilParameters KAPUR = SoilParameters.builder()
-                .O_fertility(E.FERTILITY.low)
-                .O_texture(E.TEXTURE.light)
-                .O_drainage(E.DRAINAGE.poorly)
+                .fertility(E.FERTILITY.low)
+                .texture(E.TEXTURE.light)
+                .drainage(E.DRAINAGE.poorly)
                 .pH(7f)
                 .build();
 //        Tanah Pasir (Berpasir)
@@ -77,9 +77,9 @@ public class SoilParameters implements Parameters {
 //        Drainase: Tanah yang lebih banyak pasir mempunyai drainase yang baik
 //        Tekstur: Kasar
         public static final SoilParameters PASIR = SoilParameters.builder()
-                .O_fertility(E.FERTILITY.low)
-                .O_texture(E.TEXTURE.light)
-                .O_drainage(E.DRAINAGE.excessive)
+                .fertility(E.FERTILITY.low)
+                .texture(E.TEXTURE.light)
+                .drainage(E.DRAINAGE.excessive)
                 .pH(7f)
                 .build();
 //        Andosol
@@ -87,9 +87,9 @@ public class SoilParameters implements Parameters {
 //        Drainase tanah andisol secara umum cenderung baik
 //        Tekstur Tanah Andosol:  tekstur tanah sedang
         public static final SoilParameters ANDOSOL = SoilParameters.builder()
-                .O_fertility(E.FERTILITY.high)
-                .O_texture(E.TEXTURE.wide)
-                .O_drainage(E.DRAINAGE.well)
+                .fertility(E.FERTILITY.high)
+                .texture(E.TEXTURE.wide)
+                .drainage(E.DRAINAGE.well)
                 .pH(5.4f)
                 .build();
 
@@ -99,32 +99,32 @@ public class SoilParameters implements Parameters {
 //        drainage: Well (baik)
 //        kesuburan: tergolong rendah
         public static final SoilParameters ENTISOL = SoilParameters.builder()
-        .O_fertility(E.FERTILITY.high)
-        .O_texture(E.TEXTURE.medium)
-        .O_drainage(E.DRAINAGE.well)
+        .fertility(E.FERTILITY.high)
+        .texture(E.TEXTURE.medium)
+        .drainage(E.DRAINAGE.well)
         .pH(5.4f)
         .build();
 
-        public E.DEPTH O_depth;
-        public E.TEXTURE O_texture;
-        public E.FERTILITY O_fertility; // tingkat kesuburan
-        public E.DRAINAGE O_drainage;
+        public E.DEPTH depth;
+        public E.TEXTURE texture;
+        public E.FERTILITY fertility; // tingkat kesuburan
+        public E.DRAINAGE drainage;
         public float pH;
 
         public void modify(SoilParameters soil){
-            O_texture = soil.O_texture;
-            O_fertility = soil.O_fertility;
-            O_drainage = soil.O_drainage;
+            texture = soil.texture;
+            fertility = soil.fertility;
+            drainage = soil.drainage;
             pH = soil.pH;
         }
 
         @Override
         public Map<String, String> getParameters() {
             Map<String, String> map = new HashMap<>();
-            map.put(E.O_soil_depth, O_depth== null? null : O_depth.head);
-            map.put(E.O_soil_texture, O_texture== null? null : O_texture.head);
-            map.put(E.O_soil_fertility, O_fertility== null? null : O_fertility.head);
-            map.put(E.O_soil_drainage, O_drainage== null? null : O_drainage.head);
+            map.put(E.O_soil_depth, depth == null? null : depth.head);
+            map.put(E.O_soil_texture, texture == null? null : texture.head);
+            map.put(E.O_soil_fertility, fertility == null? null : fertility.head);
+            map.put(E.O_soil_drainage, drainage == null? null : drainage.head);
             map.put("PH", String.valueOf(pH));
 
             return map;

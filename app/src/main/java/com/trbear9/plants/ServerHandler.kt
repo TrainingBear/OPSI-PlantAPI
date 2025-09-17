@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.client.RestTemplate
 import java.io.ByteArrayInputStream
@@ -40,7 +42,12 @@ import kotlin.collections.MutableMap
 @RestController
 @Getter
 class ServerHandler {
-    @GetMapping("/who")
+    @RequestMapping( "/", method = [RequestMethod.HEAD])
+    fun head() : ResponseEntity<Void> {
+        return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/")
     fun who(): String {
         return """
                             
@@ -65,7 +72,7 @@ class ServerHandler {
     }
 
 
-    @PostMapping("/predict")
+    @PostMapping("/process")
     @Throws(IOException::class)
     fun postVar(@RequestBody data: UserVariable): String? {
         val hashCode = data.hash
@@ -157,15 +164,17 @@ class ServerHandler {
      * @param tree rag response
      */
     private fun write(plant: Plant, tree: JsonNode) {
-        val node = objectMapper.readTree(tree["output"][1]["content"][0]["text"].asText());
         val kew = getKew(plant.nama_ilmiah)
-        plant.taxon = "https://powo.science.kew.org/" + node["url"].asText()
+        plant.taxon = "https://powo.science.kew.org/" + kew["url"]?.asText()
         plant.fullsize = getImage(plant, kew = kew)
         plant.thumbnail = getImage(plant, kew = kew, size = "thumbnail")
         plant.kingdom = kew["kingdom"].asText()
         plant.family = kew["family"].asText()
         plant.genus = plant.nama_ilmiah.split(" ")[0]
 
+        val jsonnode = tree["output"][1]["content"][0]["text"]
+        log.info("{}", jsonnode.toPrettyString())
+        val node = objectMapper.readTree(jsonnode.asText());
         plant.prune_url = node["prune_guide"].asText()
         plant.difficulty = node["difficulty"].asText()
         plant.nama_umum = node["common_name"].asText()

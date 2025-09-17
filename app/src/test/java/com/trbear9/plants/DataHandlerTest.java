@@ -21,8 +21,8 @@ class DataHandlerTest {
                 .query("Oryza")
                 .build();
         Parameters par2 = SoilParameters.builder()
-                .O_drainage(E.DRAINAGE.poorly)
-                .O_fertility(E.FERTILITY.high)
+                .drainage(E.DRAINAGE.poorly)
+                .fertility(E.FERTILITY.high)
                 .build();
         Parameters par3 = GeoParameters.builder()
                 .altitude(2000)

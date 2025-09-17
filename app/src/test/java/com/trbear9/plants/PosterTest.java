@@ -7,14 +7,12 @@ import com.trbear9.plants.api.GeoParameters;
 import com.trbear9.plants.api.Plant;
 import com.trbear9.plants.api.SoilParameters;
 import com.trbear9.plants.api.UserVariable;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,6 +26,8 @@ import java.util.Collections;
 
 import static com.trbear9.plants.E.CLIMATE.*;
 import static com.trbear9.plants.E.DEPTH.*;
+import static com.trbear9.plants.PlantClient.*;
+import static org.springframework.http.HttpMethod.HEAD;
 
 @SpringBootTest(classes = ServerHandler.class)
 public class PosterTest {
@@ -45,7 +45,8 @@ public class PosterTest {
     @Test
     void test() throws JsonProcessingException {
         log.info("test initialized");
-        String response = template.<String>getForObject(ServerHandler.getUrl() + "/who", String.class);
+        Assertions.assertNotNull(url);
+        String response = template.getForObject(PlantClient.url, String.class);
         log.info("{}", response);
     }
 
@@ -64,7 +65,7 @@ public class PosterTest {
                 .iklim(temperate_with_humid_winters)
                 .build();
         SoilParameters soilParameters = SoilParameters.builder()
-                .O_depth(deep)
+                .depth(deep)
                 .build();
         UserVariable userVariable = new UserVariable();
         userVariable.add(geoParameters, soilParameters);
@@ -78,7 +79,7 @@ public class PosterTest {
         HttpEntity<UserVariable> request = new HttpEntity<>(userVariable, headers);
 
         try {
-            ResponseEntity<String> response = template.postForEntity(ServerHandler.getUrl() +"/predict", request, String.class);
+            ResponseEntity<String> response = template.postForEntity(ServerHandler.getUrl() + PROCESS, request, String.class);
             JsonNode root = objectMapper.readTree(response.getBody());
             log.info(root.toPrettyString());
         } catch (Exception e) {

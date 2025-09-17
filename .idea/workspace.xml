@@ -4,21 +4,16 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="new image response (from POWO/KEW)">
+    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="env">
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/ProviderException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/PlantClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/PlantClient.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Plant.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Plant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Arctostaphylos uva-ursi.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Bellis perennis.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Capsella bursa-pastoris.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Convolvulus arvensis.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Urtica urens.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Urtica.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Utricularia vulgaris.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/null.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Poster.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/ServerHandler.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants_api/API.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants_api/API.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Response.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Response.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/SoilParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/SoilParameters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/ServerHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/ServerHandler.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/ApplicationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/ApplicationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/DataHandlerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/DataHandlerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PlantClientTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PlantClientTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" afterDir="false" />
     </list>
@@ -75,6 +70,7 @@
         <option value="Class" />
         <option value="Kotlin Class" />
         <option value="Kotlin JUnit5 Test Class" />
+        <option value="Exception" />
       </list>
     </option>
   </component>
@@ -144,6 +140,7 @@
     &quot;Gradle.OPSI-PlantAPI [bootRun test].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.OPSI-PlantAPI [bootRun].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.OPSI-PlantAPI [bootTestRun].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PlantClientTest.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.PlantClientTest.getUrl.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.PosterTest (1).executor&quot;: &quot;Run&quot;,
     &quot;Gradle.PosterTest.env.executor&quot;: &quot;Run&quot;,
@@ -221,35 +218,11 @@
       <recent name="com.tbear9.plants_api" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.PosterTest.env">
+  <component name="RunManager" selected="Gradle.PlantClientTest">
     <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
-    </configuration>
-    <configuration name="JsonReader" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":app:test" />
-            <option value="--tests" />
-            <option value="&quot;com.trbear9.JsonReader&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
     </configuration>
     <configuration name="JsonReader.readKew_caches" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
@@ -295,6 +268,30 @@
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
       <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="PlantClientTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":app:test" />
+            <option value="--tests" />
+            <option value="&quot;com.trbear9.plants.PlantClientTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
     <configuration name="PlantClientTest.getUrl" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -459,24 +456,24 @@
     </configuration>
     <list>
       <item itemvalue="Application.Unnamed" />
-      <item itemvalue="Gradle.JsonReader" />
-      <item itemvalue="Gradle.JsonReader.readKew_caches" />
-      <item itemvalue="Gradle.OPSI-PlantAPI [bootTestRun]" />
-      <item itemvalue="Gradle.PlantClientTest.getUrl" />
-      <item itemvalue="Gradle.PosterTest.env" />
-      <item itemvalue="Gradle.PosterTest.postVar" />
-      <item itemvalue="Gradle.app [bootRun]" />
       <item itemvalue="Gradle.app [bootTestRun]" />
       <item itemvalue="Gradle.clean build" />
+      <item itemvalue="Gradle.app [bootRun]" />
+      <item itemvalue="Gradle.OPSI-PlantAPI [bootTestRun]" />
       <item itemvalue="Gradle.plants-api [build]" />
+      <item itemvalue="Gradle.PlantClientTest" />
+      <item itemvalue="Gradle.PosterTest.env" />
+      <item itemvalue="Gradle.JsonReader.readKew_caches" />
+      <item itemvalue="Gradle.PlantClientTest.getUrl" />
+      <item itemvalue="Gradle.PosterTest.postVar" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.PlantClientTest" />
         <item itemvalue="Gradle.PosterTest.env" />
         <item itemvalue="Gradle.PlantClientTest.getUrl" />
         <item itemvalue="Gradle.PosterTest.postVar" />
         <item itemvalue="Gradle.JsonReader.readKew_caches" />
-        <item itemvalue="Gradle.JsonReader" />
       </list>
     </recent_temporary>
   </component>
@@ -779,7 +776,15 @@
       <option name="project" value="LOCAL" />
       <updated>1757860466647</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="env">
+      <option name="closed" value="true" />
+      <created>1757939001994</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1757939001996</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -805,7 +810,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fixed plants index" />
     <MESSAGE value="now using EcoCrop db,&#10;perenualapi is now deprecated!!!!" />
     <MESSAGE value="minor" />
     <MESSAGE value="a" />
@@ -830,7 +834,8 @@
     <MESSAGE value="post public url to gist" />
     <MESSAGE value="api update" />
     <MESSAGE value="new image response (from POWO/KEW)" />
-    <option name="LAST_COMMIT_MESSAGE" value="new image response (from POWO/KEW)" />
+    <MESSAGE value="env" />
+    <option name="LAST_COMMIT_MESSAGE" value="env" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

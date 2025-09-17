@@ -6,14 +6,19 @@ plugins {
 }
 
 tasks.register("prepareKotlinBuildScriptModel"){}
+tasks {
+     test {
+         jvmArgs?.add("-javaagent:${mockitoAgent.asPath}")
+     }
+ }
 
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
 	}
 }
-
-dependencies {
+val mockitoAgent = configurations.create("mockitoAgent")
+ dependencies {
 	implementation(project(":api"))
 	implementation("com.github.alexdlaird:java-ngrok:2.3.16")
 	implementation("org.apache.commons:commons-lang3:3.18.0")
@@ -27,6 +32,11 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation(kotlin("stdlib-jdk8"))
+	testImplementation("org.mockito:mockito-core:5.19.0")
+	mockitoAgent("org.mockito:mockito-core:5.19.0") {
+		 isTransitive = false
+	 }
+
 }
 
 tasks.withType<Test> {

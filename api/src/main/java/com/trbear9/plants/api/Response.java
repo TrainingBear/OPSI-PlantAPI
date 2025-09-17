@@ -13,7 +13,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Response {
-    public String hashCode;
+    public String timestamp, status, error, trace, message, path, hashCode;
     private String soilName;
     private float[] soilPrediction = new float[8];
     private int total = 0;
