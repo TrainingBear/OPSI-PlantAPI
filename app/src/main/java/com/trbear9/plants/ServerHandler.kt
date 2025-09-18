@@ -114,7 +114,7 @@ class ServerHandler {
                 plant.kategori = ecorecord.get(Category)
 
                 val dir = File("cache/responses")
-                if (dir.mkdirs()) log.info("Directory created: {}", dir.getAbsolutePath())
+                if (dir.mkdirs()) log.info("Directory created: {}", dir.absolutePath)
                 val file = File(dir, "$namaIlmiah.json")
                 val node: JsonNode = if (!file.exists()) {
                     val query = StringBuilder(
@@ -164,6 +164,15 @@ class ServerHandler {
      * @param tree rag response
      */
     private fun write(plant: Plant, tree: JsonNode) {
+        val node = objectMapper.readTree(
+            tree["output"][1]["content"][0]["text"].asText()
+                .removePrefix("```json\n")
+                .removePrefix("```json")
+                .removePrefix("```")
+                .removeSuffix("```")
+                .removeSuffix("\n```")
+                .trim()
+        );
         val kew = getKew(plant.nama_ilmiah)
         plant.taxon = "https://powo.science.kew.org/" + kew["url"]?.asText()
         plant.fullsize = getImage(plant, kew = kew)
@@ -172,9 +181,6 @@ class ServerHandler {
         plant.family = kew["family"].asText()
         plant.genus = plant.nama_ilmiah.split(" ")[0]
 
-        val jsonnode = tree["output"][1]["content"][0]["text"]
-        log.info("{}", jsonnode.toPrettyString())
-        val node = objectMapper.readTree(jsonnode.asText());
         plant.prune_url = node["prune_guide"].asText()
         plant.difficulty = node["difficulty"].asText()
         plant.nama_umum = node["common_name"].asText()
@@ -225,7 +231,7 @@ class ServerHandler {
         for (result in root["results"]) {
             if(result["accepted"].asBoolean()){
                 kewCache[q] = result
-                log.info("Found accepted resource, with author: {}", result["author"].asText())
+                log.info("Found accepted resource, with author: {}", result["author"]?.asText())
                 return result
             }
         }

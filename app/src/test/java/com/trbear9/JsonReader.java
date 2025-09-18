@@ -14,7 +14,7 @@ public class JsonReader {
     private static final Logger log = LoggerFactory.getLogger(JsonReader.class);
     ObjectMapper objectMapper = new ObjectMapper();
     @Test
-    void read() throws IOException {
+    void readRagResponses() throws IOException {
         File responses = new File("cache/responses");
         log.info("Reading responses... ");
         for (File response : Objects.requireNonNull(responses.listFiles())) {

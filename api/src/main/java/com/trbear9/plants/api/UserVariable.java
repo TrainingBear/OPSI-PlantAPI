@@ -13,7 +13,7 @@ public class UserVariable {
     @Setter private String tanah;
     @Singular private final Map<Class<? extends Parameters>, Parameters> parameters = new HashMap<>();
     @Setter private byte[] image;
-    private String hash;
+    public String hash;
 
     public void modify(SoilParameters par){
         ((SoilParameters) parameters.get(SoilParameters.class)).modify(par);
@@ -43,7 +43,7 @@ public class UserVariable {
         }
 
         byte[] hashBytes = digest.digest();
-        hash = Base64.getEncoder().encodeToString(hashBytes);
+        hash = Base64.getUrlEncoder().withoutPadding().encodeToString(hashBytes);
     }
 
     @Override

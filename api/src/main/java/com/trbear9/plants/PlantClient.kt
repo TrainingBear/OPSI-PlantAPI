@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.time.Duration
+import java.util.Stack
 
 class PlantClient {
     companion object{
@@ -24,15 +25,17 @@ class PlantClient {
 
         @JvmStatic
         fun sendPacket(data: UserVariable, type: String? = PROCESS): Response {
+            data.computeHash()
             val request = Request.Builder()
-                .url((url ?: getUrl(providers.last())) + type)
+                .url((url ?: getUrl()) + type)
                 .post(objectMapper.writeValueAsString(data).toRequestBody())
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .build()
             println("POSTING ${request.url}")
-            val jsonResponse= client.newCall(request).execute().body.string()
-            return objectMapper.readValue(jsonResponse, Response::class.java)
+            client.newCall(request).execute().use {
+                return objectMapper.readValue(it.body.string(), Response::class.java)
+            }
         }
 
         @JvmStatic
@@ -45,29 +48,32 @@ class PlantClient {
         }
 
         @JvmStatic
-        private fun getUrl(provider: String? = providers.last(), tries: Set<String>? = mutableSetOf()) : String {
-            return url?: run {
+        private fun getUrl(prov: Stack<String>? = Stack<String>().let {it.addAll(providers);it},
+                           ) : String {
+            val tries: MutableSet<String> = mutableSetOf()
+            while (!prov!!.isEmpty()){
+                val provider = prov.pop()
                 val request = Request.Builder()
                     .url(provider!!)
                     .build()
-                val response = client.newCall(request).execute()
-                if (!response.isSuccessful) {
-                    if (providers.isEmpty()) throw ProviderException("No providers available", tries!!)
-                    providers.removeLast()
-                    return getUrl(tries = tries)
-                }
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) {
+                        tries += provider
+                        continue
+                    }
 
-                val string = response.body.string()
-                val url = objectMapper.readTree(string)["content"].asText()
 
-                val head = client.newCall(Request.Builder().url(url).head().build()).execute()
-                if (head.code == 200) {
-                    return url
+                    val string = response.body.string()
+                    val url = objectMapper.readTree(string)["content"].asText()
+
+                    val head = client.newCall(Request.Builder().url(url).head().build()).execute()
+                    if (head.code == 200) {
+                        return url
+                    }
+                    tries += url
                 }
-                if (providers.isEmpty()) throw ProviderException("No providers available", tries!!)
-                providers.removeLast()
-                return getUrl(tries = tries)
             }
+            throw ProviderException("No providers available", tries)
         }
         fun debug(provider: String? = providers.last()) : Int {
              val request = Request.Builder()

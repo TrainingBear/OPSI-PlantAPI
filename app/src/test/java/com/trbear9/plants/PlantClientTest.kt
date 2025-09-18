@@ -58,8 +58,9 @@ class PlantClientTest {
 
     @Test
     fun head(){
+        val link = PlantClient.url
         val head = template.exchange<String>(
-            url = "https://392a6bfaff39.ngrok-free.app",
+            url = link!!,
             method = HttpMethod.HEAD
         )
         log.info("status code: {}", head.statusCode.is2xxSuccessful)
