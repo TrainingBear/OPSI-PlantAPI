@@ -27,7 +27,6 @@ class DataHandlerTest {
         Parameters par3 = GeoParameters.builder()
                 .altitude(2000)
                 .iklim(iklim)
-                .temperature(25)
                 .rainfall(1700)
                 .altitude(2300)
                 .build();
@@ -35,7 +34,7 @@ class DataHandlerTest {
         userVariable.add(par1, par2, par3);
 
         DataHandler.explored_fields = 0;
-        Map<Integer, Set<CSVRecord>> records = DataHandler.ecoCropDB_csv(userVariable);
+        Map<Integer, Set<CSVRecord>> records = DataHandler.process(userVariable);
         log.info("Explored fields: {}", DataHandler.explored_fields);
         log.info("Best score with descending order");
         for (int score : records.keySet()) {

@@ -7,9 +7,15 @@ import com.github.alexdlaird.ngrok.NgrokClient
 import com.github.alexdlaird.ngrok.protocol.CreateTunnel
 import com.github.alexdlaird.ngrok.protocol.Proto
 import com.github.alexdlaird.ngrok.protocol.Tunnel
+import com.openmeteo.api.Forecast
+import com.openmeteo.api.OpenMeteo
+import com.openmeteo.api.common.time.Date
+import com.openmeteo.api.common.units.TemperatureUnit
 import com.trbear9.plants.E.*
+import com.trbear9.plants.api.GeoParameters
 import com.trbear9.plants.api.Plant
 import com.trbear9.plants.api.Response
+import com.trbear9.plants.api.SoilParameters
 import com.trbear9.plants.api.UserVariable
 import lombok.Getter
 import lombok.extern.slf4j.Slf4j
@@ -51,11 +57,8 @@ class ServerHandler {
     fun who(): String {
         return """
                             
-                             
-                             
-                            
-                            TIM OPSI SMANEGA 2025
-                            oleh Kukuh & Refan.
+                                        TIM OPSI SMANEGA 2025
+                                        oleh Kukuh & Refan.
                 RestAPI has been built by kujatic (trbear) -> https://github.com/TrainingBear (opensource)
                 BIG SHOUTOUT TO JASPER                vvvvvvvvvvvvvvvvvvvvvvvvv
                 Join komunitas discord kami (Jasper): https://discord.gg/fbAZSd3Hf2
@@ -74,7 +77,7 @@ class ServerHandler {
 
     @PostMapping("/process")
     @Throws(IOException::class)
-    fun postVar(@RequestBody data: UserVariable): String? {
+    fun pabrikUtama(@RequestBody data: UserVariable): String? {
         val hashCode = data.hash
         val file = File("cache/$hashCode.json")
         if(file.exists()){
@@ -92,9 +95,19 @@ class ServerHandler {
         val soil = FAService.soil[max]
         val soilName = FAService.label[max]
         log.info("Soil: {}", soilName)
-        data.modify(soil)
 
-        val result = DataHandler.ecoCropDB_csv(data)
+        //fetching
+        data.fetch {
+            if(it is GeoParameters) meteo(it)
+            if(it is SoilParameters) {
+                it.texture = soil.texture;
+                it.fertility = soil.fertility;
+                it.drainage = soil.drainage;
+                it.pH = soil.pH;
+            }
+        }
+
+        val processedData = DataHandler.process(data)
         val response = Response()
         response.soilPrediction = prediction
         response.predict_time = took
@@ -102,8 +115,8 @@ class ServerHandler {
         start = System.currentTimeMillis()
 
         var total = 0
-        for (i in result.keys) {
-            for (ecorecord in result[i]!!) {
+        for (i in processedData.keys) {
+            for (ecorecord in processedData[i]!!) {
                 total++
                 val plant = Plant()
                 val namaIlmiah = ecorecord.get(Science_name)
@@ -144,7 +157,7 @@ class ServerHandler {
                     objectMapper.readTree(node.asText())
                 }
                 write(plant, node)
-                response.put(i!!, plant)
+                response.put(i, plant)
             }
         }
         took = (System.currentTimeMillis() - start).toDouble() / 1000000.0
@@ -189,7 +202,7 @@ class ServerHandler {
         plant.kultur.put("komersial", node["product_sytem"]["komersial"].asText())
         plant.kultur.put("industri", node["product_sytem"]["industri"].asText())
         node["plant_care"].fieldNames().forEach {
-            plant.kultur.put(it, node["plant_care"][it].asText())
+            plant.perawatan.put(it, node["plant_care"][it].asText())
         }
     }
 
@@ -266,10 +279,55 @@ class ServerHandler {
         return byte
     }
 
+    @OptIn(com.openmeteo.api.common.Response.ExperimentalGluedUnitTimeStepValues::class)
+    fun meteo(geo: GeoParameters) {
+        var max = 0.0
+        var min = 0.0
+        var elevation = 0f
+        val meteo = OpenMeteo(geo.latitude.toFloat(), geo.longtitude.toFloat())
+        val temperatur = meteo.forecast(){
+            latitude = geo.latitude.toFloat()
+            longitude = geo.longtitude.toFloat()
+            temperatureUnit = TemperatureUnit.Celsius
+            elevation
+            startDate = Date(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 60)
+            endDate = Date(System.currentTimeMillis())
+            daily = Forecast.Daily{
+                listOf(temperature2mMin, temperature2mMax)
+            }
+        }.getOrThrow()
+        Forecast.Daily.run {
+            temperatur.daily.getValue(temperature2mMax).run {
+                for (m in values.values)
+                    max+= m?:28.0
+                max/= values.size
+            }
+            temperatur.daily.getValue(temperature2mMin).run {
+                for (m in values.values)
+                    min+= m?:20.0
+                min/= values.size
+            }
+        }
+
+        val MPDL = meteo.elevation {
+            latitude = (-7.257281798437764).toString()
+            longitude = 110.4031409940034.toString()
+        }.getOrThrow()
+        for (f in MPDL.elevation) {
+            elevation = f
+        }
+        elevation/=MPDL.elevation.size
+        geo.elevation = elevation.toDouble()
+        geo.min =  min
+        geo.max = max
+    }
+
     companion object {
         val log: Logger = LoggerFactory.getLogger(ServerHandler::class.java)!!
         private val factory: SimpleClientHttpRequestFactory = SimpleClientHttpRequestFactory()
         private val template: RestTemplate
+        val NOA_KEY: String = System.getenv("NOAA_KEY")?:"RHFfdCaMpaYRdPrqYaxktSemnpNTxbWQ"
+        val METEO_KEY: String = System.getenv("METEO_KEY")
 
         init {
             factory.setConnectTimeout(Duration.ofMinutes(5))
@@ -389,3 +447,13 @@ class ServerHandler {
     }
 }
 
+class GeoLocation {
+    var elevation: Float? = null
+    var minTemp: Double? = null
+    var maxTemp: Double? = null
+    constructor(elevation: Float?, minTemp: Double, maxTemp: Double){
+        this.elevation = elevation
+        this.minTemp = minTemp
+        this.maxTemp = maxTemp
+    }
+}

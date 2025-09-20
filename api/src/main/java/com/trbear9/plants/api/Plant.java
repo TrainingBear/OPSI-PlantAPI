@@ -18,5 +18,4 @@ public class Plant {
     public int min_panen, max_panen;
     @Getter public final Map<String, String> kultur = new HashMap<>();
     @Getter public final Map<String, String> perawatan = new HashMap<>();
-    @Getter public final Map<String, String> penyakit_dan_hama = new HashMap<>();
 }

@@ -4,13 +4,21 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="caches">
+    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="bug fixes">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/DataHandler.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/ServerHandlerTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/PlantClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/PlantClient.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/GeoParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/GeoParameters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Plant.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/Plant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/UserVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/api/UserVariable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/DataHandler.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/ServerHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/ServerHandler.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/JsonReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/JsonReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PlantClientTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PlantClientTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/DataHandlerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/DataHandlerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/test.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,8 +72,8 @@
         <option value="JUnit5 Test Class" />
         <option value="Class" />
         <option value="Kotlin Class" />
-        <option value="Kotlin JUnit5 Test Class" />
         <option value="Exception" />
+        <option value="Kotlin JUnit5 Test Class" />
       </list>
     </option>
   </component>
@@ -130,6 +138,7 @@
     "Gradle.FAServiceTest.runPython.executor": "Run",
     "Gradle.JsonReader.executor": "Run",
     "Gradle.JsonReader.read.executor": "Run",
+    "Gradle.JsonReader.readCaches.executor": "Run",
     "Gradle.JsonReader.readKew_caches.executor": "Run",
     "Gradle.JsonReader.readRagResponses.executor": "Run",
     "Gradle.OPSI-PlantAPI [:com.tbear9.plants_api2.Application.main()].executor": "Run",
@@ -147,10 +156,12 @@
     "Gradle.PosterTest.postVar.executor": "Run",
     "Gradle.PosterTest.predict.executor": "Debug",
     "Gradle.PosterTest.pykew.executor": "Run",
+    "Gradle.ServerHandlerTest.weather.executor": "Run",
     "Gradle.TFServiceTest.executor": "Run",
     "Gradle.TFServiceTest.process.executor": "Run",
     "Gradle.app [bootRun].executor": "Run",
     "Gradle.app [bootTestRun].executor": "Run",
+    "Gradle.app [updateReadme].executor": "Run",
     "Gradle.clean build.executor": "Run",
     "Gradle.plants-api [:com.tbear9.plants_api.PlantsApiApplication.main()].executor": "Run",
     "Gradle.plants-api [bootRun].executor": "Run",
@@ -214,11 +225,35 @@
       <recent name="com.tbear9.plants_api" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.PlantClientTest">
+  <component name="RunManager" selected="Gradle.JsonReader.readCaches">
     <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="JsonReader.readCaches" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":app:test" />
+            <option value="--tests" />
+            <option value="&quot;com.trbear9.JsonReader.readCaches&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
     </configuration>
     <configuration name="JsonReader.readRagResponses" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
@@ -290,7 +325,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="PlantClientTest.getUrl" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="ServerHandlerTest.weather" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
@@ -303,55 +338,7 @@
           <list>
             <option value=":app:test" />
             <option value="--tests" />
-            <option value="&quot;com.trbear9.plants.PlantClientTest.getUrl&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="PosterTest.env" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":app:test" />
-            <option value="--tests" />
-            <option value="&quot;com.trbear9.plants.PosterTest.env&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="PosterTest.postVar" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":app:test" />
-            <option value="--tests" />
-            <option value="&quot;com.trbear9.plants.PosterTest.postVar&quot;" />
+            <option value="&quot;com.trbear9.plants.ServerHandlerTest.weather&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -396,6 +383,28 @@
         <option name="taskNames">
           <list>
             <option value="bootTestRun" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="app [updateReadme]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="updateReadme" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -457,19 +466,19 @@
       <item itemvalue="Gradle.app [bootRun]" />
       <item itemvalue="Gradle.OPSI-PlantAPI [bootTestRun]" />
       <item itemvalue="Gradle.plants-api [build]" />
+      <item itemvalue="Gradle.JsonReader.readCaches" />
+      <item itemvalue="Gradle.ServerHandlerTest.weather" />
+      <item itemvalue="Gradle.app [updateReadme]" />
       <item itemvalue="Gradle.JsonReader.readRagResponses" />
       <item itemvalue="Gradle.PlantClientTest" />
-      <item itemvalue="Gradle.PosterTest.env" />
-      <item itemvalue="Gradle.PlantClientTest.getUrl" />
-      <item itemvalue="Gradle.PosterTest.postVar" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.JsonReader.readCaches" />
+        <item itemvalue="Gradle.ServerHandlerTest.weather" />
+        <item itemvalue="Gradle.app [updateReadme]" />
         <item itemvalue="Gradle.PlantClientTest" />
         <item itemvalue="Gradle.JsonReader.readRagResponses" />
-        <item itemvalue="Gradle.PosterTest.env" />
-        <item itemvalue="Gradle.PlantClientTest.getUrl" />
-        <item itemvalue="Gradle.PosterTest.postVar" />
       </list>
     </recent_temporary>
   </component>
@@ -796,7 +805,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758118302073</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="bug fixes">
+      <option name="closed" value="true" />
+      <created>1758204441684</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1758204441684</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -822,7 +839,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="a" />
     <MESSAGE value="par" />
     <MESSAGE value="revamped score searching" />
     <MESSAGE value="laterite" />
@@ -847,7 +863,8 @@
     <MESSAGE value="env" />
     <MESSAGE value="new exception handler" />
     <MESSAGE value="caches" />
-    <option name="LAST_COMMIT_MESSAGE" value="caches" />
+    <MESSAGE value="bug fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="bug fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

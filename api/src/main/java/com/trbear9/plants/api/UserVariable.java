@@ -5,6 +5,7 @@ import lombok.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
+import java.util.function.Consumer;
 
 @Getter
 @AllArgsConstructor
@@ -44,6 +45,12 @@ public class UserVariable {
 
         byte[] hashBytes = digest.digest();
         hash = Base64.getUrlEncoder().withoutPadding().encodeToString(hashBytes);
+    }
+
+    public void fetch(Consumer<Parameters> consumer){
+        for (Parameters value : parameters.values()) {
+            consumer.accept(value);
+        }
     }
 
     @Override

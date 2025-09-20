@@ -51,4 +51,21 @@ public class JsonReader {
             }
         }
     }
+
+    @Test
+    void readCaches(){
+        File caches = new File("cache");
+        for (File file : Objects.requireNonNull(caches.listFiles())) {
+            if(file.getName().endsWith(".json")){
+                try {
+                    JsonNode node = objectMapper.readTree(file);
+                    node = objectMapper.readTree(node.asText());
+                    log.info("{} values: ", file.getName());
+                    log.info(node.toPrettyString());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
 }
