@@ -17,7 +17,6 @@
 
 
 
-***
 RESTAPI ini di di bangun oleh salah satu tim OPSI dari SMA Negeri 1 Ambarawa.
 RESTAPI ini menggunakan springboot dan fastapi (untuk memproses model CNN).
 POST Request bertipe application/json, lalu proses oleh 
