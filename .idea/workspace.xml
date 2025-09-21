@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="added resource packages,&#10;added logs,&#10;added server start argument,&#10;added docs">
+    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="README.md update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
@@ -819,7 +819,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758429138278</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="README.md update">
+      <option name="closed" value="true" />
+      <created>1758438551951</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1758438551951</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -845,7 +853,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="laterite" />
     <MESSAGE value="c" />
     <MESSAGE value="hasil kerja" />
     <MESSAGE value="perawatan" />
@@ -870,7 +877,8 @@
     <MESSAGE value="bug fixes" />
     <MESSAGE value="added open-meteo for geographic api provider,&#10;api change,&#10;open-meteo SDK client,&#10;README.md update" />
     <MESSAGE value="added resource packages,&#10;added logs,&#10;added server start argument,&#10;added docs" />
-    <option name="LAST_COMMIT_MESSAGE" value="added resource packages,&#10;added logs,&#10;added server start argument,&#10;added docs" />
+    <MESSAGE value="README.md update" />
+    <option name="LAST_COMMIT_MESSAGE" value="README.md update" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
