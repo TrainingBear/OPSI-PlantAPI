@@ -4,74 +4,9 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="added open-meteo for geographic api provider,&#10;api change,&#10;open-meteo SDK client,&#10;README.md update">
-      <change beforePath="$PROJECT_DIR$/.idea/modules/app/plants-api.app.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/app/plants-api.app.main.iml" afterDir="false" />
+    <list default="true" id="9692034b-61ae-45cf-95d5-9a361ab603f6" name="Changes" comment="added resource packages,&#10;added logs,&#10;added server start argument,&#10;added docs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HELP.md" beforeDir="false" afterPath="$PROJECT_DIR$/HELP.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/PlantClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/trbear9/plants/PlantClient.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Bersama lucens fullsize.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/images/Bersama lucens fullsize.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Bersama lucens thumbnail.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/images/Bersama lucens thumbnail.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Didymopanax morototoni fullsize.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/images/Didymopanax morototoni fullsize.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Didymopanax morototoni thumbnail.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/images/Didymopanax morototoni thumbnail.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Harpagophytum procumbens fullsize.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/images/Harpagophytum procumbens fullsize.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Harpagophytum procumbens thumbnail.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/images/Harpagophytum procumbens thumbnail.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Kigelia pinnata fullsize.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/images/Kigelia pinnata fullsize.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Kigelia pinnata thumbnail.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/images/Kigelia pinnata thumbnail.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Plantago ovata fullsize.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/images/Plantago ovata fullsize.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Plantago ovata thumbnail.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/images/Plantago ovata thumbnail.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Urtica fullsize.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/images/Urtica fullsize.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Utricularia vulgaris fullsize.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/images/Utricularia vulgaris fullsize.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/images/Utricularia vulgaris thumbnail.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/images/Utricularia vulgaris thumbnail.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/kew_caches/Arctostaphylos uva-ursi.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/kew_caches/Arctostaphylos uva-ursi.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/kew_caches/Bellis perennis.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/kew_caches/Bellis perennis.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/kew_caches/Bersama lucens.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/kew_caches/Bersama lucens.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/kew_caches/Capsella bursa-pastoris.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/kew_caches/Capsella bursa-pastoris.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/kew_caches/Convolvulus arvensis.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/kew_caches/Convolvulus arvensis.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/kew_caches/Didymopanax morototoni.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/kew_caches/Didymopanax morototoni.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/kew_caches/Harpagophytum procumbens.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/kew_caches/Harpagophytum procumbens.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/kew_caches/Kigelia pinnata.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/kew_caches/Kigelia pinnata.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/kew_caches/Plantago ovata.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/kew_caches/Plantago ovata.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/kew_caches/Urtica urens.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/kew_caches/Urtica urens.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/kew_caches/Urtica.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/kew_caches/Urtica.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/kew_caches/Utricularia vulgaris.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/kew_caches/Utricularia vulgaris.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/null.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/null.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/responses/Arctostaphylos uva-ursi.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/responses/Arctostaphylos uva-ursi.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/responses/Bellis perennis.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/responses/Bellis perennis.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/responses/Bersama lucens.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/responses/Bersama lucens.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/responses/Capsella bursa-pastoris.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/responses/Capsella bursa-pastoris.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/responses/Convolvulus arvensis.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/responses/Convolvulus arvensis.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/responses/Didymopanax morototoni.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/responses/Didymopanax morototoni.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/responses/Harpagophytum procumbens.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/responses/Harpagophytum procumbens.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/responses/Kigelia pinnata.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/responses/Kigelia pinnata.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/responses/Plantago ovata.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/responses/Plantago ovata.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/responses/Urtica urens.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/responses/Urtica urens.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/responses/Utricularia vulgaris.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/responses/Utricularia vulgaris.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cache/vzA5xHxsCG8RPAmGd3VKw2Jbf-19iz68NQX-Db3kLrg.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/cache/vzA5xHxsCG8RPAmGd3VKw2Jbf-19iz68NQX-Db3kLrg.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/fast_api/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/fast_api/api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/fast_api/uploaded_images/Test123.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/fast_api/uploaded_images/Test123.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/fast_api/uploaded_images/aluvial-001.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/fast_api/uploaded_images/aluvial-001.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/fast_api/uploaded_images/aluvial-109.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/fast_api/uploaded_images/aluvial-109.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/fast_api/uploaded_images/entisol-102.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/fast_api/uploaded_images/entisol-102.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/fast_api/uploaded_images/humus-110.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/fast_api/uploaded_images/humus-110.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/fast_api/uploaded_images/request.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/fast_api/uploaded_images/request.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/FAService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/FastApiService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/ServerHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants/ServerHandler.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants_api/API.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/deprecated/API.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants_api/APIController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/deprecated/APIController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants_api/DBManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/deprecated/DBManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants_api/PlantsApiApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/deprecated/PlantsApiApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants_api/Query.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/deprecated/Query.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants_api/Table.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/deprecated/Table.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants_api/code_lama/Perenualapi.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/deprecated/code_lama/Perenualapi.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants_api/code_lama/TabList.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/deprecated/code_lama/TabList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/trbear9/plants_api/code_lama/dbmanager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/trbear9/deprecated/code_lama/dbmanager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/FAServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/FastApiServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PlantClientTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PlantClientTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants/PosterTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/trbear9/plants_api/APIControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/trbear9/deprecated/APIControllerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -876,7 +811,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758365654399</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="added resource packages,&#10;added logs,&#10;added server start argument,&#10;added docs">
+      <option name="closed" value="true" />
+      <created>1758429138278</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1758429138278</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -902,7 +845,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="revamped score searching" />
     <MESSAGE value="laterite" />
     <MESSAGE value="c" />
     <MESSAGE value="hasil kerja" />
@@ -927,7 +869,8 @@
     <MESSAGE value="caches" />
     <MESSAGE value="bug fixes" />
     <MESSAGE value="added open-meteo for geographic api provider,&#10;api change,&#10;open-meteo SDK client,&#10;README.md update" />
-    <option name="LAST_COMMIT_MESSAGE" value="added open-meteo for geographic api provider,&#10;api change,&#10;open-meteo SDK client,&#10;README.md update" />
+    <MESSAGE value="added resource packages,&#10;added logs,&#10;added server start argument,&#10;added docs" />
+    <option name="LAST_COMMIT_MESSAGE" value="added resource packages,&#10;added logs,&#10;added server start argument,&#10;added docs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
