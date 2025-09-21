@@ -1,4 +1,4 @@
-package com.trbear9.plants_api.code_lama;
+package com.trbear9.deprecated.code_lama;
 
 public abstract class TabList {
 //    API api;
@@ -51,7 +51,7 @@ public abstract class TabList {
 //        if(!hasParent) throw new IllegalStateException("Tidak dapat mengambil halaman tanpa parent!");
 //        boolean flag = true;
 //        if(pages.containsKey(page)) return pages.get(page);
-//        JsonNode json = rest.getForObject(table.getUrl(api.key, "&page="+page), JsonNode.class);
+//        JsonNode json = rest.getForObject(table.getUrl(api.open_ai_key, "&page="+page), JsonNode.class);
 //        update(page, json, flag);
 //        return json;
 //    }
@@ -60,13 +60,13 @@ public abstract class TabList {
 //        boolean flag = false;
 //        if(children.containsKey(id)) return children.get(id);
 //        if(!hasParent){
-//            JsonNode child = rest.getForObject(table.getUrl(api.key, String.valueOf(id)), JsonNode.class);
+//            JsonNode child = rest.getForObject(table.getUrl(api.open_ai_key, String.valueOf(id)), JsonNode.class);
 //            update(id, child, flag);
 //            return child;
 //        }
 //        String path = table.equals(Table.PLANT_GUIDE_LIST)? "species_id" : "id";
-//        Set<Integer> key = pages.keySet();
-//        for (int i : key)
+//        Set<Integer> open_ai_key = pages.keySet();
+//        for (int i : open_ai_key)
 //            for (JsonNode child : pages.get(i)) {
 //                int child_id = child.path(path).asInt();
 //                update(child_id, child, flag);

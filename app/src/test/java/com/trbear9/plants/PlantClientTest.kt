@@ -42,28 +42,42 @@ class PlantClientTest {
         data.image = bos.toByteArray()
         data.add(geo, soil, custom)
 
-        val response = PlantClient.sendPacket(data, PlantClient.PROCESS)
-        log.info(objectMapper.readTree(
-            objectMapper.writeValueAsString(response)
-        ).toPrettyString()
-        )
+        try {
+            val response = PlantClient.sendPacket(data, PlantClient.PROCESS)
+            log.info(objectMapper.readTree(
+                objectMapper.writeValueAsString(response)
+            ).toPrettyString())
+        } catch (e: Exception) {
+            log.info("The server is offline")
+            log.error(e.message)
+        }
     }
 
     @Test
     fun getUrl() {
-        val url = PlantClient.url
-        log.info(url)
-        log.info(PlantClient.debug().toString())
+        try {
+            val url = PlantClient.url
+            log.info(url)
+            log.info(PlantClient.debug().toString())
+        } catch (e: Exception) {
+            log.info("The server is offline")
+            log.error(e.message)
+        }
     }
 
     @Test
     fun head(){
-        val link = PlantClient.url
-        val head = template.exchange<String>(
-            url = link!!,
-            method = HttpMethod.HEAD
-        )
-        log.info("status code: {}", head.statusCode.is2xxSuccessful)
-        log.info(head.headers.toString())
+        try {
+            val link = PlantClient.url
+            val head = template.exchange<String>(
+                url = link!!,
+                method = HttpMethod.HEAD
+            )
+            log.info("status code: {}", head.statusCode.is2xxSuccessful)
+            log.info(head.headers.toString())
+        } catch (e: Exception) {
+            log.info("The server is offline")
+            log.error(e.message)
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.trbear9.plants_api;
+package com.trbear9.deprecated;
 
 import org.springframework.boot.test.context.SpringBootTest;
 

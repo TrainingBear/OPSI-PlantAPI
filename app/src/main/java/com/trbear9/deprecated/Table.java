@@ -1,4 +1,4 @@
-package com.trbear9.plants_api;
+package com.trbear9.deprecated;
 
 @SuppressWarnings("JANGAN DI MODIFIKASI YANG SUDAH ADA")
 public enum Table {
@@ -19,8 +19,8 @@ public enum Table {
             case PLANT_LIST -> "https://perenual.com/api/v2/species-list?key="+api+parameter;
             case PLANT_DISEASE_LIST -> "https://perenual.com/api/pest-disease-list?key="+api+parameter;
             case PLANT_GUIDE_LIST -> "https://perenual.com/api/species-care-guide-list?key="+api+parameter;
-            case PLANT_DETAILS -> "https://perenual.com/api/v2/species/details/"+parameter+"?key="+api;
-            case PLANT_HARDINESS -> "https://perenual.com/api/hardiness-map?species_id="+parameter+"&key="+api;
+            case PLANT_DETAILS -> "https://perenual.com/api/v2/species/details/"+parameter+"?open_ai_key="+api;
+            case PLANT_HARDINESS -> "https://perenual.com/api/hardiness-map?species_id="+parameter+"&open_ai_key="+api;
         };
     }
 }

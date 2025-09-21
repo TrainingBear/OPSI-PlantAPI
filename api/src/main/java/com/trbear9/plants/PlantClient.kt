@@ -24,7 +24,7 @@ class PlantClient {
         var url: String? = getUrl()
 
         @JvmStatic
-        fun sendPacket(data: UserVariable, type: String? = PROCESS): Response {
+        fun sendPacket(data: UserVariable, type: String? = PROCESS): Response? {
             data.computeHash()
             val request = Request.Builder()
                 .url((url ?: getUrl()) + type)
@@ -33,11 +33,24 @@ class PlantClient {
                 .header("Accept", "application/json")
                 .build()
             println("POSTING ${request.url}")
-            client.newCall(request).execute().use {
-                return objectMapper.readValue(it.body.string(), Response::class.java)
+            try {
+                client.newCall(request).execute().use {
+                    return objectMapper.readValue(it.body.string(), Response::class.java)
+                }
+            } catch (e: Exception) {
+                throw e
             }
         }
 
+        @JvmStatic
+                /**
+                 * @param provider_id gist provider, the name of GitHub user.
+                 * eg: TrainingBear/necron8971handle2834y2hy7reimburse4ano
+                 */
+        fun addProvider(provider_id: String) {
+            val s = provider_id.split('/')
+            addProvider(s[0], s[1])
+        }
         @JvmStatic
                 /**
                  * @param provider gist provider, the name of GitHub user. eg: TrainingBear
@@ -61,7 +74,6 @@ class PlantClient {
                         tries += provider
                         continue
                     }
-
 
                     val string = response.body.string()
                     val url = objectMapper.readTree(string)["content"].asText()

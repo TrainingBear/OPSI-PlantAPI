@@ -6,8 +6,11 @@ import com.trbear9.plants.api.SoilParameters;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -22,12 +25,14 @@ import org.springframework.web.client.RestTemplate;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.util.*;
 
 @Service
-public final class FAService {
+public final class FastApiService {
     static private final SimpleClientHttpRequestFactory factory;
+    static public String model_path = System.getProperty("MODEL");
     static private final RestTemplate template;
     static {
         factory = new SimpleClientHttpRequestFactory();
@@ -44,7 +49,6 @@ public final class FAService {
     // logger provider/framework
     public static final Logger log = LoggerFactory.getLogger("FastAPI");
 
-    public static final String key = System.getenv("OPEN_AI_KEY");
     public static String url = "http://0.0.0.0:8000";
     private static Process process = null;
     public final static String[] label = {
@@ -69,16 +73,30 @@ public final class FAService {
             SoilParameters.PASIR
     };
 
-    public static void start() throws IOException, InterruptedException {
+    public static void start() {
         log.info("Starting fastapi service... ");
         long start = System.nanoTime();
         Thread thread = new Thread(() -> {
-            //yang ini juga, tapi ngerun di separate terminal
-            //gnome-terminal = terminal di linux gw. smh
-//            ProcessBuilder pb = new ProcessBuilder("gnome-terminal", "--", "bash", "-c", "fastapi run fast_api/api.py");
 
-            //ini ngerun python. yaya
-            ProcessBuilder pb = new ProcessBuilder("fastapi", "run", "fast_api/api.py");
+            ClassPathResource resource = new ClassPathResource("fast_api/api.py");
+
+            File api = null;
+            try {
+                api = Files.createTempFile("api", ".py").toFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            try (InputStream in = resource.getInputStream();
+                 OutputStream out = new FileOutputStream(api)) {
+                in.transferTo(out);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+//            ProcessBuilder pb = new ProcessBuilder("gnome-terminal", "--", "bash", "-c", "fastapi run fast_api/api.py");
+            ProcessBuilder pb = new ProcessBuilder("fastapi", "run", api.getAbsolutePath());
+            pb.environment().put("model", model_path);
             try {
                 process = pb.start();
             } catch (IOException e) {
@@ -92,9 +110,6 @@ public final class FAService {
             String line;
             boolean flag = true;
 
-            //ini buat logging, logging apaan?
-            // logger hoooo, apa pula slf4j
-            // sama aja = log
             while (true) {
                 try {
                     if ((line = reader.readLine()) == null) break;
@@ -107,11 +122,6 @@ public final class FAService {
                     String took = String.format("%.2fms", (System.nanoTime() - start) / 1_000_000.0);
                     log.info("FastAPI has been started in {} took {}", url, took);
                     flag = false;
-//                    try {
-//                        Application.process();
-//                    } catch (IOException e) {
-//                        throw new RuntimeException(e);
-//                    }
                 }
                 log.info(line);
             }

@@ -1,4 +1,4 @@
-package com.trbear9.plants_api;
+package com.trbear9.deprecated;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

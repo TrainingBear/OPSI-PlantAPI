@@ -20,12 +20,13 @@ import pykew.ipni as ipni
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
-model = tf.keras.models.load_model('fast_api/model_4gap.keras')
+model = tf.keras.models.load_model(os.environ.get("model"))
 model.summary()
 
 app = FastAPI()
 
 dir = "fast_api/uploaded_images/"
+os.makedirs(dir, exist_ok=True)
 @app.get("/")
 def read_root():
     return {"Hello": "World"}

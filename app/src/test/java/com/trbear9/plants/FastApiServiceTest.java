@@ -8,9 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.*;
 
 @SpringBootTest
-class FAServiceTest {
+class FastApiServiceTest {
 
-    private static final Logger log = LoggerFactory.getLogger(FAServiceTest.class);
+    private static final Logger log = LoggerFactory.getLogger(FastApiServiceTest.class);
 
     @Test
     public void process() throws IOException {

@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.trbear9.plants-api' is invalid and this project uses 'com.trbear9.plants_api' instead.
+* The original package name 'com.trbear9.plants-api' is invalid and this project uses 'com.trbear9.deprecated' instead.
 
 # Getting Started
 

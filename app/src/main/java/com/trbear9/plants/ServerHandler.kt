@@ -44,7 +44,6 @@ import kotlin.collections.HashMap
 import kotlin.collections.MutableMap
 
 @Slf4j
-@Service
 @RestController
 @Getter
 class ServerHandler {
@@ -79,6 +78,7 @@ class ServerHandler {
     @Throws(IOException::class)
     fun pabrikUtama(@RequestBody data: UserVariable): String? {
         val hashCode = data.hash
+        File("cache").mkdirs()
         val file = File("cache/$hashCode.json")
         if(file.exists()){
             return objectMapper.readTree(file).toPrettyString()
@@ -88,12 +88,12 @@ class ServerHandler {
         log.info("POST /predict")
         val image = data.image
         var start = System.currentTimeMillis()
-        val prediction = FAService.predict(image)
+        val prediction = FastApiService.predict(image)
         var took = (System.currentTimeMillis() - start).toDouble() / 1000000.0
         totalTime += took
-        val max = FAService.argmax(prediction)
-        val soil = FAService.soil[max]
-        val soilName = FAService.label[max]
+        val max = FastApiService.argmax(prediction)
+        val soil = FastApiService.soil[max]
+        val soilName = FastApiService.label[max]
         log.info("Soil: {}", soilName)
 
         //fetching
@@ -209,7 +209,7 @@ class ServerHandler {
     private fun rag(input: String?): String? {
         val header = HttpHeaders()
         header.contentType = MediaType.APPLICATION_JSON
-        header.setBearerAuth(key)
+        header.setBearerAuth(open_ai_key)
 
         val body: MutableMap<String?, Any?> = HashMap()
         body.put("model", "o3")
@@ -326,8 +326,6 @@ class ServerHandler {
         val log: Logger = LoggerFactory.getLogger(ServerHandler::class.java)!!
         private val factory: SimpleClientHttpRequestFactory = SimpleClientHttpRequestFactory()
         private val template: RestTemplate
-        val NOA_KEY: String = System.getenv("NOAA_KEY")?:"RHFfdCaMpaYRdPrqYaxktSemnpNTxbWQ"
-        val METEO_KEY: String = System.getenv("METEO_KEY")
 
         init {
             factory.setConnectTimeout(Duration.ofMinutes(5))
@@ -335,10 +333,10 @@ class ServerHandler {
             template = RestTemplate(factory)
         }
 
-        val key: String = System.getenv("OPEN_AI_KEY")
         private val objectMapper = ObjectMapper()
-        private val gistId = System.getenv("GIST_ID")
-        private val git_token: String = System.getenv("GITHUB_TOKEN")
+        val open_ai_key : String = System.getProperty("OPEN_AI_KEY")
+        private val gistId = System.getProperty("GIST_ID")
+        private val git_token: String = System.getProperty("GITHUB_TOKEN")
         var ngrokClient: NgrokClient? = null
         var tunnel: Tunnel? = null
         private var startTime: Long = -1
@@ -376,7 +374,6 @@ class ServerHandler {
                     "{" +
                             "\"content\": \"" + publicUrl + "\"," +
                             "\"started\": " + startTime + "," +
-                            "\"stopped\": " + "\"N/A\"" +
                             "}"
                 )
                 val json: MutableMap<String?, Any?> = HashMap()
@@ -397,7 +394,7 @@ class ServerHandler {
                         String::class.java
                     )
                 if (response.statusCode.is2xxSuccessful) {
-                    log.info("Gist updated: {}", response.getBody())
+                    log.info("Gist updated: {}", response.body!!.substring(0, 100))
                 } else {
                     log.error("Gist update failed: {}", response.getBody())
                 }
@@ -407,11 +404,7 @@ class ServerHandler {
         @JvmStatic
         fun stop() {
             if (tunnel != null && ngrokClient != null) {
-                ngrokClient!!.disconnect(tunnel!!.publicUrl)
-                tunnel = null
-                ngrokClient!!.kill()
-                ngrokClient = null
-
+                log.info("Stopping ngrok tunnel \"{}\"", tunnel!!.name)
                 val content: MutableMap<String?, String?> = HashMap()
                 content.put(
                     "content",
@@ -442,6 +435,9 @@ class ServerHandler {
                 } else {
                     log.error("Gist update failed: {}", response.getBody())
                 }
+                tunnel = null
+                ngrokClient!!.kill()
+                ngrokClient = null
             }
         }
     }

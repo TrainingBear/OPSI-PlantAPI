@@ -1,4 +1,4 @@
-package com.trbear9.plants_api;
+package com.trbear9.deprecated;
 
 public enum Query {
     COMMON_NAME("common_name", 1);

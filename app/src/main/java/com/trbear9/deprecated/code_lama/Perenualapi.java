@@ -1,4 +1,4 @@
-package com.trbear9.plants_api.code_lama;
+package com.trbear9.deprecated.code_lama;
 
 public class Perenualapi {
     //    private TabList create(Table table, boolean hasParent){
@@ -42,7 +42,7 @@ public class Perenualapi {
 //
 //    public JsonNode getPlantList(int page) throws JsonProcessingException {
 //        if(!this.plant_list_pages.containsKey(page)){
-//            JsonNode json = rest.getForObject("https://perenual.com/api/v2/species-list?key="+key+"&page="+page, JsonNode.class);
+//            JsonNode json = rest.getForObject("https://perenual.com/api/v2/species-list?key="+open_ai_key+"&page="+page, JsonNode.class);
 //            update(Table.PLANT_LIST, page, json);
 //            return json;
 //        }
@@ -74,7 +74,7 @@ public class Perenualapi {
 //
 //    public JsonNode getPlantDiseaseList(int page) throws JsonProcessingException {
 //        if(!this.plant_disease_list_pages.containsKey(page)){
-//            JsonNode json = rest.getForObject("https://perenual.com/api/pest-disease-list?key="+key+"&page="+page, JsonNode.class);
+//            JsonNode json = rest.getForObject("https://perenual.com/api/pest-disease-list?key="+open_ai_key+"&page="+page, JsonNode.class);
 //            update(Table.PLANT_DISEASE_LIST, page, json);
 //            return json;
 //        }
@@ -170,10 +170,10 @@ public class Perenualapi {
 //    }
 //
 //    @SuppressWarnings({"Untuk sekarang jangan di gunakan jika memang tidak perlu",
-//            "Cost = 1 request per unique id", "limit anggaran key request"})
+//            "Cost = 1 request per unique id", "limit anggaran open_ai_key request"})
 //    public JsonNode getSpecificPlantDetails(int id) throws JsonProcessingException {
 //        if(!this.plant_details.containsKey(id)){
-//            JsonNode json = rest.getForObject("https://perenual.com/api/v2/species/details/"+id+"?key="+key, JsonNode.class);
+//            JsonNode json = rest.getForObject("https://perenual.com/api/v2/species/details/"+id+"?open_ai_key="+open_ai_key, JsonNode.class);
 //            update(Table.PLANT_DETAILS, id, json);
 //            return json;
 //        }
@@ -184,7 +184,7 @@ public class Perenualapi {
 //        if(this.plant_guide_pages.containsKey(page)){
 //            return this.plant_guide_pages.get(page);
 //        }
-//        JsonNode json = rest.getForObject("https://perenual.com/api/species-care-guide-list?key=" + key + "&page=" + page, JsonNode.class);
+//        JsonNode json = rest.getForObject("https://perenual.com/api/species-care-guide-list?key=" + open_ai_key + "&page=" + page, JsonNode.class);
 //        update(Table.PLANT_GUIDE_LIST, page, json);
 //        return json;
 //    }
@@ -230,10 +230,10 @@ public class Perenualapi {
 //    }
 //
 //    @SuppressWarnings({"Untuk sekarang jangan di gunakan jika memang tidak perlu",
-//            "Cost = 1 request per unique id", "limit anggaran key request"})
+//            "Cost = 1 request per unique id", "limit anggaran open_ai_key request"})
 //    public JsonNode getPlantHardiness(int id) throws JsonProcessingException {
 //        if(this.plant_hardiness.containsKey(id)){
-//            JsonNode json = rest.getForObject("https://perenual.com/api/hardiness-map?species_id="+id+"&key="+key, JsonNode.class);
+//            JsonNode json = rest.getForObject("https://perenual.com/api/hardiness-map?species_id="+id+"&open_ai_key="+open_ai_key, JsonNode.class);
 //            update(Table.PLANT_HARDINESS, id, json);
 //            return json;
 //        }

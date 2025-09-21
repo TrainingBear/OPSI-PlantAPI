@@ -1,4 +1,4 @@
-package com.trbear9.plants_api.code_lama;
+package com.trbear9.deprecated.code_lama;
 
 public class dbmanager {
 //    public void init(){

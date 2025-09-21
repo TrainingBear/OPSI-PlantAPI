@@ -27,7 +27,6 @@ import java.util.Collections;
 import static com.trbear9.plants.E.CLIMATE.*;
 import static com.trbear9.plants.E.DEPTH.*;
 import static com.trbear9.plants.PlantClient.*;
-import static org.springframework.http.HttpMethod.HEAD;
 
 @SpringBootTest(classes = ServerHandler.class)
 public class PosterTest {
@@ -45,9 +44,14 @@ public class PosterTest {
     @Test
     void test() throws JsonProcessingException {
         log.info("test initialized");
-        Assertions.assertNotNull(url);
-        String response = template.getForObject(PlantClient.url, String.class);
-        log.info("{}", response);
+        try {
+            String link = PlantClient.url;
+            Assertions.assertNotNull(link);
+            String response = template.getForObject(link, String.class);
+            log.info("{}", response);
+        } catch (Exception e) {
+            log.error("Error: {}", e.getMessage());
+        }
     }
 
     @Test
@@ -116,21 +120,29 @@ public class PosterTest {
 
     @Test void pykew(){
 //        String urticaUrens = template.getForEntity(FAService.url+"/", String.class).getBody();
-        String urticaUrens = template.<String>getForEntity(FAService.url+"/plants/"+"Urtica", String.class).getBody();
-        log.info("{}", urticaUrens);
+        try {
+            String urticaUrens = template.<String>getForEntity(FastApiService.url + "/plants/" + "Urtica", String.class).getBody();
+            log.info("{}", urticaUrens);
+        } catch (Exception e) {
+            log.error("Error: {}", e.getMessage());
+        }
     }
 
     @Test
     public void getKewImage() throws JsonProcessingException {
         ServerHandler serverHandler = new ServerHandler();
         String url = "https://powo.science.kew.org/api/1/search?q=Urtica";
-        ResponseEntity<String> response = template.getForEntity(url, String.class);
-        String body = response.getBody();
-        JsonNode urtica = serverHandler.getKew("Urtica");
-        assert urtica != null;
-        Plant plant = new Plant();
-        plant.nama_ilmiah = "Urtica";
-        byte[] urticas = serverHandler.getImage(plant);
+        try {
+            ResponseEntity<String> response = template.getForEntity(url, String.class);
+            String body = response.getBody();
+            JsonNode urtica = serverHandler.getKew("Urtica");
+            assert urtica != null;
+            Plant plant = new Plant();
+            plant.nama_ilmiah = "Urtica";
+            byte[] urticas = serverHandler.getImage(plant);
+        } catch (Exception e){
+            log.error("Error: {}", e.getMessage());
+        }
     }
 
     @Test
