@@ -4,10 +4,10 @@
 
 <p align="center">
     <a href="https://sman1ambarawa.sch.id/">
-        <img src="SMANEGA.png" alt="SMANEGA" width="90" height="90" title="SMA NEGERI 1 AMBARAWA" >
+        <img src="SMANEGA.png" alt="SMANEGA" width="180" height="180" title="SMA NEGERI 1 AMBARAWA" >
     </a>
     <a href="https://sma.pusatprestasinasional.kemdikbud.go.id/opsi/">
-        <img src="logoopsi.png" width="145" height="90" title="Olimipiade Penelitian Sains Nasional"><br>
+        <img src="logoopsi.png" width="290" height="180" title="Olimipiade Penelitian Sains Nasional"><br>
     </a>
     <a href="https://sman1ambarawa.sch.id/">SMA Negeri 1 Ambarawa</a>
     <br href="https://jitpack.io/#TrainingBear/OPSI-PlantAPI">
