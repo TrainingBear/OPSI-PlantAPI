@@ -1,6 +1,5 @@
 <h2 align="center">Open Plant API</h2>
 
----
 <p align="center">
     <a href="https://sman1ambarawa.sch.id/">
         <img src="SMANEGA.png" alt="SMANEGA" width="180" height="180" title="SMA NEGERI 1 AMBARAWA" >
