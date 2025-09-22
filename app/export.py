@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import tensorflow as tf
-model = tf.keras.models.load_model('fast_api/model_4gap.keras')
+model = tf.keras.models.load_model('fast_api/model.keras')
 model.export('model')
 
 loaded = tf.saved_model.load('model')

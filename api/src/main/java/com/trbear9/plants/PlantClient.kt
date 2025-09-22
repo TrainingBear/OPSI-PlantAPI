@@ -1,33 +1,45 @@
 package com.trbear9.plants
 
+import com.fasterxml.jackson.core.StreamReadConstraints
+import com.fasterxml.jackson.core.StreamWriteConstraints
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.trbear9.plants.api.Response
 import com.trbear9.plants.api.UserVariable
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.awt.List
 import java.time.Duration
 import java.util.Stack
 
 class PlantClient {
-    companion object{
+    companion object {
         const val PROCESS = "/process"
         val objectMapper = ObjectMapper()
-        val client = OkHttpClient.Builder()
+                val client = OkHttpClient.Builder()
             .connectTimeout(Duration.ofSeconds(10))
             .readTimeout(Duration.ofMinutes(3))
             .writeTimeout(Duration.ofMinutes(3))
             .callTimeout(Duration.ofMinutes(5))
             .build()
-        val providers = mutableListOf("https://gist.githubusercontent.com/TrainingBear/${System.getenv("GIST_ID")}/raw/url.json")
-        @JvmField
-        var url: String? = getUrl()
+        init {
+            objectMapper.factory.setStreamReadConstraints(
+                StreamReadConstraints.builder()
+                    .maxStringLength(1_000_000_000)
+                    .build()
+            ).setStreamWriteConstraints(
+                StreamWriteConstraints.builder()
+                    .maxNestingDepth(1_000_000_000)
+                    .build()
+            )
+        }
+        var providers = mutableListOf("https://gist.githubusercontent.com/null/null/raw/url.json")
+        val url: String get() = getUrll()
 
-        @JvmStatic
         fun sendPacket(data: UserVariable, type: String? = PROCESS): Response? {
             data.computeHash()
             val request = Request.Builder()
-                .url((url ?: getUrl()) + type)
+                .url(url + type)
                 .post(objectMapper.writeValueAsString(data).toRequestBody())
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
@@ -42,7 +54,6 @@ class PlantClient {
             }
         }
 
-        @JvmStatic
                 /**
                  * @param provider_id gist provider, the name of GitHub user.
                  * eg: TrainingBear/necron8971handle2834y2hy7reimburse4ano
@@ -51,25 +62,26 @@ class PlantClient {
             val s = provider_id.split('/')
             addProvider(s[0], s[1])
         }
-        @JvmStatic
                 /**
                  * @param provider gist provider, the name of GitHub user. eg: TrainingBear
                  * @param id gist id provider. eg: necron8971handle2834y2hy7reimburse4ano
                  */
         fun addProvider(provider: String, id: String) {
             providers+=("https://gist.githubusercontent.com/$provider/$id/raw/url.json")
+            println("Provider has been added, size: ${providers.size}")
         }
 
-        @JvmStatic
-        private fun getUrl(prov: Stack<String>? = Stack<String>().let {it.addAll(providers);it},
-                           ) : String {
+        private fun getUrll() : String {
+            val prov: Stack<String> = Stack<String>().apply{ addAll(providers)}
             val tries: MutableSet<String> = mutableSetOf()
+            println("Getting url with providers size: ${prov.size}")
             while (!prov!!.isEmpty()){
                 val provider = prov.pop()
                 val request = Request.Builder()
                     .url(provider!!)
                     .build()
                 client.newCall(request).execute().use { response ->
+                    println("GETTING $provider")
                     if (!response.isSuccessful) {
                         tries += provider
                         continue
@@ -98,7 +110,9 @@ class PlantClient {
 
             val head = client.newCall(Request.Builder().url(url).head().build()).execute()
             return head.code
-        }
+
     }
 }
+    }
+
 

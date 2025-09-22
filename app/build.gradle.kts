@@ -20,6 +20,7 @@ java {
 val mockitoAgent = configurations.create("mockitoAgent")
  dependencies {
 	 implementation(project(":api"))
+	 implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
 	 implementation("com.open-meteo:open-meteo-api-kotlin:0.7.1-beta.1")
 	 implementation("com.github.alexdlaird:java-ngrok:2.3.16")
 	 implementation("org.apache.commons:commons-lang3:3.18.0")

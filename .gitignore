@@ -22,3 +22,4 @@ gradle-app.setting
 .classpath
 /app/fast_api/model_4gap.keras
 /app/model/
+/.idea/

@@ -1,6 +1,8 @@
 package com.trbear9.plants
 
 import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.core.StreamReadConstraints
+import com.fasterxml.jackson.core.StreamWriteConstraints
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.alexdlaird.ngrok.NgrokClient
@@ -43,6 +45,7 @@ import javax.imageio.ImageIO
 import kotlin.collections.HashMap
 import kotlin.collections.MutableMap
 
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @Slf4j
 @RestController
 @Getter
@@ -73,15 +76,51 @@ class ServerHandler {
                 """.trimIndent()
     }
 
+    val rag = mutableMapOf<String, JsonNode>()
+    init {
+        val dir = File("cache/responses")
+        if (dir.mkdirs()) log.info("Directory created: {}", dir.absolutePath)
+        for(file in dir.listFiles()){
+            if(file.name.endsWith(".json"))
+            rag[file.name.replace(".json", "")] = objectMapper.readTree(file)
+        }
+    }
+    private fun rag(input: String?, namaIlmiah: String): JsonNode {
+        if(rag.containsKey(namaIlmiah)) return rag[namaIlmiah]!!;
+        val dir = File("cache/responses")
+        if (dir.mkdirs()) log.info("Directory created: {}", dir.absolutePath)
+        val file = File(dir, "$namaIlmiah.json")
+
+        val header = HttpHeaders()
+        header.contentType = MediaType.APPLICATION_JSON
+        header.setBearerAuth(open_ai_key)
+
+        val body: MutableMap<String?, Any?> = HashMap()
+        body.put("model", "o3")
+        body.put("input", input)
+
+        val request = HttpEntity(body, header)
+
+        val respon = template.postForEntity(
+            "https://api.openai.com/v1/responses",
+            request,
+            String::class.java
+        ).body
+        Thread(){
+            objectMapper.writeValue(file, respon)
+        }.start()
+        rag[namaIlmiah] = objectMapper.readTree(respon)
+        return rag[namaIlmiah]!!
+    }
 
     @PostMapping("/process")
     @Throws(IOException::class)
-    fun pabrikUtama(@RequestBody data: UserVariable): String? {
+    fun process(@RequestBody data: UserVariable): String? {
         val hashCode = data.hash
         File("cache").mkdirs()
-        val file = File("cache/$hashCode.json")
-        if(file.exists()){
-            return objectMapper.readTree(file).toPrettyString()
+        val hash = File("cache/$hashCode.json")
+        if(hash.exists()){
+            return objectMapper.readTree(hash).toPrettyString()
         }
 
         var totalTime = 0.0
@@ -126,10 +165,7 @@ class ServerHandler {
                 plant.family = ecorecord.get(Family)
                 plant.kategori = ecorecord.get(Category)
 
-                val dir = File("cache/responses")
-                if (dir.mkdirs()) log.info("Directory created: {}", dir.absolutePath)
-                val file = File(dir, "$namaIlmiah.json")
-                val node: JsonNode = if (!file.exists()) {
+                val node: JsonNode = rag[namaIlmiah]?: run {
                     val query = StringBuilder(
                        "$namaIlmiah, generate this plants description, Crop production system(categorized by their scale and objectives)," +
                        " guide & care (include watering, pruning, fertilization, sunlight, pest & disease" +
@@ -140,7 +176,7 @@ class ServerHandler {
                         "plant_care: {\"watering:output, pruning:output, ..:output\"}," +
                         " difficulty:output," +
                         " description:output," +
-                        " product_sytem:{" +
+                        " product_system:{" +
                                 "rumah_tangga:output," +
                                 "komersial:output," +
                                 "industri:output}," +
@@ -149,12 +185,7 @@ class ServerHandler {
                         "}"
                     ).append('\n')
                     query.append("generate the output in indonesian language")
-                    val respon = rag(query.toString())
-                    objectMapper.writeValue(file, respon)
-                    objectMapper.readTree(respon);
-                } else {
-                    val node = objectMapper.readTree(file)
-                    objectMapper.readTree(node.asText())
+                    rag(query.toString(), namaIlmiah)
                 }
                 write(plant, node)
                 response.put(i, plant)
@@ -167,7 +198,9 @@ class ServerHandler {
         response.hashCode = hashCode
 
         val value: String? = objectMapper.writeValueAsString(response)
-        objectMapper.writeValue(file, value!!)
+        synchronized(hash.absolutePath.intern()){
+            objectMapper.writeValue(hash, value!!)
+        }
         return value
     }
 
@@ -186,45 +219,59 @@ class ServerHandler {
                 .removeSuffix("\n```")
                 .trim()
         );
-        val kew = getKew(plant.nama_ilmiah)
-        plant.taxon = "https://powo.science.kew.org/" + kew["url"]?.asText()
-        plant.fullsize = getImage(plant, kew = kew)
-        plant.thumbnail = getImage(plant, kew = kew, size = "thumbnail")
-        plant.kingdom = kew["kingdom"].asText()
-        plant.family = kew["family"].asText()
-        plant.genus = plant.nama_ilmiah.split(" ")[0]
-
         plant.prune_url = node["prune_guide"].asText()
         plant.difficulty = node["difficulty"].asText()
         plant.nama_umum = node["common_name"].asText()
         plant.description = node["description"].asText()
-        plant.kultur.put("rumah_tangga", node["product_sytem"]["rumah_tangga"].asText())
-        plant.kultur.put("komersial", node["product_sytem"]["komersial"].asText())
-        plant.kultur.put("industri", node["product_sytem"]["industri"].asText())
+//        if(debug) log.info(node.toPrettyString())
+
+        //typo: product_sytem -> product_system
+        val sytem = node["product_sytem"]?:node["product_system"]
+        plant.kultur.put("rumah_tangga", sytem["rumah_tangga"].asText())
+        plant.kultur.put("komersial", sytem["komersial"].asText())
+        plant.kultur.put("industri", sytem["industri"].asText())
         node["plant_care"].fieldNames().forEach {
             plant.perawatan.put(it, node["plant_care"][it].asText())
         }
+        plant.genus = plant.nama_ilmiah.split(" ")[0]
+
+
+        val kew = getKew(plant.nama_ilmiah)
+        if(kew == null) return
+        plant.taxon = "https://powo.science.kew.org/" + kew["url"]?.asText()
+        try {
+            plant.fullsize = getImage(plant, kew = kew)
+            plant.thumbnail = getImage(plant, kew = kew, size = "thumbnail")
+        } catch (e: NullPointerException) {
+            e.printStackTrace()
+        }
+        plant.kingdom = kew["kingdom"].asText()
+        plant.family = kew["family"].asText()
     }
 
-    private fun rag(input: String?): String? {
-        val header = HttpHeaders()
-        header.contentType = MediaType.APPLICATION_JSON
-        header.setBearerAuth(open_ai_key)
-
-        val body: MutableMap<String?, Any?> = HashMap()
-        body.put("model", "o3")
-        body.put("input", input)
-
-        val request = HttpEntity(body, header)
-        return template.postForEntity(
-            "https://api.openai.com/v1/responses",
-            request,
-            String::class.java
-        ).body
-    }
 
     val kewCache = HashMap<String, JsonNode>()
-    fun getKew(q: String): JsonNode {
+    init {
+        val dir = File("cache/kew_caches"); dir.mkdirs();
+        for (it in dir.listFiles()) {
+            var node = objectMapper.readTree(it)
+            node = objectMapper.readTree(node.asText())
+
+            if(node["totalResults"].asInt() <= 0) {
+                continue
+            }
+            for (result in node["results"]) {
+                if(result["accepted"].asBoolean()){
+                    kewCache[it.name.replace(".json", "")] = result
+                    log.info("Found accepted resource, with author: {}", result["author"]?.asText())
+                    continue
+                }
+            }
+            log.info("No accepted resource found, returning first result. author: {}",
+                node["results"][0]["author"].asText())
+        }
+    }
+    fun getKew(q: String): JsonNode? {
         val dir = File("cache/kew_caches"); dir.mkdirs();
         val file = File(dir, "$q.json")
         if(kewCache.containsKey(q) && kewCache[q] != null) {
@@ -232,14 +279,17 @@ class ServerHandler {
             return kewCache[q]!!
         }
 
-        var root : JsonNode = if(file.exists()){
-            val root = objectMapper.readTree(file)
-            objectMapper.readTree(root.asText())
-        } else {
+        val root : JsonNode = if(!file.exists()) {
             val url = "https://powo.science.kew.org/api/1/search?q=$q"
             val response = template.getForEntity(url, String::class.java)
-            objectMapper.writeValue(file, response.body)
+            Thread(){objectMapper.writeValue(file, response.body)}.start()
             objectMapper.readTree(response.body)
+        } else {
+            throw NullPointerException("Cant find result")
+        }
+
+        if(root["totalResults"].asInt() <= 0) {
+            return null;
         }
         for (result in root["results"]) {
             if(result["accepted"].asBoolean()){
@@ -255,6 +305,7 @@ class ServerHandler {
     }
 
     @JvmOverloads
+    @kotlin.jvm.Throws(NullPointerException::class)
     fun getImage(plant: Plant? = null, kew: JsonNode? = null, size: String? = "fullsize") : ByteArray? {
         val q : String? = plant?.nama_ilmiah
 
@@ -264,17 +315,31 @@ class ServerHandler {
         if(file.exists()){
             return file.readBytes()
         }
-
         val url = "http:" +
-            if (kew != null) kew["images"][0][size].asText()
-            else             getKew(q!!)["images"][0][size].asText()
+            if (kew != null) {
+                val nodes = kew["images"]
+                nodes ?: run {
+                    if (debug) log.info("kew root: {}", kew.toPrettyString())
+                    throw NullPointerException("No images found")
+                }
+                nodes[0][size].asText()
+            } else {
+                val kew1 = getKew(q!!)
+                kew1?: return null
+                val nodes = kew1["images"]
+                nodes?: run {
+                    if(debug) log.info("kew root: {}", kew1.toPrettyString())
+                    throw NullPointerException("No images found")
+                }
+                nodes[0][size].asText()
+            }
         val byte = URI.create(url).toURL().readBytes()
 
         if(!file.exists()) {
-            Thread {
+            synchronized(file.absolutePath.intern()){
                 val bufferedImage = ImageIO.read(ByteArrayInputStream(byte));
                 ImageIO.write(bufferedImage, "jpg", file)
-            }.start()
+            }
         }
         return byte
     }
@@ -326,20 +391,31 @@ class ServerHandler {
         val log: Logger = LoggerFactory.getLogger(ServerHandler::class.java)!!
         private val factory: SimpleClientHttpRequestFactory = SimpleClientHttpRequestFactory()
         private val template: RestTemplate
+        private val objectMapper = ObjectMapper()
 
         init {
             factory.setConnectTimeout(Duration.ofMinutes(5))
             factory.setReadTimeout(Duration.ofMinutes(5))
             template = RestTemplate(factory)
+            objectMapper.factory.setStreamReadConstraints(
+                StreamReadConstraints.builder()
+                    .maxStringLength(1_000_000_000)
+                    .build()
+            ).setStreamWriteConstraints(
+                StreamWriteConstraints.builder()
+                    .maxNestingDepth(1_000_000_000)
+                    .build()
+            )
         }
 
-        private val objectMapper = ObjectMapper()
         val open_ai_key : String = System.getProperty("OPEN_AI_KEY")
         private val gistId = System.getProperty("GIST_ID")
         private val git_token: String = System.getProperty("GITHUB_TOKEN")
         var ngrokClient: NgrokClient? = null
         var tunnel: Tunnel? = null
         private var startTime: Long = -1
+        private var debug: Boolean = true
+//            System.getProperty("DEBUG", "false").toBoolean();
 
         @JvmStatic
         @get:Throws(JsonProcessingException::class)
@@ -372,9 +448,9 @@ class ServerHandler {
                 content.put(
                     "content",
                     "{" +
-                            "\"content\": \"" + publicUrl + "\"," +
-                            "\"started\": " + startTime + "," +
-                            "}"
+                         "\"content\": \"" + publicUrl + "\"," +
+                         "\"started\": " + startTime+
+                    "}"
                 )
                 val json: MutableMap<String?, Any?> = HashMap()
                 json.put("url.json", content)
@@ -411,8 +487,8 @@ class ServerHandler {
                     "{" +
                             "\"content\": \"http://localhost:8080\"," +
                             "\"started\": " + startTime + "," +
-                            "\"stopped\": " + System.currentTimeMillis() + "," +
-                            "}"
+                            "\"stopped\": " + System.currentTimeMillis()+
+                    "}"
                 )
                 val json: MutableMap<String?, Any?> = HashMap()
                 json.put("url.json", content)

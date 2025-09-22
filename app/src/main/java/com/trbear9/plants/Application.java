@@ -41,6 +41,9 @@ public class Application implements CommandLineRunner {
                 System.setProperty("MODEL", arg.substring("--MODEL".length()+1));
                 log.info("Loaded MODEL: {}", System.getProperty("MODEL"));
                 loaded[3] = true;
+            } else if(arg.startsWith("--DEBUG")){
+                System.setProperty("DEBUG", "true");
+                log.info("Debug mode enabled");
             }
             else {
                 log.error("Unknown argument: {}", arg);

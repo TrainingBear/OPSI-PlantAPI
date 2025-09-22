@@ -7,8 +7,11 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.core.io.ClassPathResource
 import java.io.FileReader
 import java.io.IOException
+import java.io.InputStream
+import java.io.InputStreamReader
 import java.util.*
 import kotlin.math.abs
 
@@ -16,13 +19,22 @@ object DataHandler {
     @JvmField
     var explored_fields: Int = 0
     val log: Logger = LoggerFactory.getLogger("DATASET LOG")
-
+    val ecocropcsv: MutableList<CSVRecord>
     val perawatancsv: MutableList<CSVRecord>
 
     init {
         try {
-            FileReader("Perawatan.csv").use { `in` ->
-                perawatancsv = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(`in`).records
+            var resource = ClassPathResource("Perawatan.csv")
+            resource.inputStream.use { `is` ->
+                InputStreamReader(`is`).use {
+                    reader -> perawatancsv = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader).records
+                }
+            }
+            resource = ClassPathResource("EcoCrop_DB.csv")
+            resource.inputStream.use { `is` ->
+                InputStreamReader(`is`).use {
+                        reader -> ecocropcsv = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader).records
+                }
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -253,22 +265,13 @@ object DataHandler {
     }
 
     fun process(): MutableList<CSVRecord> {
-        try {
-            FileReader("EcoCrop_DB.csv").use { `in` ->
-                return CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(`in`).records
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            throw RuntimeException(e)
-        }
+        return ecocropcsv
     }
 
     private val science_perawatancsv: MutableMap<String?, CSVRecord?> = HashMap<String?, CSVRecord?>()
     fun perawatanCsv(ecocropcsv: CSVRecord): CSVRecord? {
-        if (science_perawatancsv.containsKey(ecocropcsv.get(E.Science_name))) return science_perawatancsv[ecocropcsv.get(
-            E.Science_name
-        )]
-
+        if (science_perawatancsv.containsKey(ecocropcsv.get(E.Science_name)))
+            return science_perawatancsv[ecocropcsv[E.Science_name]]
         for (i in perawatancsv) {
             if (i.get(E.Science_name).contains(ecocropcsv.get(E.Science_name))) {
                 science_perawatancsv.put(ecocropcsv.get(E.Science_name), i)

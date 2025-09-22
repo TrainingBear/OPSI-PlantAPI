@@ -94,9 +94,13 @@ public final class FastApiService {
                 throw new RuntimeException(e);
             }
 
-//            ProcessBuilder pb = new ProcessBuilder("gnome-terminal", "--", "bash", "-c", "fastapi run fast_api/api.py");
+//            ProcessBuilder pb = new ProcessBuilder(
+//                    "gnome-terminal", "--", "bash", "-c",
+//                    "uvicorn "+api.getAbsolutePath()+" --reload --host 0.0.0.0 --port 8000; exec bash");
+//            ProcessBuilder pb = new ProcessBuilder("gnome-terminal", "--", "bash", "-c", "fastapi run "+api.getAbsolutePath()+"; exec bash");
             ProcessBuilder pb = new ProcessBuilder("fastapi", "run", api.getAbsolutePath());
             pb.environment().put("model", model_path);
+            pb.inheritIO();
             try {
                 process = pb.start();
             } catch (IOException e) {
