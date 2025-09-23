@@ -65,14 +65,6 @@ class ServerHandler {
                 BIG SHOUTOUT TO JASPER                vvvvvvvvvvvvvvvvvvvvvvvvv
                 Join komunitas discord kami (Jasper): https://discord.gg/fbAZSd3Hf2
                 
-                 
-                 
-                
-                
-                
-                 
-                
-                
                 """.trimIndent()
     }
 

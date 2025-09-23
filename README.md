@@ -67,7 +67,32 @@ Keterangan:
 model CNN yang kami buat: https://github.com/TrainingBear/OPSI-Project-AndroidApplication/tree/master/tensorflow_examples/lite/model_maker/demo
 
 ---
-# SDK Client Installation
+# SDK Client
+examples:
+```kotlin
+val client = PlantClient("TrainingBear/84d0e105aaabce26c8dfbaff74b2280e")
+val img: ByteArray = null /* image byte array */
+val result: Response = client.sendPacket(
+    UserVariable().apply {
+        image = img
+        name = "image.png"
+        add(
+            GeoParameter().apply {
+                iklim = E.CLIMATE.tropical_wet_and_dry
+                latitude = -7.327
+                longtitude = 110.1938
+            },
+            SoilParameter().apply {
+                pH = 5.5
+                deep = 10
+            }
+        )
+    }
+)
+```
+
+Instalation:
+-
 Versi terbaru tersedia di [release](https://github.com/TrainingBear/OPSI-PlantAPI/releases)
 atau di [jitpack](https://jitpack.io/#TrainingBear/OPSI-PlantAPI)
 - Maven:
