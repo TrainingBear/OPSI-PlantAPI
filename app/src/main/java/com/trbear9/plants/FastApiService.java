@@ -143,22 +143,18 @@ public final class FastApiService {
             process.destroy();
     }
 
-    public static SoilParameters process(byte[] image) {
-        return soil[argmax(predict(image))];
-    }
-
     public static float[] predict(File file) throws IOException {
         BufferedImage img = ImageIO.read(file);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ImageIO.write(img, "jpg", bos);
-        return predict(bos.toByteArray());
+        ImageIO.write(img, file.getName().substring(file.getName().lastIndexOf('.') + 1), bos);
+        return predict(bos.toByteArray(), file.getName());
     }
 
-    public static float @NonNull [] predict(byte[] img) {
+    public static float @NonNull [] predict(byte[] img, String filename) {
         ByteArrayResource imgResource = new ByteArrayResource(img) {
             @Override
             public String getFilename() {
-                return "request.jpg";
+                return filename;
             }
         };
 

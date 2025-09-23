@@ -1,6 +1,7 @@
 package com.trbear9.plants.api;
 
 import com.trbear9.plants.api.blob.Plant;
+import com.trbear9.plants.api.blob.SoilCare;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.Map;
 public class Response {
     public String timestamp, status, error, trace, message, path, hashCode;
     private String soilName;
+    private SoilCare soilCare;
     private float[] soilPrediction = new float[8];
     private int total = 0;
     private double predict_time, process_time, took;
