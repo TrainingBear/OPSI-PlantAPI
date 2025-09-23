@@ -27,12 +27,22 @@ untuk yang mau berkontribusi dalam pembuatan SDK Client, atau penambahan fitur l
 Kalian bisa membuat pull request, atau hubungi kami lewat email kukuhsudrajad354@gmail.com kontribusimu akan sangat membantu
 *** 
 
-# Server start guide
+# Server Deployment
 kami menggunakan [ngrok](https://ngrok.com) untuk proxy https protocol provider.
 ngrok gratis tanpa biaya, namun setiap memulai server, url https yang diberikan akan acak seperti: https://c27e3f9aacc8.ngrok-free.app
 
 untuk mengakalinya kami menggunakan [GitHub Gist](https://gist.github.com/) yang berisi url https yang selalu di update setiap server start.
 berikut tahap-tahap menjalankan server:
+
+Install python required depedency:
+-
+```cmd
+pip install tensorflow
+pip install "fastapi[standard]"
+pip install pykew
+pip install numpy
+pip install typing
+```
 
 compile:
 -

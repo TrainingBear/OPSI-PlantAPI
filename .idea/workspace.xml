@@ -451,7 +451,6 @@
       <item itemvalue="Application.Unnamed" />
       <item itemvalue="Gradle.app [bootTestRun]" />
       <item itemvalue="Gradle.clean build" />
-      <item itemvalue="Gradle.app [bootRun]" />
       <item itemvalue="Gradle.app [app:build]" />
       <item itemvalue="Gradle.OPSI-PlantAPI [bootTestRun]" />
       <item itemvalue="Gradle.plants-api [build]" />
