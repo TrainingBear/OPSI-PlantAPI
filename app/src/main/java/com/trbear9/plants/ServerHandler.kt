@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.StreamReadConstraints
 import com.fasterxml.jackson.core.StreamWriteConstraints
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
 import com.github.alexdlaird.ngrok.NgrokClient
 import com.github.alexdlaird.ngrok.protocol.CreateTunnel
 import com.github.alexdlaird.ngrok.protocol.Proto
@@ -15,10 +16,11 @@ import com.openmeteo.api.common.time.Date
 import com.openmeteo.api.common.units.TemperatureUnit
 import com.trbear9.plants.E.*
 import com.trbear9.plants.api.GeoParameters
-import com.trbear9.plants.api.Plant
+import com.trbear9.plants.api.blob.Plant
 import com.trbear9.plants.api.Response
 import com.trbear9.plants.api.SoilParameters
 import com.trbear9.plants.api.UserVariable
+import com.trbear9.plants.api.blob.SoilCare
 import lombok.Getter
 import lombok.extern.slf4j.Slf4j
 import org.slf4j.Logger
@@ -28,7 +30,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.http.client.SimpleClientHttpRequestFactory
-import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -44,6 +45,7 @@ import java.time.Duration
 import javax.imageio.ImageIO
 import kotlin.collections.HashMap
 import kotlin.collections.MutableMap
+import kotlin.jvm.java
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @Slf4j
@@ -65,44 +67,99 @@ class ServerHandler {
                 BIG SHOUTOUT TO JASPER                vvvvvvvvvvvvvvvvvvvvvvvvv
                 Join komunitas discord kami (Jasper): https://discord.gg/fbAZSd3Hf2
                 
+                
                 """.trimIndent()
     }
 
-    val rag = mutableMapOf<String, JsonNode>()
+    val plantDir = File("cache/plant")
+    val soilDir = File("cache/soil")
+    val plantResponse = mutableMapOf<String, Plant>()
+    val soilCare = mutableMapOf<String, SoilCare>()
     init {
-        val dir = File("cache/responses")
-        if (dir.mkdirs()) log.info("Directory created: {}", dir.absolutePath)
-        for(file in dir.listFiles()){
-            if(file.name.endsWith(".json"))
-            rag[file.name.replace(".json", "")] = objectMapper.readTree(file)
+        var start = System.nanoTime()
+        if (plantDir.mkdirs()) log.info("Directory created: {}", soilDir.absolutePath)
+        for(file in plantDir.listFiles()){
+            if(file.name.endsWith(".json")) {
+                plantResponse[file.name.replace(".json", "")] =
+                    objectMapper.readValue<Plant>(file, Plant::class.java)
+                if(debug) log.info("Loaded plantResponse response from cache: {}", file.name)
+            }
         }
+        log.info("RAG loaded in {} ms", (System.nanoTime() - start) / 1000000)
+
+        start = System.nanoTime()
+        if (soilDir.mkdirs()) log.info("Directory created: {}", soilDir.absolutePath)
+        for(file in soilDir.listFiles()){
+            if(file.name.endsWith(".json")) {
+                soilCare[file.name.replace(".json", "")] =
+                    objectMapper.readValue<SoilCare>(file, SoilCare::class.java)
+                if(debug) log.info("Loaded soilCare response from cache: {}", file.name)
+            }
+        }
+        log.info("SoilCare loaded in {} ms", (System.nanoTime() - start) / 1000000)
     }
-    private fun rag(input: String?, namaIlmiah: String): JsonNode {
-        if(rag.containsKey(namaIlmiah)) return rag[namaIlmiah]!!;
-        val dir = File("cache/responses")
-        if (dir.mkdirs()) log.info("Directory created: {}", dir.absolutePath)
-        val file = File(dir, "$namaIlmiah.json")
+    private fun <T> rag(input: String?, name: String, clazz: Class<T>): T {
+        if(clazz == Plant::class.java) {
+            if (plantResponse.containsKey(name)) return plantResponse[name]!! as T;
+            val file = File(plantDir, "$name.json")
 
-        val header = HttpHeaders()
-        header.contentType = MediaType.APPLICATION_JSON
-        header.setBearerAuth(open_ai_key)
+            val header = HttpHeaders()
+            header.contentType = MediaType.APPLICATION_JSON
+            header.setBearerAuth(open_ai_key)
 
-        val body: MutableMap<String?, Any?> = HashMap()
-        body.put("model", "o3")
-        body.put("input", input)
+            val body: MutableMap<String?, Any?> = HashMap()
+            body.put("model", "o4-mini")
+            body.put("input", input)
 
-        val request = HttpEntity(body, header)
+            val request = HttpEntity(body, header)
 
-        val respon = template.postForEntity(
-            "https://api.openai.com/v1/responses",
-            request,
-            String::class.java
-        ).body
-        Thread(){
-            objectMapper.writeValue(file, respon)
-        }.start()
-        rag[namaIlmiah] = objectMapper.readTree(respon)
-        return rag[namaIlmiah]!!
+            val respon = template.postForEntity(
+                "https://api.openai.com/v1/responses",
+                request,
+                String::class.java
+            ).body
+//            val tree = objectMapper.readTree(objectMapper.readTree(respon).asText())
+            var tree = objectMapper.readTree(respon)
+            tree = objectMapper.readTree(tree["output"][1]["content"][0]["text"].asText())
+            try {
+                plantResponse[name] = objectMapper.treeToValue(tree, Plant::class.java)
+            }catch (e: UnrecognizedPropertyException){
+                log.info(tree.toPrettyString())
+                throw e
+            }
+            Thread() {
+                objectMapper.writeValue(file, tree)
+            }.start()
+            return plantResponse[name]!! as T
+        } else if(clazz == SoilCare::class.java) {
+            if (soilCare.containsKey(name)) return soilCare[name]!! as T;
+            val file = File(soilDir, "$name.json")
+
+            val header = HttpHeaders()
+            header.contentType = MediaType.APPLICATION_JSON
+            header.setBearerAuth(open_ai_key)
+
+            val body: MutableMap<String?, Any?> = HashMap()
+            body.put("model", "o3")
+            body.put("input", input)
+
+            val request = HttpEntity(body, header)
+
+            val respon = template.postForEntity(
+                "https://api.openai.com/v1/responses",
+                request,
+                String::class.java
+            ).body
+//            val tree = objectMapper.readTree(objectMapper.readTree(respon).asText())
+            var tree = objectMapper.readTree(respon)
+            tree = objectMapper.readTree(tree["output"][0]["output"]["text"].asText())
+            soilCare[name] = objectMapper.treeToValue(tree, SoilCare::class.java)
+            Thread() {
+                objectMapper.writeValue(file, respon)
+            }.start()
+            return soilCare[name]!! as T
+        }
+        throw IllegalArgumentException("Invalid class")
     }
 
     @PostMapping("/process")
@@ -119,7 +176,7 @@ class ServerHandler {
         log.info("POST /predict")
         val image = data.image
         var start = System.currentTimeMillis()
-        val prediction = FastApiService.predict(image)
+        val prediction = FastApiService.predict(image, data.filename?:throw IllegalArgumentException("Filename cannot be null"))
         var took = (System.currentTimeMillis() - start).toDouble() / 1000000.0
         totalTime += took
         val max = FastApiService.argmax(prediction)
@@ -145,44 +202,87 @@ class ServerHandler {
         response.soilName = soilName
         start = System.currentTimeMillis()
 
+        var target = 0
+        for (i in processedData.keys)
+            target+= processedData[i]!!.size
         var total = 0
         for (i in processedData.keys) {
             for (ecorecord in processedData[i]!!) {
                 total++
-                val plant = Plant()
                 val namaIlmiah = ecorecord.get(Science_name)
+
+                val plant: Plant = plantResponse[namaIlmiah]?: run {
+                    rag(    """
+                        You are given a plant with the scientific name: "$namaIlmiah".
+                        Generate structured information in **valid JSON only** (no extra text).
+                    
+                        The JSON must follow this schema:
+                        {
+                          "plant_care": {
+                            "watering": "...",
+                            "pruning": "...",
+                            "fertilization": "...",
+                            "sunlight": "...",
+                            "pest_disease_management": "..."
+                          },
+                          "difficulty": "EASY | MEDIUM | HARD",
+                          "description": "...",
+                          "product_system": {
+                            "rumah_tangga": "...",
+                            "komersial": "...",
+                            "industri": "..."
+                          },
+                          "common_name": "...",
+                          "prune_guide": "YouTube/Blog link OR 'Tanaman ini tidak dapat dipangkas'"
+                        }
+                    
+                        Requirements:
+                        - All values must be written in **Indonesian language**.
+                        - Do not add explanations outside JSON.
+                        - Ensure output is strictly valid JSON.
+                        """.trimIndent()
+                        , namaIlmiah,
+                        Plant::class.java)
+                }
+
                 plant.nama_ilmiah = namaIlmiah
                 plant.min_panen = ecorecord.get(MIN_crop_cycle).toInt()
                 plant.max_panen = ecorecord.get(MAX_crop_cycle).toInt()
                 plant.family = ecorecord.get(Family)
                 plant.kategori = ecorecord.get(Category)
-
-                val node: JsonNode = rag[namaIlmiah]?: run {
-                    val query = StringBuilder(
-                       "$namaIlmiah, generate this plants description, Crop production system(categorized by their scale and objectives)," +
-                       " guide & care (include watering, pruning, fertilization, sunlight, pest & disease" +
-                       " management), common name(in indonesia), and level of difficulty of care(MEDIUM, EASY, HARD).\n"
-                    )
-                    query.append(
-                        "generate them in JSON, with format of: {" +
-                        "plant_care: {\"watering:output, pruning:output, ..:output\"}," +
-                        " difficulty:output," +
-                        " description:output," +
-                        " product_system:{" +
-                                "rumah_tangga:output," +
-                                "komersial:output," +
-                                "industri:output}," +
-                        " common_name:output," +
-                        " prune_guide: \"a youtube(or blog as alternative) link that refer prune method for this plant or either just say this plant cant be pruned\"" +
-                        "}"
-                    ).append('\n')
-                    query.append("generate the output in indonesian language")
-                    rag(query.toString(), namaIlmiah)
-                }
-                write(plant, node)
+                writeTaxonomy(plant)
                 response.put(i, plant)
+                log.info("Processed {}/{}", total, target)
             }
         }
+        response.soilCare = soilCare[soilName+soil.pH+"pH"]?: rag(
+             """
+                Given the soil type "$soilName" with a pH of ${soil.pH},
+                provide a detailed soil care and fertility improvement plan.
+            
+                Return the result in **valid JSON only** (no explanations, no Markdown).
+                
+                Schema:
+                {
+                  "pH_correction": "...",
+                  "nutrient_management": {
+                    "N": "...",
+                    "P": "...",
+                    "K": "..."
+                  },
+                  "organic_matter": "...",
+                  "water_retention": "..."
+                }
+            
+                Requirements:
+                - All values must be in Indonesian language.
+                - Do not add extra fields.
+                - Ensure the JSON is strictly valid.
+                """.trimIndent(),
+            name = soilName+soil.pH+"pH",
+            SoilCare::class.java
+            )
+
         took = (System.currentTimeMillis() - start).toDouble() / 1000000.0
         response.process_time = took
         response.took = took + totalTime
@@ -199,34 +299,10 @@ class ServerHandler {
     /**
      *
      * @param plant objek yang akan di tulis
-     * @param tree rag response
+     * @param tree plantResponse response
      */
-    private fun write(plant: Plant, tree: JsonNode) {
-        val node = objectMapper.readTree(
-            tree["output"][1]["content"][0]["text"].asText()
-                .removePrefix("```json\n")
-                .removePrefix("```json")
-                .removePrefix("```")
-                .removeSuffix("```")
-                .removeSuffix("\n```")
-                .trim()
-        );
-        plant.prune_url = node["prune_guide"].asText()
-        plant.difficulty = node["difficulty"].asText()
-        plant.nama_umum = node["common_name"].asText()
-        plant.description = node["description"].asText()
-//        if(debug) log.info(node.toPrettyString())
-
-        //typo: product_sytem -> product_system
-        val sytem = node["product_sytem"]?:node["product_system"]
-        plant.kultur.put("rumah_tangga", sytem["rumah_tangga"].asText())
-        plant.kultur.put("komersial", sytem["komersial"].asText())
-        plant.kultur.put("industri", sytem["industri"].asText())
-        node["plant_care"].fieldNames().forEach {
-            plant.perawatan.put(it, node["plant_care"][it].asText())
-        }
+    private fun writeTaxonomy(plant: Plant) {
         plant.genus = plant.nama_ilmiah.split(" ")[0]
-
 
         val kew = getKew(plant.nama_ilmiah)
         if(kew == null) return
@@ -243,57 +319,102 @@ class ServerHandler {
 
 
     val kewCache = HashMap<String, JsonNode>()
+    val kewDir = File("cache/kew_caches");
     init {
-        val dir = File("cache/kew_caches"); dir.mkdirs();
-        for (it in dir.listFiles()) {
+        val start = System.nanoTime()
+        if(kewDir.mkdirs()) log.info("Kew cache directory created")
+        for (it in kewDir.listFiles()) {
+            if(!it.name.endsWith(".json")) continue
             var node = objectMapper.readTree(it)
-            node = objectMapper.readTree(node.asText())
 
-            if(node["totalResults"].asInt() <= 0) {
-                continue
+            val totalResults = node["totalResults"]
+            totalResults?: run{
+                log.warn("No results found for {}", it.name)
+                 continue
             }
+            if(totalResults.asInt() <= 0) continue
+            var flag = false
             for (result in node["results"]) {
                 if(result["accepted"].asBoolean()){
                     kewCache[it.name.replace(".json", "")] = result
-                    log.info("Found accepted resource, with author: {}", result["author"]?.asText())
-                    continue
+                    if(debug) log.info("Found accepted resource! author: {}", result["author"]?.asText())
+                    flag = true
+                    break;
                 }
             }
-            log.info("No accepted resource found, returning first result. author: {}",
-                node["results"][0]["author"].asText())
+            if(flag) continue
+            if(debug) log.info("No accepted resource found for {}",
+                 it.name
+            )
         }
+        val took = (System.nanoTime() - start).toDouble() / 1000000.0
+        log.info("KEW caches response loaded in {} ms", took)
     }
+
     fun getKew(q: String): JsonNode? {
-        val dir = File("cache/kew_caches"); dir.mkdirs();
-        val file = File(dir, "$q.json")
+        val file = File(kewDir, "$q.json")
         if(kewCache.containsKey(q) && kewCache[q] != null) {
-            log.info("Cache hit: {}", q)
             return kewCache[q]!!
         }
 
         val root : JsonNode = if(!file.exists()) {
             val url = "https://powo.science.kew.org/api/1/search?q=$q"
-            val response = template.getForEntity(url, String::class.java)
-            Thread(){objectMapper.writeValue(file, response.body)}.start()
-            objectMapper.readTree(response.body)
+            log.info("GETTING {}", url)
+            val response = template.getForEntity(url, JsonNode::class.java)
+            synchronized(file.absolutePath.intern()){
+                objectMapper.writeValue(file, response.body) }
+            response.body
         } else {
-            throw NullPointerException("Cant find result")
+            var len = q.length
+            var root: JsonNode? = null
+            while(len > 1){
+                len--
+                val q = q.substring(0, len)
+                val url = "https://powo.science.kew.org/api/1/search?q=$q"
+                log.info("GETTING {}", url)
+                val response = template.getForEntity(url, JsonNode::class.java)
+                synchronized(file.absolutePath.intern()){
+                    objectMapper.writeValue(file, response.body)
+                }
+                root = response.body
+                break;
+            }
+            root ?: throw NullPointerException("Cant find result of $q")
         }
 
-        if(root["totalResults"].asInt() <= 0) {
-            return null;
-        }
+        if(root["totalResults"].asInt() <= 0) return null;
+
         for (result in root["results"]) {
             if(result["accepted"].asBoolean()){
                 kewCache[q] = result
-                log.info("Found accepted resource, with author: {}", result["author"]?.asText())
+                if(debug) log.info("Found accepted resource, with author: {}", result["author"]?.asText())
                 return result
             }
         }
 
-        log.info("No accepted resource found, returning first result. author: {}",
+        if(debug) log.info("No accepted resource found, returning first result. author: {}",
             root["results"][0]["author"].asText())
         return root["results"][0];
+    }
+
+    @GetMapping("/loadKEWdataFromDatabase")
+    fun loadKEWdataFromDatabase() : String {
+        val file = File("cache/kew_caches")
+        file.mkdirs()
+        val start = System.nanoTime()
+        val process = DataHandler.process()
+        val max = process.size
+        var c = file.listFiles().size;
+        for(it in process){
+            val sciencename = it[E.Science_name]
+            val data = File(file, "$sciencename.json")
+            if(data.exists()) continue
+            log.info("Processing $sciencename")
+            getKew(sciencename)
+            c++;
+            log.info("Processed $c/$max")
+        }
+        return "KEW data loaded in ${(System.nanoTime() - start).toDouble() / 1000000.0} ms"
     }
 
     @JvmOverloads
@@ -406,8 +527,8 @@ class ServerHandler {
         var ngrokClient: NgrokClient? = null
         var tunnel: Tunnel? = null
         private var startTime: Long = -1
-        private var debug: Boolean = true
-//            System.getProperty("DEBUG", "false").toBoolean();
+        private var debug: Boolean =
+            System.getProperty("DEBUG", "false").toBoolean();
 
         @JvmStatic
         @get:Throws(JsonProcessingException::class)

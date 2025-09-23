@@ -17,10 +17,14 @@ class UserVariable {
     val parameters: MutableMap<Class<out Parameters>, Parameters> =
         HashMap<Class<out Parameters>, Parameters>()
 
-    @Setter
     var image: ByteArray? = null
+    var filename: String? = null
     var hash: String? = null
 
+    fun setImage(image: ByteArray, filename: String){
+        this.image = image
+        this.filename = filename
+    }
     fun modify(par: SoilParameters) {
         (parameters[SoilParameters::class.java] as SoilParameters).modify(par)
     }
@@ -37,8 +41,8 @@ class UserVariable {
         if (tanah != null) digest.update(tanah!!.toByteArray(StandardCharsets.UTF_8))
 
         for (entry in parameters.entries) {
-            digest.update(entry.key!!.getName().toByteArray())
-            val parameter: Parameters = entry.value!!
+            digest.update(entry.key.getName().toByteArray())
+            val parameter: Parameters = entry.value
             digest.update(parameter.toString().toByteArray())
             for (par in parameter.getParameters().entries) {
                 digest.update(par.key.toByteArray())

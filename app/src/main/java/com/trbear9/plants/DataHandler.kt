@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.trbear9.plants
 
 import com.trbear9.plants.E.DRAINAGE
@@ -8,9 +10,7 @@ import org.apache.commons.csv.CSVRecord
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
-import java.io.FileReader
 import java.io.IOException
-import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.*
 import kotlin.math.abs
@@ -51,7 +51,8 @@ object DataHandler {
         return record.get(E.Science_name)
     }
 
-    fun getCommonName(record: CSVRecord): MutableSet<String?> {
+    @JvmStatic
+    fun commonNames(record: CSVRecord): MutableSet<String?> {
         return HashSet<String?>(
             listOf(
                 *record.get(E.Common_names).split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
@@ -72,10 +73,10 @@ object DataHandler {
             for (parameter in parameters) {
                 val params = parameter.getParameters()
                 for (col in params.keys) {
-                    val variable = params[col]
-                    if (variable == null || variable == "NA") continue
+                    val paramVal = params[col]
+                    paramVal?:continue
                     var floatVar = Float.Companion.MAX_VALUE
-                    try { floatVar = variable.toFloat() }
+                    try { floatVar = paramVal.toFloat() }
                     catch (_: NumberFormatException) { }
 
                     when (col) {
@@ -120,8 +121,11 @@ object DataHandler {
                             if (min <= floatVar && max >= floatVar) {
                                 score += 1
                                 flag = true
-                            } else score +=  // minus 1 per rainfall yang diluar jangkauan
-                                (if (floatVar < min) floatVar - min else max - floatVar).toInt()
+                            } else {
+                                val floatVar = floatVar/25 // bias
+                                score +=  // -1 score/25 rainfall
+                                    (if (floatVar < min) floatVar - min else max - floatVar).toInt()
+                            }
                         }
 
                         "TEMPMAX" -> {
@@ -153,7 +157,7 @@ object DataHandler {
                         }
 
                         "QUERY" -> {
-                            if (record.get(E.Common_names).contains(variable)) {
+                            if (record.get(E.Common_names).contains(paramVal)) {
                                 score++
                                 flag = true
                             }
@@ -180,7 +184,7 @@ object DataHandler {
                                 continue
                             }
 
-                            if (value.contains(variable)) {
+                            if (value.contains(paramVal)) {
                                 score += if (col == E.Climate_zone) 3
                                 else 2
                                 flag = true
@@ -198,7 +202,7 @@ object DataHandler {
                                     else -> null
                                 }
                                 if (drainage == null) continue
-                                if (split.size == 1 && drainage.ordinal - DRAINAGE.valueOf(variable).ordinal >= 2) {
+                                if (split.size == 1 && drainage.ordinal - DRAINAGE.valueOf(paramVal).ordinal >= 2) {
                                     score -= 7
                                     flag = false
                                 }
