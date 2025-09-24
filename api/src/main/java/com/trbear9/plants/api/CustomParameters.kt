@@ -17,8 +17,8 @@ class CustomParameters : Parameters {
     var panen: Int = 0
     override fun getParameters(): MutableMap<String?, String?> {
         val map: MutableMap<String?, String?> = HashMap()
-        map.put(E.Category, if (category == null) null else category!!.head)
-        map.put(E.Life_span, if (lifeSpan == null) null else lifeSpan!!.head)
+        map.put(E.Category, category?.head)
+        map.put(E.Life_span, lifeSpan?.head)
         map.put("PANEN", panen.toString())
         map.put("QUERY", query)
         return map

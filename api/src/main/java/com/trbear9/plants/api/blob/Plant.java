@@ -12,17 +12,19 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Plant {
-    @JsonIgnore byte[] fullsize;
-    @JsonIgnore byte[] thumbnail;
-    @JsonIgnore private String nama_ilmiah;
-    @JsonIgnore private String family;
-    @JsonIgnore private String genus;
-    @JsonIgnore private String kingdom;
-    @JsonIgnore private String taxon;
-    @JsonIgnore private String kategori;
-    @JsonIgnore private int min_panen;
-    @JsonIgnore private int max_panen;
-
+    byte[] fullsize;
+    byte[] thumbnail;
+    @JsonProperty("nama_ilmiah")
+    private String nama_ilmiah;
+    private String family;
+    private String genus;
+    private String kingdom;
+    private String taxon;
+    private String kategori;
+    @JsonProperty("min_panen")
+    private int min_panen;
+    @JsonProperty("max_panen")
+    private int max_panen;
     @JsonProperty("plant_care")
     private PlantCare plantCare;
 

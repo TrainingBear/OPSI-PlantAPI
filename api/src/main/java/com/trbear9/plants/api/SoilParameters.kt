@@ -24,11 +24,11 @@ class SoilParameters : Parameters {
     }
 
     override fun getParameters(): MutableMap<String?, String?> {
-        val map: MutableMap<String?, String?> = HashMap<String?, String?>()
-        map.put(E.O_soil_depth, if (depth == null) null else depth!!.head)
-        map.put(E.O_soil_texture, if (texture == null) null else texture!!.head)
-        map.put(E.O_soil_fertility, if (fertility == null) null else fertility!!.head)
-        map.put(E.O_soil_drainage, if (drainage == null) null else drainage!!.head)
+        val map: MutableMap<String?, String?> = HashMap()
+        map.put(O_soil_depth, depth?.head)
+        map.put(O_soil_texture, texture?.head)
+        map.put(O_soil_fertility, fertility?.head)
+        map.put(O_soil_drainage, drainage?.head)
         map.put("PH", pH.toString())
 
         return map

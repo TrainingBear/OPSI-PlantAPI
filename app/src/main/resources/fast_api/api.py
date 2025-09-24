@@ -13,6 +13,7 @@
 
 from typing import Union
 from fastapi import FastAPI, UploadFile, File
+from ai_edge_litert.interpreter import Interpreter
 
 import tensorflow as tf
 import numpy as np
@@ -22,6 +23,16 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 model = tf.keras.models.load_model(os.environ.get("model"))
 model.summary()
+
+converter = tf.lite.TFLiteConverter.from_keras_model(model)
+converter.optimizations = [tf.lite.Optimize.DEFAULT]
+
+tflite_model = converter.convert()
+interpreter = Interpreter(model_content=tflite_model)
+interpreter.allocate_tensors()
+
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
 
 app = FastAPI()
 
@@ -36,16 +47,23 @@ def read_item(item_id: int, q: Union[str, None] = None):
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
+    print("DEBUG filename:", file.filename)
     contents = await file.read()
+    print("DEBUG size:", len(contents))
+    if not contents:
+        return {"error": "Uploaded file is empty!"}
     with open(dir + file.filename, "wb") as f:
         f.write(contents)
 
     contents = tf.image.decode_jpeg(contents, channels=3);
-    contents = tf.expand_dims(contents, axis=1);
+    contents = tf.expand_dims(contents, axis=0);
     contents = tf.image.resize(contents, [320, 320]);
     contents = tf.image.convert_image_dtype(contents, tf.float32);
 
-    predictions = model.predict(contents)
+    interpreter.set_tensor(input_details[0]['index'], contents.numpy())
+    interpreter.invoke()
+    predictions = interpreter.get_tensor(output_details[0]['index'])
+
     return predictions[0].tolist()
 
 @app.get("/plants/{name}")

@@ -22,8 +22,8 @@ class GeoParameters : Parameters {
     var min: Double = 19.0
     var max: Double = 31.0 // di seluruh indonesia (default)
     override fun getParameters(): MutableMap<String?, String?> {
-        val map: MutableMap<String?, String?> = HashMap<String?, String?>()
-        map.put(E.Climate_zone, if (iklim == null) null else iklim!!.head)
+        val map: MutableMap<String?, String?> = HashMap()
+        map.put(E.Climate_zone, iklim?.head)
         map.put("LAT", abs(latitude).toString())
         map.put("ALT", altitude.toString())
         map.put("RAIN", rainfall.toString())

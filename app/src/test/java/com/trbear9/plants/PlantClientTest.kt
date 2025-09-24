@@ -25,10 +25,10 @@ class PlantClientTest {
     val log = LoggerFactory.getLogger(PlantClientTest::class.java)
     val template = RestTemplate()
     val objectMapper = ObjectMapper()
+    val client = PlantClient("TrainingBear/84d0e105aaabce26c8dfbaff74b2280e")
 
     @Test
     fun sendPacket() {
-        PlantClient.Companion.addProvider("TrainingBear", "84d0e105aaabce26c8dfbaff74b2280e")
         val resource = ClassPathResource("fast_api/uploaded_images/aluvial-001.jpg")
         val file = resource.file;
         val bos = ByteArrayOutputStream();
@@ -43,12 +43,11 @@ class PlantClientTest {
         geo.iklim = E.CLIMATE.tropical_wet_and_dry
         soil.depth = E.DEPTH.medium
         data.image = bos.toByteArray()
+        data.filename = resource.file.name
         data.add(geo, soil, custom)
 
         try {
-//            val plantClient = PlantClient()
-//            val response = plantClient.sendPacket(data, PlantClient.PROCESS)
-            val response = PlantClient.sendPacket(data, PlantClient.PROCESS)
+            val response = client.sendPacket(data, PlantClient.PROCESS)
             log.info(objectMapper.readTree(
                 objectMapper.writeValueAsString(response)
             ).toPrettyString())
@@ -62,12 +61,9 @@ class PlantClientTest {
     @Test
     fun getUrl() {
         try {
-//            val plantClient = PlantClient()
-//            plantClient.addProvider("TrainingBear", "84d0e105aaabce26c8dfbaff74b2280e")
-            PlantClient.Companion.addProvider("TrainingBear", "84d0e105aaabce26c8dfbaff74b2280e")
-            val url = PlantClient.Companion.url
+            val url = client.url
             log.info(url)
-            log.info(PlantClient.debug().toString())
+            log.info(PlantClient.debug(client).toString())
         } catch (e: Exception) {
             log.info("The server is offline")
             log.error(e.message)
@@ -80,9 +76,9 @@ class PlantClientTest {
         try {
 //            val plantClient = PlantClient()
 //            val link = plantClient.url
-            val link = PlantClient.url
+            val link = client.url
             val head = template.exchange<String>(
-                url = link!!,
+                url = link,
                 method = HttpMethod.HEAD
             )
             log.info("status code: {}", head.statusCode.is2xxSuccessful)

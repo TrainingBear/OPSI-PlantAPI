@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.trbear9.plants
 
 import com.trbear9.plants.E.DRAINAGE
@@ -30,12 +28,14 @@ object DataHandler {
                     reader -> perawatancsv = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader).records
                 }
             }
+            log.info("Perawatan.csv loaded with size of ${perawatancsv.size}")
             resource = ClassPathResource("EcoCrop_DB.csv")
             resource.inputStream.use { `is` ->
                 InputStreamReader(`is`).use {
                         reader -> ecocropcsv = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader).records
                 }
             }
+            log.info("Loaded ECOCROP.csv with size of ${ecocropcsv.size}")
         } catch (e: IOException) {
             e.printStackTrace()
             throw RuntimeException(e)
@@ -66,7 +66,7 @@ object DataHandler {
             TreeMap<Int, MutableSet<CSVRecord>>(Comparator.reverseOrder())
         val parameters = userVariable.parameters.values
 
-        for (record in process()) {
+        for (record in ecocropcsv) {
             explored_fields++
             var score = 0
             var flag = false
@@ -240,7 +240,7 @@ object DataHandler {
     fun getRecord(parameters: Parameters): CSVRecord? {
         val par = parameters.getParameters()
         log.info("finding... ")
-        for (record in process()) {
+        for (record in ecocropcsv) {
             var flag = false
             for (col in par.keys) {
                 val `val` = par[col]
@@ -258,7 +258,7 @@ object DataHandler {
     @JvmStatic
     fun getRecord(query: String, column: String?): CSVRecord? {
         log.info("finding {} in {}", query, column)
-        for (i in process()) {
+        for (i in ecocropcsv) {
 //            log.info("checking {}", i.get(column));
             if (i.get(column).contains(query)) {
                 return i
@@ -266,10 +266,6 @@ object DataHandler {
         }
         log.info("{} not found in {}", query, column)
         return null
-    }
-
-    fun process(): MutableList<CSVRecord> {
-        return ecocropcsv
     }
 
     private val science_perawatancsv: MutableMap<String?, CSVRecord?> = HashMap<String?, CSVRecord?>()

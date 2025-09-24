@@ -6,7 +6,7 @@ import com.trbear9.plants.E.CLIMATE
 import com.trbear9.plants.E.DEPTH
 import com.trbear9.plants.ServerHandler.Companion.url
 import com.trbear9.plants.api.GeoParameters
-import com.trbear9.plants.api.Plant
+import com.trbear9.plants.api.blob.Plant
 import com.trbear9.plants.api.SoilParameters
 import com.trbear9.plants.api.UserVariable
 import org.junit.jupiter.api.Test

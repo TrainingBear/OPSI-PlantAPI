@@ -80,23 +80,59 @@ class ServerHandler {
         if (plantDir.mkdirs()) log.info("Directory created: {}", soilDir.absolutePath)
         for(file in plantDir.listFiles()){
             if(file.name.endsWith(".json")) {
-                plantResponse[file.name.replace(".json", "")] =
-                    objectMapper.readValue<Plant>(file, Plant::class.java)
-                if(debug) log.info("Loaded plantResponse response from cache: {}", file.name)
+                if(debug) log.info("Loading {}", file.name)
+                try {
+                    plantResponse[file.name.replace(".json", "")] = run {
+                        val tree = objectMapper.readTree(file)
+                        objectMapper.readValue<Plant>(tree["output"][1]
+                            ["content"][0]
+                            ["text"].asText()
+                            .removePrefix("```json\n")
+                            .removePrefix("```json")
+                            .removePrefix("```")
+                            .removeSuffix("```")
+                            .removeSuffix("\n```")
+                            .trim()
+                            , Plant::class.java)
+                    }
+                } catch (e: NullPointerException){
+                    log.error("NullPointerException: {}", e.message)
+                    if (file.delete()) {
+                        log.info("Deleted {}", file.name)
+                    }
+                    continue
+                }
             }
         }
-        log.info("RAG loaded in {} ms", (System.nanoTime() - start) / 1000000)
+        log.info("Plant care loaded in {} ms", (System.nanoTime() - start) / 1000000)
 
         start = System.nanoTime()
         if (soilDir.mkdirs()) log.info("Directory created: {}", soilDir.absolutePath)
         for(file in soilDir.listFiles()){
             if(file.name.endsWith(".json")) {
-                soilCare[file.name.replace(".json", "")] =
-                    objectMapper.readValue<SoilCare>(file, SoilCare::class.java)
-                if(debug) log.info("Loaded soilCare response from cache: {}", file.name)
+                soilCare[file.name.replace(".json", "")] = run {
+                    val tree = objectMapper.readTree(file)
+                    try {
+                        objectMapper.readValue<SoilCare>(tree["output"][1]["content"][0]["text"].asText()
+                            .removePrefix("```json\n")
+                            .removePrefix("```json")
+                            .removePrefix("```")
+                            .removeSuffix("```")
+                            .removeSuffix("\n```")
+                            .trim()
+                            , SoilCare::class.java)
+                    } catch (e: NullPointerException) {
+                        log.error("UnrecognizedPropertyException: {}", e.message)
+                        if (file.delete()) {
+                            log.info("Deleted {}", file.name)
+                        }
+                        continue
+                    }
+                }
+                if(debug) log.info("Loaded {}", file.name)
             }
         }
-        log.info("SoilCare loaded in {} ms", (System.nanoTime() - start) / 1000000)
+        log.info("Soil care loaded in {} ms", (System.nanoTime() - start) / 1000000)
     }
     private fun <T> rag(input: String?, name: String, clazz: Class<T>): T {
         if(clazz == Plant::class.java) {
@@ -120,16 +156,23 @@ class ServerHandler {
             ).body
 //            val tree = objectMapper.readTree(objectMapper.readTree(respon).asText())
             var tree = objectMapper.readTree(respon)
-            tree = objectMapper.readTree(tree["output"][1]["content"][0]["text"].asText())
+            synchronized(file.absolutePath.intern()) {
+                objectMapper.writeValue(file, tree)
+            }
+            tree = objectMapper.readTree(tree["output"][1]["content"][0]["text"].asText()
+                .removePrefix("```json\n")
+                .removePrefix("```json")
+                .removePrefix("```")
+                .removeSuffix("```")
+                .removeSuffix("\n```")
+                .trim()
+            )
             try {
                 plantResponse[name] = objectMapper.treeToValue(tree, Plant::class.java)
             }catch (e: UnrecognizedPropertyException){
                 log.info(tree.toPrettyString())
                 throw e
             }
-            Thread() {
-                objectMapper.writeValue(file, tree)
-            }.start()
             return plantResponse[name]!! as T
         } else if(clazz == SoilCare::class.java) {
             if (soilCare.containsKey(name)) return soilCare[name]!! as T;
@@ -152,11 +195,17 @@ class ServerHandler {
             ).body
 //            val tree = objectMapper.readTree(objectMapper.readTree(respon).asText())
             var tree = objectMapper.readTree(respon)
-            tree = objectMapper.readTree(tree["output"][0]["output"]["text"].asText())
+            synchronized(file.absolutePath.intern()) {
+                objectMapper.writeValue(file, tree)
+            }
+            tree = objectMapper.readTree(tree["output"][1]["content"][0]["text"].asText()
+                .removePrefix("```json\n")
+                .removePrefix("```json")
+                .removePrefix("```")
+                .removeSuffix("```")
+                .removeSuffix("\n```")
+                .trim())
             soilCare[name] = objectMapper.treeToValue(tree, SoilCare::class.java)
-            Thread() {
-                objectMapper.writeValue(file, respon)
-            }.start()
             return soilCare[name]!! as T
         }
         throw IllegalArgumentException("Invalid class")
@@ -175,7 +224,7 @@ class ServerHandler {
         var totalTime = 0.0
         log.info("POST /predict")
         val image = data.image
-        var start = System.currentTimeMillis()
+        var start = System.nanoTime()
         val prediction = FastApiService.predict(image, data.filename?:throw IllegalArgumentException("Filename cannot be null"))
         var took = (System.currentTimeMillis() - start).toDouble() / 1000000.0
         totalTime += took
@@ -210,6 +259,7 @@ class ServerHandler {
             for (ecorecord in processedData[i]!!) {
                 total++
                 val namaIlmiah = ecorecord.get(Science_name)
+                log.info("Processing $namaIlmiah {}/{}", response.tanaman.size+1, target)
 
                 val plant: Plant = plantResponse[namaIlmiah]?: run {
                     rag(    """
@@ -252,7 +302,6 @@ class ServerHandler {
                 plant.kategori = ecorecord.get(Category)
                 writeTaxonomy(plant)
                 response.put(i, plant)
-                log.info("Processed {}/{}", total, target)
             }
         }
         response.soilCare = soilCare[soilName+soil.pH+"pH"]?: rag(
@@ -291,7 +340,7 @@ class ServerHandler {
 
         val value: String? = objectMapper.writeValueAsString(response)
         synchronized(hash.absolutePath.intern()){
-            objectMapper.writeValue(hash, value!!)
+            objectMapper.writeValue(hash, response)
         }
         return value
     }
@@ -305,12 +354,16 @@ class ServerHandler {
         plant.genus = plant.nama_ilmiah.split(" ")[0]
 
         val kew = getKew(plant.nama_ilmiah)
-        if(kew == null) return
+        if(kew == null) {
+            log.warn("No taxonomy found for ${plant.nama_ilmiah}")
+            return
+        }
         plant.taxon = "https://powo.science.kew.org/" + kew["url"]?.asText()
         try {
             plant.fullsize = getImage(plant, kew = kew)
             plant.thumbnail = getImage(plant, kew = kew, size = "thumbnail")
         } catch (e: NullPointerException) {
+            log.warn("No image found for ${plant.nama_ilmiah}")
             e.printStackTrace()
         }
         plant.kingdom = kew["kingdom"].asText()
@@ -402,7 +455,7 @@ class ServerHandler {
         val file = File("cache/kew_caches")
         file.mkdirs()
         val start = System.nanoTime()
-        val process = DataHandler.process()
+        val process = DataHandler.ecocropcsv
         val max = process.size
         var c = file.listFiles().size;
         for(it in process){
