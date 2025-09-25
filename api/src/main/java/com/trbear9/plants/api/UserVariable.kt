@@ -1,5 +1,6 @@
 package com.trbear9.plants.api
 
+import com.trbear9.plants.PlantClient.Companion.objectMapper
 import lombok.*
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
@@ -14,8 +15,8 @@ class UserVariable {
     private var tanah: String? = null
 
     @Singular
-    val parameters: MutableMap<Class<out Parameters>, Parameters> =
-        HashMap<Class<out Parameters>, Parameters>()
+    val parameters: MutableMap<String, Parameters> =
+        HashMap<String, Parameters>()
 
     var image: ByteArray? = null
     var filename: String? = null
@@ -25,23 +26,19 @@ class UserVariable {
         this.image = image
         this.filename = filename
     }
-    fun modify(par: SoilParameters) {
-        (parameters[SoilParameters::class.java] as SoilParameters).modify(par)
-    }
 
     fun add(vararg parms: Parameters) {
-        for (par in parms) parameters.put(par.javaClass, par)
+        for (par in parms) parameters.put(par.javaClass.toString(), par)
     }
 
     @SneakyThrows
     fun computeHash() {
         val digest = MessageDigest.getInstance("SHA-256")
-
         if (image != null) digest.update(image)
         if (tanah != null) digest.update(tanah!!.toByteArray(StandardCharsets.UTF_8))
 
         for (entry in parameters.entries) {
-            digest.update(entry.key.getName().toByteArray())
+            digest.update(entry.key.toByteArray())
             val parameter: Parameters = entry.value
             digest.update(parameter.toString().toByteArray())
             for (par in parameter.getParameters().entries) {

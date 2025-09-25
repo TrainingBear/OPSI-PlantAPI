@@ -19,6 +19,7 @@ import org.springframework.web.client.getForEntity
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.util.concurrent.CountDownLatch
 import javax.imageio.ImageIO
 
 class PlantClientTest {
@@ -47,10 +48,15 @@ class PlantClientTest {
         data.add(geo, soil, custom)
 
         try {
-            val response = client.sendPacket(data, PlantClient.PROCESS)
-            log.info(objectMapper.readTree(
-                objectMapper.writeValueAsString(response)
-            ).toPrettyString())
+            val latch = CountDownLatch(1)
+            client.sendPacket(data, PlantClient.PROCESS, onResponse = {
+                log.info(objectMapper.readTree(
+                    objectMapper.writeValueAsString(it)
+                ).toPrettyString())
+                latch.countDown()
+            })
+            latch.await(5, java.util.concurrent.TimeUnit.MINUTES)
+
         } catch (e: Exception) {
             log.info("The server is offline")
             log.error(e.message)

@@ -80,7 +80,9 @@ class PlantClient {
         )
     }
 
-    fun sendPacket(data: UserVariable, type: String? = PROCESS): Response? {
+    fun sendPacket(data: UserVariable, type: String? = PROCESS,
+                   onResponse: (Response) -> Unit? = {}, callBack: (okhttp3.Callback)? = null
+                   ) {
         data.computeHash()
         val request = Request.Builder()
             .url(url + type)
@@ -90,9 +92,18 @@ class PlantClient {
             .build()
         println("POSTING ${request.url}")
         try {
-            client.newCall(request).execute().use {
-                return objectMapper.readValue(it.body.string(), Response::class.java)
-            }
+            client.newCall(request).enqueue(callBack ?:
+                object : okhttp3.Callback {
+                    override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+                        e.printStackTrace()
+                    }
+                    override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                        onResponse(
+                            objectMapper.readValue(response.body.string(), Response::class.java)
+                        )
+                    }
+                }
+            )
         } catch (e: Exception) {
             throw e
         }
