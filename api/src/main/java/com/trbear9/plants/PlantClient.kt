@@ -5,17 +5,22 @@ import com.fasterxml.jackson.core.StreamWriteConstraints
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.trbear9.plants.api.Response
 import com.trbear9.plants.api.UserVariable
+import kotlinx.coroutines.suspendCancellableCoroutine
+import okhttp3.Callback
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.time.Duration
 import java.util.Stack
+import kotlin.coroutines.resume
 
 class PlantClient {
     companion object {
         @JvmField
         val PROCESS = "/process"
         val objectMapper = ObjectMapper()
+
         init {
             objectMapper.factory.setStreamReadConstraints(
                 StreamReadConstraints.builder()
@@ -27,12 +32,14 @@ class PlantClient {
                     .build()
             )
         }
+
         val client = OkHttpClient.Builder()
-                .connectTimeout(Duration.ofSeconds(10))
-                .readTimeout(Duration.ofMinutes(3))
-                .writeTimeout(Duration.ofMinutes(3))
-                .callTimeout(Duration.ofMinutes(5))
-                .build()
+            .connectTimeout(Duration.ofSeconds(10))
+            .readTimeout(Duration.ofMinutes(3))
+            .writeTimeout(Duration.ofMinutes(3))
+            .callTimeout(Duration.ofMinutes(5))
+            .build()
+
         @JvmStatic
         fun debug(plantClient: PlantClient, provider: String? = plantClient.providers.last()): Int {
             val request = Request.Builder()
@@ -48,10 +55,11 @@ class PlantClient {
 
         }
     }
+
     val objectMapper = ObjectMapper()
     var providers = mutableListOf("https://gist.githubusercontent.com/null/null/raw/url.json")
-    val url: String get() = getUrll()
-    constructor(vararg provider: String, size : Int = 1_000_000){
+
+    constructor(vararg provider: String, size: Int = 1_000_000) {
         provider.forEach { addProvider(it) }
         objectMapper.factory.setStreamReadConstraints(
             StreamReadConstraints.builder()
@@ -68,7 +76,7 @@ class PlantClient {
      * Ukuran maksimal file respon. 1000 = 1mb
      * @param int 1 = 1kb
      */
-    fun maxSize(int: Int){
+    fun maxSize(int: Int) {
         objectMapper.factory.setStreamReadConstraints(
             StreamReadConstraints.builder()
                 .maxStringLength(int)
@@ -80,93 +88,168 @@ class PlantClient {
         )
     }
 
-    fun sendPacket(data: UserVariable, type: String? = PROCESS,
-                   onResponse: (Response) -> Unit? = {}, callBack: (okhttp3.Callback)? = null
-                   ) {
-        data.computeHash()
+    suspend fun check(url: String): String? = suspendCancellableCoroutine {
+        sus ->
         val request = Request.Builder()
-            .url(url + type)
-            .post(objectMapper.writeValueAsString(data).toRequestBody())
-            .header("Content-Type", "application/json")
-            .header("Accept", "application/json")
+            .url(url)
             .build()
-        println("POSTING ${request.url}")
-        try {
-            client.newCall(request).enqueue(callBack ?:
-                object : okhttp3.Callback {
+        val call = client.newCall(request)
+        call.enqueue(object : okhttp3.Callback {
+            override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+                e.printStackTrace()
+                sus.resume(null)
+            }
+
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                println("${response.code} ${response.message}");
+                sus.resume(response.body.string())
+            }
+        })
+        sus.invokeOnCancellation { call.cancel() }
+    }
+
+    suspend fun sendPacket(data: UserVariable, url: String? = null
+    ): Response? {
+        val url = url?:getUrl();
+        return suspendCancellableCoroutine { sus ->
+            data.computeHash()
+            val request = Request.Builder()
+                .url(url + PROCESS)
+                .post(objectMapper.writeValueAsString(data).toRequestBody())
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .build()
+            println("POSTING ${request.url}")
+            try {
+                val call = client.newCall(request)
+                sus.invokeOnCancellation { call.cancel() }
+                call.enqueue(object : Callback {
+                    override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+                        e.printStackTrace()
+                        sus.resume(null)
+                    }
+
+                    override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                        sus.resume(
+                            objectMapper.readValue(response.body.string(), Response::class.java)
+                        )
+                    }
+                })
+            } catch (e: Exception) {
+                throw e
+            }
+        }
+    }
+
+    suspend fun GET(map: String = "/", url: String? = null): okhttp3.Response {
+        val url = url?:getUrl()
+        return suspendCancellableCoroutine { sus ->
+            val request = Request.Builder()
+                .url(url + map)
+                .get()
+                .build()
+            try {
+                val call = client.newCall(request)
+                sus.invokeOnCancellation { call.cancel() }
+                call.enqueue(object : okhttp3.Callback {
                     override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
                         e.printStackTrace()
                     }
                     override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                        onResponse(
-                            objectMapper.readValue(response.body.string(), Response::class.java)
-                        )
+                        sus.resume(response)
                     }
-                }
-            )
-        } catch (e: Exception) {
-            throw e
-        }
-    }
-
-    fun GET(map: String = "/") : String?{
-        val request = Request.Builder()
-            .url(url + map)
-            .get()
-            .build()
-        try {
-            client.newCall(request).execute().use {
-                return it.body.string()
+                })
+            } catch (e: Exception) {
+                throw e
             }
-        } catch (e: Exception) {
-            throw e
         }
     }
-                /**
-                 * @param providerId gist provider, the name of GitHub user.
-                 * eg: TrainingBear/necron8971handle2834y2hy7reimburse4ano
-                 */
-        fun addProvider(providerId: String) {
-            val s = providerId.split('/')
-            addProvider(s[0], s[1])
-        }
-                /**
-                 * @param provider gist provider, the name of GitHub user. eg: TrainingBear
-                 * @param id gist id provider. eg: necron8971handle2834y2hy7reimburse4ano
-                 */
-        fun addProvider(provider: String, id: String) {
-            providers+=("https://gist.githubusercontent.com/$provider/$id/raw/url.json")
-            println("Provider has been added, size: ${providers.size}")
-        }
 
-        private fun getUrll() : String {
-            val prov: Stack<String> = Stack<String>().apply{ addAll(providers)}
-            val tries: MutableSet<String> = mutableSetOf()
-            while (!prov.isEmpty()){
-                val provider = prov.pop()
-                val request = Request.Builder()
-                    .url(provider)
-                    .build()
-                client.newCall(request).execute().use { response ->
-                    println("GETTING $provider")
+    /**
+     * @param providerId gist provider, the name of GitHub user.
+     * eg: TrainingBear/necron8971handle2834y2hy7reimburse4ano
+     */
+    fun addProvider(providerId: String) {
+        val s = providerId.split('/')
+        addProvider(s[0], s[1])
+    }
+
+    /**
+     * @param provider gist provider, the name of GitHub user. eg: TrainingBear
+     * @param id gist id provider. eg: necron8971handle2834y2hy7reimburse4ano
+     */
+    fun addProvider(provider: String, id: String) {
+        providers += ("https://gist.githubusercontent.com/$provider/$id/raw/url.json")
+        println("Provider has been added, size: ${providers.size}")
+    }
+
+    suspend fun getUrl(): String? = suspendCancellableCoroutine {
+        sus ->
+        val prov: Stack<String> = Stack<String>().apply { addAll(providers) }
+        val tries: MutableSet<String> = mutableSetOf()
+        fun find() {
+            if (prov.isEmpty()) {
+                sus.resume(null)
+                println("Cant find any active provider")
+                throw ProviderException("No provider available", tries)
+            }
+
+            val provider = prov.pop()
+            try{
+                provider.toHttpUrl()
+            } catch (e: Exception){
+                tries += provider
+                find()
+                e.printStackTrace()
+                return
+            }
+            val request = Request.Builder()
+                .url(provider)
+                .build()
+            println("GETTING $provider")
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+                    e.printStackTrace()
+                    tries += provider
+                    find()
+                }
+
+                override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
                     if (!response.isSuccessful) {
                         tries += provider
-                        continue
+                        find()
+                        return
                     }
-
                     val string = response.body.string()
                     val url = objectMapper.readTree(string)["content"].asText()
 
-                    val head = client.newCall(Request.Builder().url(url).head().build()).execute()
-                    if (head.code == 200) {
-                        println("RECEIVED $url")
-                        return url
-                    }
-                    tries += url
+                    client.newCall(
+                        Request.Builder()
+                            .url(url)
+                            .head()
+                            .build()
+                    ).enqueue(object : Callback {
+                        override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+                            e.printStackTrace()
+                            tries += url
+                            find()
+                        }
+
+                        override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                            if (response.code == 200) {
+                                println("RECEIVED $url")
+                                sus.resume(url)
+                            } else {
+                                tries += url
+                                find()
+                            }
+                        }
+                    })
                 }
-            }
-            throw ProviderException("No providers available", tries)
+            })
         }
+        find()
+    }
 }
 
 

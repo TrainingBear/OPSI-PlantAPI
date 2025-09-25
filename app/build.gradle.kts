@@ -20,6 +20,8 @@ java {
 val mockitoAgent = configurations.create("mockitoAgent")
  dependencies {
 	 implementation(project(":api"))
+	 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+	 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 	 implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
 	 implementation("com.open-meteo:open-meteo-api-kotlin:0.7.1-beta.1")
 	 implementation("com.github.alexdlaird:java-ngrok:2.3.16")

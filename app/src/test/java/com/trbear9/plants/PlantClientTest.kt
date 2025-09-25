@@ -5,21 +5,15 @@ import com.trbear9.plants.api.CustomParameters
 import com.trbear9.plants.api.GeoParameters
 import com.trbear9.plants.api.SoilParameters
 import com.trbear9.plants.api.UserVariable
-import org.apache.commons.lang3.ObjectUtils
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpMethod
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.exchange
-import org.springframework.web.client.getForEntity
-import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.util.concurrent.CountDownLatch
 import javax.imageio.ImageIO
 
 class PlantClientTest {
@@ -30,6 +24,7 @@ class PlantClientTest {
 
     @Test
     fun sendPacket() {
+        client.addProvider("TrainingBear/84d0e105aaabce26c8dfbaff74b2280e")
         val resource = ClassPathResource("fast_api/uploaded_images/aluvial-001.jpg")
         val file = resource.file;
         val bos = ByteArrayOutputStream();
@@ -48,15 +43,12 @@ class PlantClientTest {
         data.add(geo, soil, custom)
 
         try {
-            val latch = CountDownLatch(1)
-            client.sendPacket(data, PlantClient.PROCESS, onResponse = {
+            runBlocking{
+                val response = client.sendPacket(data)
                 log.info(objectMapper.readTree(
-                    objectMapper.writeValueAsString(it)
+                    objectMapper.writeValueAsString(response)
                 ).toPrettyString())
-                latch.countDown()
-            })
-            latch.await(5, java.util.concurrent.TimeUnit.MINUTES)
-
+            }
         } catch (e: Exception) {
             log.info("The server is offline")
             log.error(e.message)
@@ -67,9 +59,11 @@ class PlantClientTest {
     @Test
     fun getUrl() {
         try {
-            val url = client.url
-            log.info(url)
-            log.info(PlantClient.debug(client).toString())
+            runBlocking {
+            val url = client.getUrl()
+                log.info(url)
+                log.info(PlantClient.debug(client).toString())
+            }
         } catch (e: Exception) {
             log.info("The server is offline")
             log.error(e.message)
@@ -80,15 +74,15 @@ class PlantClientTest {
     @Test
     fun head(){
         try {
-//            val plantClient = PlantClient()
-//            val link = plantClient.url
-            val link = client.url
-            val head = template.exchange<String>(
-                url = link,
-                method = HttpMethod.HEAD
-            )
-            log.info("status code: {}", head.statusCode.is2xxSuccessful)
-            log.info(head.headers.toString())
+            runBlocking {
+            val link = client.getUrl()
+                val head = template.exchange<String>(
+                    url = link!!,
+                    method = HttpMethod.HEAD
+                )
+                log.info("status code: {}", head.statusCode.is2xxSuccessful)
+                log.info(head.headers.toString())
+            }
         } catch (e: Exception) {
             log.info("The server is offline")
             log.error(e.message)
