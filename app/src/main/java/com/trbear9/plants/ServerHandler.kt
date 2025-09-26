@@ -222,10 +222,15 @@ class ServerHandler {
         }
 
         var totalTime = 0.0
-        log.info("POST /predict")
+        val sumber = data.parameters[GeoParameters::class.java.toString()] as GeoParameters
+        log.info("POST /process from lon: ${sumber.longtitude} lat: ${sumber.latitude}")
         val image = data.image
         var start = System.nanoTime()
-        val prediction = FastApiService.predict(image, data.filename?:throw IllegalArgumentException("Filename cannot be null"))
+        val response = Response()
+        val prediction = FastApiService.predict(image, data.filename?:run{
+            log.error("File name cannot be null!")
+            return objectMapper.writeValueAsString(response)
+        })
         var took = (System.currentTimeMillis() - start).toDouble() / 1000000.0
         totalTime += took
         val max = FastApiService.argmax(prediction)
@@ -233,9 +238,28 @@ class ServerHandler {
         val soilName = FastApiService.label[max]
         log.info("Soil: {}", soilName)
 
+        response.soilPrediction = prediction
+        response.predict_time = took
+        response.soilName = soilName
+
+        var flag = true;
+        for (it in prediction) {
+            if(it <= 0.5) {
+                flag = false
+                break
+            }
+        }
+        if(flag) {
+            log.warn("The soil is not valid!")
+            return objectMapper.writeValueAsString(response)
+        }
+
         //fetching
         data.fetch {
-            if(it is GeoParameters) meteo(it)
+            if(it is GeoParameters) {
+                meteo(it)
+                response.altitude = it.altitude
+            }
             if(it is SoilParameters) {
                 it.texture = soil.texture;
                 it.fertility = soil.fertility;
@@ -245,10 +269,6 @@ class ServerHandler {
         }
 
         val processedData = DataHandler.process(data)
-        val response = Response()
-        response.soilPrediction = prediction
-        response.predict_time = took
-        response.soilName = soilName
         start = System.currentTimeMillis()
 
         var target = 0
@@ -259,7 +279,7 @@ class ServerHandler {
             for (ecorecord in processedData[i]!!) {
                 total++
                 val namaIlmiah = ecorecord.get(Science_name)
-                log.info("Processing $namaIlmiah {}/{}", response.tanaman.size+1, target)
+                if(debug) log.warn("Processing $namaIlmiah {}/{}", total, target)
 
                 val plant: Plant = plantResponse[namaIlmiah]?: run {
                     rag(    """
@@ -300,6 +320,7 @@ class ServerHandler {
                 plant.max_panen = ecorecord.get(MAX_crop_cycle).toInt()
                 plant.family = ecorecord.get(Family)
                 plant.kategori = ecorecord.get(Category)
+                plant.ph = "${ecorecord[O_minimum_ph]}-${ecorecord.get(O_maximum_ph)}"
                 writeTaxonomy(plant)
                 response.put(i, plant)
             }
@@ -364,7 +385,6 @@ class ServerHandler {
             plant.thumbnail = getImage(plant, kew = kew, size = "thumbnail")
         } catch (e: NullPointerException) {
             log.warn("No image found for ${plant.nama_ilmiah}")
-            e.printStackTrace()
         }
         plant.kingdom = kew["kingdom"].asText()
         plant.family = kew["family"].asText()
@@ -412,7 +432,6 @@ class ServerHandler {
 
         val root : JsonNode = if(!file.exists()) {
             val url = "https://powo.science.kew.org/api/1/search?q=$q"
-            log.info("GETTING {}", url)
             val response = template.getForEntity(url, JsonNode::class.java)
             synchronized(file.absolutePath.intern()){
                 objectMapper.writeValue(file, response.body) }
@@ -424,7 +443,6 @@ class ServerHandler {
                 len--
                 val q = q.substring(0, len)
                 val url = "https://powo.science.kew.org/api/1/search?q=$q"
-                log.info("GETTING {}", url)
                 val response = template.getForEntity(url, JsonNode::class.java)
                 synchronized(file.absolutePath.intern()){
                     objectMapper.writeValue(file, response.body)
@@ -485,8 +503,7 @@ class ServerHandler {
             if (kew != null) {
                 val nodes = kew["images"]
                 nodes ?: run {
-                    if (debug) log.info("kew root: {}", kew.toPrettyString())
-                    throw NullPointerException("No images found")
+                    throw NullPointerException("No images found for ${plant?.nama_ilmiah}")
                 }
                 nodes[0][size].asText()
             } else {
@@ -494,8 +511,7 @@ class ServerHandler {
                 kew1?: return null
                 val nodes = kew1["images"]
                 nodes?: run {
-                    if(debug) log.info("kew root: {}", kew1.toPrettyString())
-                    throw NullPointerException("No images found")
+                    throw NullPointerException("No images found for ${plant.nama_ilmiah}")
                 }
                 nodes[0][size].asText()
             }

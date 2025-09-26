@@ -7,16 +7,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Plant {
+public class Plant implements Serializable {
     byte[] fullsize;
     byte[] thumbnail;
     @JsonProperty("nama_ilmiah")
     private String nama_ilmiah;
     private String family;
+    private String ph;
     private String genus;
     private String kingdom;
     private String taxon;
