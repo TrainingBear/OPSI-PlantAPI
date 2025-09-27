@@ -29,7 +29,9 @@ internal class DataHandlerTest {
             rainfall = (1700).toDouble()
         }
         val userVariable = UserVariable()
-        userVariable.add(par1, par2!!, par3!!)
+        userVariable.soil = par2 as SoilParameters
+        userVariable.geo = par3 as GeoParameters
+        userVariable.custom = par1 as CustomParameters?
 
         DataHandler.explored_fields = 0
         val records: MutableMap<Int, MutableSet<CSVRecord>> = process(userVariable)

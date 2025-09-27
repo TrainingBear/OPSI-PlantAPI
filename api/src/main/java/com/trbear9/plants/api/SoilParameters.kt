@@ -14,7 +14,7 @@ class SoilParameters : Parameters {
     var texture: TEXTURE? = null
     var fertility: FERTILITY? = null // tingkat kesuburan
     var drainage: DRAINAGE? = null
-    var pH: Float = 0f
+    var pH: Float? = null
 
     fun modify(soil: SoilParameters) {
         texture = soil.texture

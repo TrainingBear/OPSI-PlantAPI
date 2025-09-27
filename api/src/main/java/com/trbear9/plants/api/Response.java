@@ -21,7 +21,7 @@ public class Response implements Serializable {
     private SoilCare soilCare;
     private float[] soilPrediction = new float[8];
     private int total = 0;
-    private double altitude = 538;
+    private Double altitude = 538.0;
     private double predict_time, process_time, took;
     private Map<Integer, List<Plant>> tanaman = new HashMap<>();
     //{score: [{nama tanaman: response rag}, {...}]}

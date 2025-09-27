@@ -43,10 +43,11 @@ class PosterTest {
 
         val geoParameters: GeoParameters = GeoParameters().apply{
             iklim = (CLIMATE.temperate_with_humid_winters)}
-        val soilParameters: SoilParameters? = SoilParameters().apply {
+        val soilParameters = SoilParameters().apply {
             depth = (DEPTH.deep)}
         val userVariable = UserVariable()
-        userVariable.add(geoParameters, soilParameters!!)
+        userVariable.geo = geoParameters
+        userVariable.soil = soilParameters
         userVariable.image = bos.toByteArray()
         userVariable.computeHash()
 

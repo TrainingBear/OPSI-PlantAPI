@@ -12,6 +12,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.util.*
 import kotlin.math.abs
+import kotlin.math.absoluteValue
 
 object DataHandler {
     @JvmField
@@ -61,16 +62,17 @@ object DataHandler {
     }
 
     @JvmStatic
-    fun process(userVariable: UserVariable): MutableMap<Int, MutableSet<CSVRecord>> {
+    fun process(data: UserVariable): MutableMap<Int, MutableSet<CSVRecord>> {
         val map: MutableMap<Int, MutableSet<CSVRecord>> =
-            TreeMap<Int, MutableSet<CSVRecord>>(Comparator.reverseOrder())
-        val parameters = userVariable.parameters.values
+            TreeMap<Int, MutableSet<CSVRecord>>()
+        val parameters = listOf(data.geo, data.custom, data.soil)
 
         for (record in ecocropcsv) {
             explored_fields++
             var score = 0
             var flag = false
             for (parameter in parameters) {
+                if(parameter==null) continue
                 val params = parameter.getParameters()
                 for (col in params.keys) {
                     val paramVal = params[col]
@@ -118,7 +120,7 @@ object DataHandler {
                             if (record.get(E.O_minimum_rainfall) == "NA" || record.get(E.O_maximum_rainfall) == "NA") continue
                             val min = record.get(E.O_minimum_rainfall).toFloat()
                             val max = record.get(E.O_maximum_rainfall).toFloat()
-                            if (min <= floatVar && max >= floatVar) {
+                            if(floatVar in min..max){
                                 score += 1
                                 flag = true
                             } else {
@@ -150,8 +152,8 @@ object DataHandler {
                             if (record.get(E.MIN_crop_cycle) == "NA" || record.get(E.MAX_crop_cycle) == "NA") continue
                             val min = record.get(E.MIN_crop_cycle).toFloat()
                             val max = record.get(E.MAX_crop_cycle).toFloat()
-                            if (min <= floatVar && max >= floatVar) {
-                                ++score
+                            if (floatVar in min..max) {
+                                score+=2
                                 flag = true
                             }
                         }
@@ -167,8 +169,8 @@ object DataHandler {
                             if (record.get(E.O_minimum_ph) == "NA" || record.get(E.A_minimum_ph) == "NA") continue
                             val min = record.get(E.O_minimum_ph).toFloat()
                             val max = record.get(E.O_maximum_ph).toFloat()
-                            if (min <= floatVar && max >= floatVar) {
-                                score += 1
+                            if (floatVar in min..max) {
+                                score += 3
                                 flag = true
                             } else score +=  // minus n per ph yang diluar jangkauan
                                 (if (floatVar < min) floatVar - min else max - floatVar).toInt()
@@ -211,7 +213,8 @@ object DataHandler {
                     }
                 }
             }
-            if (isAuthored(record) && flag && score > 0) map.computeIfAbsent(score) { k: Int? -> HashSet<CSVRecord>() }
+            if (isAuthored(record) && flag && score > 0)
+                map.computeIfAbsent(score) { k: Int? -> HashSet<CSVRecord>() }
                 .add(record)
         }
         return map

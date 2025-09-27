@@ -40,7 +40,8 @@ class PlantClientTest {
         soil.depth = E.DEPTH.medium
         data.image = bos.toByteArray()
         data.filename = resource.file.name
-        data.add(geo, soil, custom)
+        data.geo = geo
+        data.soil = soil
 
         try {
             runBlocking{

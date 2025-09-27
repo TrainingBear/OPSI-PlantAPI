@@ -14,12 +14,12 @@ class CustomParameters : Parameters {
     var category: CATEGORY? = null
     var lifeSpan: LIFESPAM? = null
     var query: String? = null
-    var panen: Int = 0
+    var panen: Int? = null
     override fun getParameters(): MutableMap<String?, String?> {
         val map: MutableMap<String?, String?> = HashMap()
         map.put(E.Category, category?.head)
         map.put(E.Life_span, lifeSpan?.head)
-        map.put("PANEN", panen.toString())
+        map.put("PANEN", panen?.toString())
         map.put("QUERY", query)
         return map
     }

@@ -1,5 +1,6 @@
 package com.trbear9.plants
 
+import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.core.StreamReadConstraints
 import com.fasterxml.jackson.core.StreamWriteConstraints
@@ -18,9 +19,9 @@ import com.trbear9.plants.E.*
 import com.trbear9.plants.api.GeoParameters
 import com.trbear9.plants.api.blob.Plant
 import com.trbear9.plants.api.Response
-import com.trbear9.plants.api.SoilParameters
 import com.trbear9.plants.api.UserVariable
 import com.trbear9.plants.api.blob.SoilCare
+import jakarta.servlet.http.HttpServletResponse
 import lombok.Getter
 import lombok.extern.slf4j.Slf4j
 import org.slf4j.Logger
@@ -84,16 +85,15 @@ class ServerHandler {
                 try {
                     plantResponse[file.name.replace(".json", "")] = run {
                         val tree = objectMapper.readTree(file)
-                        objectMapper.readValue<Plant>(tree["output"][1]
-                            ["content"][0]
-                            ["text"].asText()
-                            .removePrefix("```json\n")
-                            .removePrefix("```json")
-                            .removePrefix("```")
-                            .removeSuffix("```")
-                            .removeSuffix("\n```")
-                            .trim()
-                            , Plant::class.java)
+                        try {
+                            objectMapper.readValue<Plant>(
+                                sanitize(tree["output"][1]["content"][0]["text"].asText()),
+                                Plant::class.java
+                            )
+                        } catch (e: Exception){
+                            log.info(sanitize(tree["output"][1]["content"][0]["text"].asText()))
+                            throw e
+                        }
                     }
                 } catch (e: NullPointerException){
                     log.error("NullPointerException: {}", e.message)
@@ -113,14 +113,9 @@ class ServerHandler {
                 soilCare[file.name.replace(".json", "")] = run {
                     val tree = objectMapper.readTree(file)
                     try {
-                        objectMapper.readValue<SoilCare>(tree["output"][1]["content"][0]["text"].asText()
-                            .removePrefix("```json\n")
-                            .removePrefix("```json")
-                            .removePrefix("```")
-                            .removeSuffix("```")
-                            .removeSuffix("\n```")
-                            .trim()
-                            , SoilCare::class.java)
+                        objectMapper.readValue<SoilCare>(
+                            sanitize(tree["output"][1]["content"][0]["text"].asText()),
+                            SoilCare::class.java)
                     } catch (e: NullPointerException) {
                         log.error("UnrecognizedPropertyException: {}", e.message)
                         if (file.delete()) {
@@ -159,14 +154,7 @@ class ServerHandler {
             synchronized(file.absolutePath.intern()) {
                 objectMapper.writeValue(file, tree)
             }
-            tree = objectMapper.readTree(tree["output"][1]["content"][0]["text"].asText()
-                .removePrefix("```json\n")
-                .removePrefix("```json")
-                .removePrefix("```")
-                .removeSuffix("```")
-                .removeSuffix("\n```")
-                .trim()
-            )
+            tree = objectMapper.readTree(sanitize(tree["output"][1]["content"][0]["text"].asText()))
             try {
                 plantResponse[name] = objectMapper.treeToValue(tree, Plant::class.java)
             }catch (e: UnrecognizedPropertyException){
@@ -198,43 +186,53 @@ class ServerHandler {
             synchronized(file.absolutePath.intern()) {
                 objectMapper.writeValue(file, tree)
             }
-            tree = objectMapper.readTree(tree["output"][1]["content"][0]["text"].asText()
-                .removePrefix("```json\n")
-                .removePrefix("```json")
-                .removePrefix("```")
-                .removeSuffix("```")
-                .removeSuffix("\n```")
-                .trim())
+            tree = objectMapper.readTree(sanitize(tree["output"][1]["content"][0]["text"].asText()))
             soilCare[name] = objectMapper.treeToValue(tree, SoilCare::class.java)
             return soilCare[name]!! as T
         }
         throw IllegalArgumentException("Invalid class")
     }
 
+    fun sanitize(text: String): String {
+        return text
+            .replace(Regex("^```(json)?\\s*"), "")
+            .replace(Regex("```$"), "")
+            .replace(Regex("\",\"}"), "\"}")
+            .trim()
+    }
+
+
     @PostMapping("/process")
     @Throws(IOException::class)
-    fun process(@RequestBody data: UserVariable): String? {
+    fun process(@RequestBody data: UserVariable, result: HttpServletResponse) {
+        result.contentType = "application/json"
         val hashCode = data.hash
         File("cache").mkdirs()
         val hash = File("cache/$hashCode.json")
-        if(hash.exists()){
-            return objectMapper.readTree(hash).toPrettyString()
+        if (hash.exists()) {
+            hash.inputStream().use { input ->
+                result.outputStream.use {
+                    input.copyTo(it)
+                }
+            }
+            return
         }
 
+        val response = Response()
+        val sumber = data.geo
+        log.info("request from lon: ${sumber.longtitude} lat: ${sumber.latitude} -> POST /process ")
         var totalTime = 0.0
-        val sumber = data.parameters[GeoParameters::class.java.toString()] as GeoParameters
-        log.info("POST /process from lon: ${sumber.longtitude} lat: ${sumber.latitude}")
         val image = data.image
         var start = System.nanoTime()
-        val response = Response()
-        val prediction = FastApiService.predict(image, data.filename?:run{
+        val prediction = FastApiService.predict(image, data.filename ?: run {
             log.error("File name cannot be null!")
-            return objectMapper.writeValueAsString(response)
+            objectMapper.writeValue(result.outputStream, response)
+            return
         })
-        var took = (System.currentTimeMillis() - start).toDouble() / 1000000.0
+        var took = (System.nanoTime() - start).toDouble() / 1000000.0
         totalTime += took
         val max = FastApiService.argmax(prediction)
-        val soil = FastApiService.soil[max]
+        val resultSoil = FastApiService.soil[max]
         val soilName = FastApiService.label[max]
         log.info("Soil: {}", soilName)
 
@@ -244,28 +242,28 @@ class ServerHandler {
 
         var flag = true;
         for (it in prediction) {
-            if(it <= 0.5) {
+            if (it > 0.5f) {
                 flag = false
                 break
             }
         }
-        if(flag) {
+        if (flag) {
             log.warn("The soil is not valid!")
-            return objectMapper.writeValueAsString(response)
+            response.error = "Gambar tidak menunjukan adanya keberadaan tanah!"
+            objectMapper.writeValue(result.outputStream, response)
+            return
         }
 
         //fetching
-        data.fetch {
-            if(it is GeoParameters) {
-                meteo(it)
-                response.altitude = it.altitude
-            }
-            if(it is SoilParameters) {
-                it.texture = soil.texture;
-                it.fertility = soil.fertility;
-                it.drainage = soil.drainage;
-                it.pH = soil.pH;
-            }
+        data.geo.let {
+            meteo(it)
+            response.altitude = it.altitude
+        }
+        data.soil.let {
+            it.texture = resultSoil.texture;
+            it.fertility = resultSoil.fertility;
+            it.drainage = resultSoil.drainage;
+            it.pH = it.pH ?: resultSoil.pH
         }
 
         val processedData = DataHandler.process(data)
@@ -273,16 +271,17 @@ class ServerHandler {
 
         var target = 0
         for (i in processedData.keys)
-            target+= processedData[i]!!.size
+            target += processedData[i]!!.size
         var total = 0
         for (i in processedData.keys) {
             for (ecorecord in processedData[i]!!) {
                 total++
                 val namaIlmiah = ecorecord.get(Science_name)
-                if(debug) log.warn("Processing $namaIlmiah {}/{}", total, target)
+                if (debug) log.warn("Processing $namaIlmiah {}/{}", total, target)
 
-                val plant: Plant = plantResponse[namaIlmiah]?: run {
-                    rag(    """
+                val plant: Plant = plantResponse[namaIlmiah] ?: run {
+                    rag(
+                        """
                         You are given a plant with the scientific name: "$namaIlmiah".
                         Generate structured information in **valid JSON only** (no extra text).
                     
@@ -310,9 +309,9 @@ class ServerHandler {
                         - All values must be written in **Indonesian language**.
                         - Do not add explanations outside JSON.
                         - Ensure output is strictly valid JSON.
-                        """.trimIndent()
-                        , namaIlmiah,
-                        Plant::class.java)
+                        """.trimIndent(), namaIlmiah,
+                        Plant::class.java
+                    )
                 }
 
                 plant.nama_ilmiah = namaIlmiah
@@ -325,9 +324,9 @@ class ServerHandler {
                 response.put(i, plant)
             }
         }
-        response.soilCare = soilCare[soilName+soil.pH+"pH"]?: rag(
-             """
-                Given the soil type "$soilName" with a pH of ${soil.pH},
+        response.soilCare = soilCare[soilName + resultSoil.pH + "pH"] ?: rag(
+            """
+                Given the soil type "$soilName" with a pH of ${resultSoil.pH},
                 provide a detailed soil care and fertility improvement plan.
             
                 Return the result in **valid JSON only** (no explanations, no Markdown).
@@ -349,9 +348,9 @@ class ServerHandler {
                 - Do not add extra fields.
                 - Ensure the JSON is strictly valid.
                 """.trimIndent(),
-            name = soilName+soil.pH+"pH",
+            name = soilName + resultSoil.pH + "pH",
             SoilCare::class.java
-            )
+        )
 
         took = (System.currentTimeMillis() - start).toDouble() / 1000000.0
         response.process_time = took
@@ -359,11 +358,10 @@ class ServerHandler {
         response.total = total
         response.hashCode = hashCode
 
-        val value: String? = objectMapper.writeValueAsString(response)
-        synchronized(hash.absolutePath.intern()){
+        objectMapper.writeValue(result.outputStream, response)
+        synchronized(hash.absolutePath.intern()) {
             objectMapper.writeValue(hash, response)
         }
-        return value
     }
 
     /**
