@@ -32,16 +32,20 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
 import java.net.URI
+import java.nio.file.Files
 import java.time.Duration
 import javax.imageio.ImageIO
 import kotlin.collections.HashMap
@@ -257,13 +261,15 @@ class ServerHandler {
         //fetching
         data.geo.let {
             meteo(it)
-            response.altitude = it.altitude
+            response.geo = data.geo
         }
         data.soil.let {
             it.texture = resultSoil.texture;
             it.fertility = resultSoil.fertility;
             it.drainage = resultSoil.drainage;
             it.pH = it.pH ?: resultSoil.pH
+
+            response.soil = it
         }
 
         val processedData = DataHandler.process(data)
@@ -314,6 +320,7 @@ class ServerHandler {
                     )
                 }
 
+                plant.common_names = ecorecord.get(Common_names)
                 plant.nama_ilmiah = namaIlmiah
                 plant.min_panen = ecorecord.get(MIN_crop_cycle).toInt()
                 plant.max_panen = ecorecord.get(MAX_crop_cycle).toInt()
@@ -364,6 +371,34 @@ class ServerHandler {
         }
     }
 
+    @GetMapping("/images/{image}")
+    fun getImage(@PathVariable image: String): ResponseEntity<StreamingResponseBody> {
+        val dir = File("cache/images");
+        val file = File(dir, image)
+        val canonicalDir = dir.canonicalFile
+        val canonicalFile = file.canonicalFile
+        if(!canonicalFile.path.startsWith(canonicalDir.path))
+            return ResponseEntity.notFound().build()
+
+        val stream = StreamingResponseBody{ output ->
+            file.inputStream().use { input ->
+                input.copyTo(output)
+            }
+        }
+
+        val mediaType = when (file.extension.lowercase()) {
+            "png" -> MediaType.IMAGE_PNG
+            "jpg", "jpeg" -> MediaType.IMAGE_JPEG
+            "gif" -> MediaType.IMAGE_GIF
+            else -> MediaType.APPLICATION_OCTET_STREAM
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(mediaType)
+            .body(stream)
+    }
+
     /**
      *
      * @param plant objek yang akan di tulis
@@ -379,8 +414,8 @@ class ServerHandler {
         }
         plant.taxon = "https://powo.science.kew.org/" + kew["url"]?.asText()
         try {
-            plant.fullsize = getImage(plant, kew = kew)
-            plant.thumbnail = getImage(plant, kew = kew, size = "thumbnail")
+            plant.fullsize = getImagePath(plant, kew = kew)
+            plant.thumbnail = getImagePath(plant, kew = kew, size = "thumbnail")
         } catch (e: NullPointerException) {
             log.warn("No image found for ${plant.nama_ilmiah}")
         }
@@ -488,14 +523,14 @@ class ServerHandler {
 
     @JvmOverloads
     @kotlin.jvm.Throws(NullPointerException::class)
-    fun getImage(plant: Plant? = null, kew: JsonNode? = null, size: String? = "fullsize") : ByteArray? {
+    fun getImagePath(plant: Plant? = null, kew: JsonNode? = null, size: String? = "fullsize") : String? {
         val q : String? = plant?.nama_ilmiah
 
         val dir = File("cache/images")
         dir.mkdirs()
         val file = File(dir, "$q $size.jpg")
         if(file.exists()){
-            return file.readBytes()
+            return file.name
         }
         val url = "http:" +
             if (kew != null) {
@@ -513,15 +548,12 @@ class ServerHandler {
                 }
                 nodes[0][size].asText()
             }
-        val byte = URI.create(url).toURL().readBytes()
-
-        if(!file.exists()) {
-            synchronized(file.absolutePath.intern()){
-                val bufferedImage = ImageIO.read(ByteArrayInputStream(byte));
-                ImageIO.write(bufferedImage, "jpg", file)
+        if (!file.exists()) {
+            URI.create(url).toURL().openStream().use { inputStream ->
+                Files.copy(inputStream, file.toPath())
             }
         }
-        return byte
+        return file.name
     }
 
     @OptIn(com.openmeteo.api.common.Response.ExperimentalGluedUnitTimeStepValues::class)

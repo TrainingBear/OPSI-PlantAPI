@@ -14,10 +14,11 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Plant implements Serializable {
-    byte[] fullsize;
-    byte[] thumbnail;
+    private String fullsize, thumbnail;
     @JsonProperty("nama_ilmiah")
     private String nama_ilmiah;
+    @JsonProperty("common_names")
+    private String common_names;
     private String family;
     private String ph;
     private String genus;

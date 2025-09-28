@@ -6,11 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.trbear9.plants.api.Response
 import com.trbear9.plants.api.UserVariable
 import kotlinx.coroutines.suspendCancellableCoroutine
+import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okio.source
+import java.io.InputStream
 import java.time.Duration
 import java.util.Stack
 import kotlin.coroutines.resume
@@ -19,6 +22,7 @@ class PlantClient {
     companion object {
         @JvmField
         val PROCESS = "/process"
+        val IMAGE = "/images"
         val objectMapper = ObjectMapper()
 
         init {
@@ -76,7 +80,7 @@ class PlantClient {
      * Ukuran maksimal file respon. 1000 = 1mb
      * @param int 1 = 1kb
      */
-    fun maxSize(int: Int) {
+    fun setMaxSize(int: Int) {
         objectMapper.factory.setStreamReadConstraints(
             StreamReadConstraints.builder()
                 .maxStringLength(int)
@@ -106,6 +110,30 @@ class PlantClient {
             }
         })
         sus.invokeOnCancellation { call.cancel() }
+    }
+
+    suspend fun loadImage(name: String, result: (InputStream) -> Unit) {
+        val url = getUrl()
+        return suspendCancellableCoroutine { sus ->
+            val request = Request.Builder()
+                .url("$url$IMAGE/$name")
+                .build()
+            val call = client.newCall(request)
+            call.enqueue(object : okhttp3.Callback {
+                override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+                    e.printStackTrace()
+                }
+
+                override fun onResponse(call: Call, response: okhttp3.Response) {
+                    response.use {
+                        it.body.byteStream().use { input ->
+                            result(input)
+                            sus.resume(Unit)
+                        }
+                    }
+                }
+            })
+        }
     }
 
     suspend fun sendPacket(data: UserVariable, url: String? = null

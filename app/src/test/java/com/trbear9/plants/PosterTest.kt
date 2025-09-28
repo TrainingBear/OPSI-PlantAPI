@@ -117,7 +117,7 @@ class PosterTest {
             val urtica = checkNotNull(serverHandler.getKew("Urtica"))
             val plant = Plant()
             plant.nama_ilmiah = "Urtica"
-            val urticas = serverHandler.getImage(plant)
+            val urticas = serverHandler.getImagePath(plant)
         } catch (e: Exception) {
             log.error("Error: {}", e.message)
         }

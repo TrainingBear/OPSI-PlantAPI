@@ -14,6 +14,8 @@ import org.springframework.http.HttpMethod
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.exchange
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.nio.file.Files
 import javax.imageio.ImageIO
 
 class PlantClientTest {
@@ -42,18 +44,50 @@ class PlantClientTest {
         data.filename = resource.file.name
         data.geo = geo
         data.soil = soil
-
         try {
             runBlocking{
                 val response = client.sendPacket(data)
                 log.info(objectMapper.readTree(
                     objectMapper.writeValueAsString(response)
                 ).toPrettyString())
+                for (plants in response!!.tanaman.values) {
+                    for (plant in plants) {
+                        val img = plant.fullsize
+                        if(img==null) continue
+                        client.loadImage(img) { inputStream ->
+                            val out = File("test/out")
+                            out.mkdirs()
+                            val file = File(out, img)
+                            inputStream.use {
+                                Files.copy(it, file.toPath())
+                            }
+                        }
+                        break
+                    }
+                    break
+                }
             }
         } catch (e: Exception) {
             log.info("The server is offline")
             log.error(e.message)
             e.printStackTrace()
+        }
+    }
+
+    @Test
+    fun getImage() {
+        val img = "Albizia falcataria fullsize.jpg"
+        runBlocking {
+            client.loadImage(img, {input ->
+                val out = File("test/out")
+                out.mkdirs()
+                val file = File(out, img)
+                input.use { input ->
+                    file.outputStream().use {
+                        input.copyTo(file.outputStream())
+                    }
+                }
+            })
         }
     }
 
