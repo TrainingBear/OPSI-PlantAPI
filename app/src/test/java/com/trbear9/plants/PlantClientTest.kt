@@ -35,14 +35,10 @@ class PlantClientTest {
 
         val data = UserVariable()
 
-        val geo = GeoParameters()
-        val soil = SoilParameters()
-        val custom = CustomParameters()
-        geo.iklim = E.CLIMATE.tropical_wet_and_dry
-        soil.depth = E.DEPTH.medium
+        val soil = SoilParameters.ANDOSOL
+        soil!!.depth = E.DEPTH.medium
         data.image = bos.toByteArray()
         data.filename = resource.file.name
-        data.geo = geo
         data.soil = soil
         try {
             runBlocking{
@@ -54,14 +50,14 @@ class PlantClientTest {
                     for (plant in plants) {
                         val img = plant.fullsize
                         if(img==null) continue
-                        client.loadImage(img) { inputStream ->
-                            val out = File("test/out")
-                            out.mkdirs()
-                            val file = File(out, img)
-                            inputStream.use {
-                                Files.copy(it, file.toPath())
-                            }
-                        }
+//                        client.loadImage(img) { inputStream ->
+//                            val out = File("test/out")
+//                            out.mkdirs()
+//                            val file = File(out, img)
+//                            inputStream.use {
+//                                Files.copy(it, file.toPath())
+//                            }
+//                        }
                         break
                     }
                     break

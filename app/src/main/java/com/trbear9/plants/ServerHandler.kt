@@ -148,12 +148,17 @@ class ServerHandler {
 
             val request = HttpEntity(body, header)
 
-            val respon = template.postForEntity(
-                "https://api.openai.com/v1/responses",
-                request,
-                String::class.java
-            ).body
-//            val tree = objectMapper.readTree(objectMapper.readTree(respon).asText())
+            var respon: String? = null
+            try {
+                respon = template.postForEntity(
+                    "https://api.openai.com/v1/responses",
+                    request,
+                    String::class.java
+                ).body
+            }catch (e: Exception){
+                log.error("Something wrong when getting $name from OpenAI")
+                throw e
+            }
             var tree = objectMapper.readTree(respon)
             synchronized(file.absolutePath.intern()) {
                 objectMapper.writeValue(file, tree)
@@ -179,13 +184,17 @@ class ServerHandler {
             body.put("input", input)
 
             val request = HttpEntity(body, header)
-
-            val respon = template.postForEntity(
-                "https://api.openai.com/v1/responses",
-                request,
-                String::class.java
-            ).body
-//            val tree = objectMapper.readTree(objectMapper.readTree(respon).asText())
+            var respon: String?
+            try {
+                respon = template.postForEntity(
+                    "https://api.openai.com/v1/responses",
+                    request,
+                    String::class.java
+                ).body
+            }catch (e: Exception){
+                log.error("Something wrong when getting $name from OpenAI")
+                throw e
+            }
             var tree = objectMapper.readTree(respon)
             synchronized(file.absolutePath.intern()) {
                 objectMapper.writeValue(file, tree)
@@ -284,10 +293,11 @@ class ServerHandler {
                 total++
                 val namaIlmiah = ecorecord.get(Science_name)
                 if (debug) log.warn("Processing $namaIlmiah {}/{}", total, target)
-
-                val plant: Plant = plantResponse[namaIlmiah] ?: run {
-                    rag(
-                        """
+                var plant: Plant?
+                try {
+                     plant = plantResponse[namaIlmiah] ?: run {
+                        rag(
+                            """
                         You are given a plant with the scientific name: "$namaIlmiah".
                         Generate structured information in **valid JSON only** (no extra text).
                     
@@ -316,8 +326,11 @@ class ServerHandler {
                         - Do not add explanations outside JSON.
                         - Ensure output is strictly valid JSON.
                         """.trimIndent(), namaIlmiah,
-                        Plant::class.java
-                    )
+                            Plant::class.java
+                        )
+                    }
+                }catch (e: Exception){
+                    continue
                 }
 
                 plant.common_names = ecorecord.get(Common_names)
@@ -331,8 +344,9 @@ class ServerHandler {
                 response.put(i, plant)
             }
         }
-        response.soilCare = soilCare[soilName + resultSoil.pH + "pH"] ?: rag(
-            """
+        try {
+            response.soilCare = soilCare[soilName + resultSoil.pH + "pH"] ?: rag(
+                """
                 Given the soil type "$soilName" with a pH of ${resultSoil.pH},
                 provide a detailed soil care and fertility improvement plan.
             
@@ -355,9 +369,12 @@ class ServerHandler {
                 - Do not add extra fields.
                 - Ensure the JSON is strictly valid.
                 """.trimIndent(),
-            name = soilName + resultSoil.pH + "pH",
-            SoilCare::class.java
-        )
+                name = soilName + resultSoil.pH + "pH",
+                SoilCare::class.java
+            )
+        }catch (e: Exception){
+            log.error("Error while fetching soil care for $soilName with pH ${resultSoil.pH}", e)
+        }
 
         took = (System.currentTimeMillis() - start).toDouble() / 1000000.0
         response.process_time = took
@@ -510,7 +527,7 @@ class ServerHandler {
         val max = process.size
         var c = file.listFiles().size;
         for(it in process){
-            val sciencename = it[E.Science_name]
+            val sciencename = it[Science_name]
             val data = File(file, "$sciencename.json")
             if(data.exists()) continue
             log.info("Processing $sciencename")

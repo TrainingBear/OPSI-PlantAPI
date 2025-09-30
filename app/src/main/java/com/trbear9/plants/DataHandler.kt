@@ -83,28 +83,18 @@ object DataHandler {
 
                     when (col) {
                         "LAT" -> {
-                            val bias = 10
-                            if (record.get(E.O_minimum_latitude) == "NA" ||
-                                record.get(E.O_maximum_latitude) == "NA"
-                            ) continue
-
-                            val min = record.get(E.O_minimum_latitude).toFloat()
-                            val max = record.get(E.O_maximum_latitude).toFloat()
-                            if ((min <= floatVar && max >= floatVar)) {
-                                score += 1
-                                flag = true
-                            } else score += (if (floatVar < min) floatVar - min - bias else max - floatVar - bias).toInt()
-
+                            val bias = 5
                             if (record.get(E.A_minimum_latitude) == "NA" ||
                                 record.get(E.A_maximum_latitude) == "NA"
                             ) continue
 
-                            val amin = record.get(E.A_minimum_latitude).toFloat()
-                            val amax = record.get(E.A_maximum_latitude).toFloat()
-                            if (amin <= floatVar && amax >= floatVar) {
+                            floatVar = abs(floatVar)
+                            val min = record.get(E.A_minimum_latitude).toFloat()
+                            val max = record.get(E.A_maximum_latitude).toFloat()
+                            if (floatVar in min .. max) {
                                 score += 1
                                 flag = true
-                            }
+                            }else score += (if (floatVar < min) floatVar - min - bias else max - floatVar - bias).toInt()
                         }
 
                         "ALT" -> {
@@ -113,13 +103,13 @@ object DataHandler {
                             if (altitude >= floatVar) {
                                 score += 1
                                 flag = true
-                            } else score -= abs(altitude - floatVar).toInt()
+                            } else score -= (abs(altitude - floatVar)/5).toInt()
                         }
 
                         "RAIN" -> {
-                            if (record.get(E.O_minimum_rainfall) == "NA" || record.get(E.O_maximum_rainfall) == "NA") continue
-                            val min = record.get(E.O_minimum_rainfall).toFloat()
-                            val max = record.get(E.O_maximum_rainfall).toFloat()
+                            if (record.get(E.A_minimum_rainfall) == "NA" || record.get(E.A_maximum_rainfall) == "NA") continue
+                            val min = record.get(E.A_minimum_rainfall).toFloat()
+                            val max = record.get(E.A_maximum_rainfall).toFloat()
                             if(floatVar in min..max){
                                 score += 1
                                 flag = true
@@ -131,8 +121,8 @@ object DataHandler {
                         }
 
                         "TEMPMAX" -> {
-                            if (record.get(E.O_maximum_temperature) == "NA") continue
-                            val max = record.get(E.O_maximum_temperature).toFloat()
+                            if (record.get(E.A_maximum_temperature) == "NA") continue
+                            val max = record.get(E.A_maximum_temperature).toFloat()
                             if (max >= floatVar) {
                                 score += 1
                                 flag = true
@@ -140,8 +130,8 @@ object DataHandler {
                         }
 
                         "TEMPMIN" -> {
-                            if (record.get(E.O_minimum_temperature) == "NA") continue
-                            val min = record.get(E.O_minimum_temperature).toFloat()
+                            if (record.get(E.A_minimum_temperature) == "NA") continue
+                            val min = record.get(E.A_minimum_temperature).toFloat()
                             if (min <= floatVar) {
                                 score += 1
                                 flag = true
@@ -166,9 +156,9 @@ object DataHandler {
                         }
 
                         "PH" -> {
-                            if (record.get(E.O_minimum_ph) == "NA" || record.get(E.A_minimum_ph) == "NA") continue
-                            val min = record.get(E.O_minimum_ph).toFloat()
-                            val max = record.get(E.O_maximum_ph).toFloat()
+                            if (record.get(E.A_minimum_ph) == "NA" || record.get(E.A_minimum_ph) == "NA") continue
+                            val min = record.get(E.A_minimum_ph).toFloat()
+                            val max = record.get(E.A_maximum_ph).toFloat()
                             if (floatVar in min..max) {
                                 score += 3
                                 flag = true
@@ -179,7 +169,7 @@ object DataHandler {
                         else -> {
                             val value = record.get(col)
                             if ((col == E.O_soil_texture || col == E.A_soil_texture) &&
-                                record.get(col) == "wide"
+                                record.get(col).contains("wide")
                             ) {
                                 score += 2
                                 flag = true
@@ -188,26 +178,11 @@ object DataHandler {
 
                             if (value.contains(paramVal)) {
                                 score += if (col == E.Climate_zone) 3
-                                else 2
+                                else 1
                                 flag = true
                             } else if (col == E.Climate_zone) {
                                 score -= 354
                                 flag = false
-                            } else if (col == E.O_soil_drainage) {
-                                val split: Array<String?> =
-                                    value.split(", ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-                                if (split.size > 1) continue
-                                val drainage = when (value) {
-                                    "well (dry spells)" -> DRAINAGE.well
-                                    "poorly (saturated >50% of year)" -> DRAINAGE.poorly
-                                    "excessive (dry/moderately dry)" -> DRAINAGE.excessive
-                                    else -> null
-                                }
-                                if (drainage == null) continue
-                                if (split.size == 1 && drainage.ordinal - DRAINAGE.valueOf(paramVal).ordinal >= 2) {
-                                    score -= 7
-                                    flag = false
-                                }
                             }
                         }
                     }
