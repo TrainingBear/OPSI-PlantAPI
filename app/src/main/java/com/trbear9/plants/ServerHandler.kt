@@ -1,6 +1,5 @@
 package com.trbear9.plants
 
-import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.core.StreamReadConstraints
 import com.fasterxml.jackson.core.StreamWriteConstraints
@@ -37,17 +36,15 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody
-import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
 import java.net.URI
 import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.time.Duration
-import javax.imageio.ImageIO
 import kotlin.collections.HashMap
 import kotlin.collections.MutableMap
 import kotlin.jvm.java
@@ -99,11 +96,11 @@ class ServerHandler {
                             throw e
                         }
                     }
-                } catch (e: NullPointerException){
-                    log.error("NullPointerException: {}", e.message)
-                    if (file.delete()) {
-                        log.info("Deleted {}", file.name)
-                    }
+                } catch (e: Exception) {
+                    log.error("Something went wrong: {}", e.message)
+                    val trash = File(plantDir, "trash")
+                    Files.move(file.toPath(), trash.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                    log.warn("Deleted {}", file.name)
                     continue
                 }
             }
@@ -120,11 +117,11 @@ class ServerHandler {
                         objectMapper.readValue<SoilCare>(
                             sanitize(tree["output"][1]["content"][0]["text"].asText()),
                             SoilCare::class.java)
-                    } catch (e: NullPointerException) {
-                        log.error("UnrecognizedPropertyException: {}", e.message)
-                        if (file.delete()) {
-                            log.info("Deleted {}", file.name)
-                        }
+                    } catch (e: Exception) {
+                        log.error("Something went wrong: {}", e.message)
+                        val trash = File(soilDir, "trash")
+                        Files.move(file.toPath(), trash.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                        log.warn("Deleted {}", file.name)
                         continue
                     }
                 }
@@ -292,7 +289,7 @@ class ServerHandler {
             for (ecorecord in processedData[i]!!) {
                 total++
                 val namaIlmiah = ecorecord.get(Science_name)
-                if (debug) log.warn("Processing $namaIlmiah {}/{}", total, target)
+                if (debug) log.debug("Processing $namaIlmiah {}/{}", total, target)
                 var plant: Plant?
                 try {
                      plant = plantResponse[namaIlmiah] ?: run {
@@ -329,7 +326,7 @@ class ServerHandler {
                             Plant::class.java
                         )
                     }
-                }catch (e: Exception){
+                }catch (_: Exception){
                     continue
                 }
 
@@ -340,6 +337,7 @@ class ServerHandler {
                 plant.family = ecorecord.get(Family)
                 plant.kategori = ecorecord.get(Category)
                 plant.ph = "${ecorecord[O_minimum_ph]}-${ecorecord.get(O_maximum_ph)}"
+                plant.temp = "${ecorecord.get(O_minimum_temperature)}-${ecorecord.get(O_maximum_temperature)}"
                 writeTaxonomy(plant)
                 response.put(i, plant)
             }
@@ -611,7 +609,7 @@ class ServerHandler {
             elevation = f
         }
         elevation/=MPDL.elevation.size
-        geo.elevation = elevation.toDouble()
+        geo.altitude = elevation.toDouble()
         geo.min =  min
         geo.max = max
     }

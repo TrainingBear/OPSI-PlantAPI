@@ -27,8 +27,7 @@ class PlantClientTest {
     @Test
     fun sendPacket() {
         client.addProvider("TrainingBear/84d0e105aaabce26c8dfbaff74b2280e")
-        val resource = ClassPathResource("fast_api/uploaded_images/aluvial-001.jpg")
-        val file = resource.file;
+        val file = File("fast_api/uploaded_images/humus-110.jpg")
         val bos = ByteArrayOutputStream();
         val img = ImageIO.read(file)
         ImageIO.write(img, "jpg", bos);
@@ -38,14 +37,16 @@ class PlantClientTest {
         val soil = SoilParameters.ANDOSOL
         soil!!.depth = E.DEPTH.medium
         data.image = bos.toByteArray()
-        data.filename = resource.file.name
+        data.filename = file.name
         data.soil = soil
         try {
             runBlocking{
                 val response = client.sendPacket(data)
-                log.info(objectMapper.readTree(
-                    objectMapper.writeValueAsString(response)
-                ).toPrettyString())
+//                log.info(objectMapper.readTree(
+//                    objectMapper.writeValueAsString(response)
+//                ).toPrettyString())
+                log.info("Request done!")
+                log.info("{}", response!!.tanaman.size)
                 for (plants in response!!.tanaman.values) {
                     for (plant in plants) {
                         val img = plant.fullsize
@@ -68,6 +69,11 @@ class PlantClientTest {
             log.error(e.message)
             e.printStackTrace()
         }
+    }
+
+    @Test
+    fun sendAllSoil(){
+
     }
 
     @Test

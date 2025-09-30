@@ -1,6 +1,14 @@
 package com.trbear9.plants;
 
 public final class E {
+    public final static String[] label = {
+           "Aluvial",
+           "Andosol",
+           "Humus",
+           "Kapur",
+           "Laterit",
+           "Pasir"
+    };
     public static final String PERAWATAN = "PERAWATAN";
     public static final String NAME = "NAME";
     public static final String PENYAKIT = "PENYAKIT";
@@ -79,13 +87,13 @@ public final class E {
         cereals_pseudocereals("cereals & pseudocereals"),
         pulls("pulses (grain legumes)"),
         roots_tubers("roots/tubers"),
-        forage_pastures("forage/pastures"),
+        forage_pastures("forage/pasture"),
         fruit_nut("fruits & nuts"),
         vegetables("vegetables"),
         materials("materials"),
         ornamentals_turf("ornamentals/turf"),
         medicinals_and_armoatic("medicinals & aromatic"),
-        forest_or_wood("forest or wood"),
+        forest_or_wood("forest/wood"),
         cover_crop("cover crop"),
         environmental("environmental"),
         weed("weed");

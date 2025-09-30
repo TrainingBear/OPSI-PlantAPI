@@ -17,7 +17,6 @@ class GeoParameters : Parameters {
     var latitude: Double = -7.2565293 // di sekitar ambarawa (default)
     var longtitude: Double = 110.402824 // di sekitar ambarawa (default)
     var altitude: Double = 0.0
-    var elevation: Double = 0.0
     var rainfall: Double = 2000.0 // di jawa tengah (default)
     var min: Double = 18.0
     var max: Double = 31.0 // di seluruh indonesia (default)

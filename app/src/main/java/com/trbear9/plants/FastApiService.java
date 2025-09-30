@@ -52,24 +52,20 @@ public final class FastApiService {
     public static String url = "http://0.0.0.0:8000";
     private static Process process = null;
     public final static String[] label = {
-            "Aluvial",
-            "Andosol",
-            "Entisol",
-            "Humus",
-            "Inceptisol",
-            "Laterit",
-            "Kapur",
-            "Pasir"
+           "Aluvial",
+           "Andosol",
+           "Humus",
+           "Kapur",
+           "Laterit",
+           "Pasir"
     };
 
     public static final SoilParameters[] soil = {
             SoilParameters.ALLUVIAL,
             SoilParameters.ANDOSOL,
-            SoilParameters.ENTISOL,
             SoilParameters.HUMUS,
-            SoilParameters.INCEPTISOL,
-            SoilParameters.LATERITE,
             SoilParameters.KAPUR,
+            SoilParameters.LATERITE,
             SoilParameters.PASIR
     };
 

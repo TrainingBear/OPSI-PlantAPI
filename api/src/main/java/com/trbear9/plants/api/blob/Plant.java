@@ -20,7 +20,7 @@ public class Plant implements Serializable {
     @JsonProperty("common_names")
     private String common_names;
     private String family;
-    private String ph;
+    private String ph, temp;
     private String genus;
     private String kingdom;
     private String taxon;

@@ -39,9 +39,9 @@ class PlantClient {
 
         val client = OkHttpClient.Builder()
             .connectTimeout(Duration.ofSeconds(10))
-            .readTimeout(Duration.ofMinutes(3))
-            .writeTimeout(Duration.ofMinutes(3))
-            .callTimeout(Duration.ofMinutes(5))
+            .readTimeout(Duration.ofMinutes(30))
+            .writeTimeout(Duration.ofMinutes(30))
+            .callTimeout(Duration.ofMinutes(50))
             .build()
 
         @JvmStatic
