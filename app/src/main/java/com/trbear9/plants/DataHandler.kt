@@ -48,8 +48,8 @@ object DataHandler {
     }
 
     @JvmStatic
-    fun getScienceName(record: CSVRecord): String {
-        return record.get(E.Science_name)
+    fun getScienceName(record: CSVRecord?): String? {
+        return record?.get(E.Science_name)
     }
 
     @JvmStatic
@@ -83,23 +83,27 @@ object DataHandler {
 
                     when (col) {
                         "LAT" -> {
-                            val bias = 5
-                            if (record.get(E.A_minimum_latitude) == "NA" ||
-                                record.get(E.A_maximum_latitude) == "NA"
-                            ) continue
-
                             floatVar = abs(floatVar)
-                            val min = record.get(E.A_minimum_latitude).toFloat()
-                            val max = record.get(E.A_maximum_latitude).toFloat()
+                            val min: Float
+                            val max: Float
+                            try {
+                                min = record.get(E.A_minimum_latitude).toFloat()
+                                max = record.get(E.A_maximum_latitude).toFloat()
+                            }catch (_: NumberFormatException) {
+                                continue
+                            }
                             if (floatVar in min .. max) {
-                                score += 1
+                                score += 2
                                 flag = true
-                            }else score += (if (floatVar < min) floatVar - min - bias else max - floatVar - bias).toInt()
+                            }
                         }
 
                         "ALT" -> {
-                            if (record.get(E.O_maximum_altitude) == "NA") continue
-                            val altitude = record.get(E.O_maximum_altitude).toFloat()
+                            val altitude: Float
+                            try {altitude = record.get(E.O_maximum_altitude).toFloat()}
+                            catch (_: NumberFormatException) {
+                                continue
+                            }
                             if (altitude >= floatVar) {
                                 score += 1
                                 flag = true
@@ -107,22 +111,33 @@ object DataHandler {
                         }
 
                         "RAIN" -> {
-                            if (record.get(E.A_minimum_rainfall) == "NA" || record.get(E.A_maximum_rainfall) == "NA") continue
-                            val min = record.get(E.A_minimum_rainfall).toFloat()
-                            val max = record.get(E.A_maximum_rainfall).toFloat()
-                            if(floatVar in min..max){
+                            val min: Float
+                            val max: Float
+                            try {
+                                min = record.get(E.A_minimum_rainfall).toFloat()
+                                max = record.get(E.A_maximum_rainfall).toFloat()
+                            } catch (_: NumberFormatException) {
+                                continue
+                            }
+                            if (floatVar in min..max) {
                                 score += 1
                                 flag = true
                             } else {
-                                val floatVar = floatVar/25 // bias
-                                score +=  // -1 score/25 rainfall
-                                    (if (floatVar < min) floatVar - min else max - floatVar).toInt()
+                                val floatVar = floatVar / 25 // bias
+                                score -= (floatVar.coerceIn(
+                                    Math.min(min, max),
+                                    Math.max(min, max)
+                                ).absoluteValue).toInt()
                             }
                         }
 
                         "TEMPMAX" -> {
-                            if (record.get(E.A_maximum_temperature) == "NA") continue
-                            val max = record.get(E.A_maximum_temperature).toFloat()
+                            val max:Float
+                            try {
+                                max = record.get(E.A_maximum_temperature).toFloat()
+                            } catch (_: NumberFormatException){
+                                continue
+                            }
                             if (max >= floatVar) {
                                 score += 1
                                 flag = true
@@ -130,8 +145,12 @@ object DataHandler {
                         }
 
                         "TEMPMIN" -> {
-                            if (record.get(E.A_minimum_temperature) == "NA") continue
-                            val min = record.get(E.A_minimum_temperature).toFloat()
+                            val min:Float
+                            try{
+                                min = record.get(E.A_minimum_temperature).toFloat()
+                            }catch (_: NumberFormatException){
+                                 continue
+                            }
                             if (min <= floatVar) {
                                 score += 1
                                 flag = true
@@ -139,9 +158,14 @@ object DataHandler {
                         }
 
                         "PANEN" -> {
-                            if (record.get(E.MIN_crop_cycle) == "NA" || record.get(E.MAX_crop_cycle) == "NA") continue
-                            val min = record.get(E.MIN_crop_cycle).toFloat()
-                            val max = record.get(E.MAX_crop_cycle).toFloat()
+                            val min:Float
+                            val max:Float
+                            try {
+                                min = record.get(E.MIN_crop_cycle).toFloat()
+                                max = record.get(E.MAX_crop_cycle).toFloat()
+                            }catch (_: NumberFormatException) {
+                                continue
+                            }
                             if (floatVar in min..max) {
                                 score+=2
                                 flag = true
@@ -156,14 +180,19 @@ object DataHandler {
                         }
 
                         "PH" -> {
-                            if (record.get(E.A_minimum_ph) == "NA" || record.get(E.A_minimum_ph) == "NA") continue
-                            val min = record.get(E.A_minimum_ph).toFloat()
-                            val max = record.get(E.A_maximum_ph).toFloat()
-                            if (floatVar in min..max) {
-                                score += 3
-                                flag = true
-                            } else score +=  // minus n per ph yang diluar jangkauan
-                                (if (floatVar < min) floatVar - min else max - floatVar).toInt()
+//                            val min: Float
+//                            val max:Float
+//                            try {
+//                                min = record.get(E.A_minimum_ph).toFloat()
+//                                max = record.get(E.A_maximum_ph).toFloat()
+//                            } catch (_: NumberFormatException){
+//                                 continue
+//                            }
+//                            if (floatVar in min..max) {
+//                                score += 3
+//                                flag = true
+//                            }
+//                            else score -= (floatVar.coerceIn(Math.min(min, max), Math.max(min, max)).absoluteValue).toInt()
                         }
 
                         else -> {
@@ -181,7 +210,7 @@ object DataHandler {
                                 else 1
                                 flag = true
                             } else if (col == E.Climate_zone) {
-                                score -= 354
+                                score -= 354354
                                 flag = false
                             }
                         }

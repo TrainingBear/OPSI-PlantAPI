@@ -414,6 +414,7 @@ class ServerHandler {
             .body(stream)
     }
 
+    val ignored = mutableSetOf<String>()
     /**
      *
      * @param plant objek yang akan di tulis
@@ -422,9 +423,15 @@ class ServerHandler {
     private fun writeTaxonomy(plant: Plant) {
         plant.genus = plant.nama_ilmiah.split(" ")[0]
 
-        val kew = getKew(plant.nama_ilmiah)
+        var name = plant.nama_ilmiah.replace(" ssp.", "|").split("|")[0]
+        if(ignored.contains(name)){
+            log.warn("No taxonomy found for ${plant.nama_ilmiah}")
+            return
+        }
+        val kew = getKew(name)
         if(kew == null) {
             log.warn("No taxonomy found for ${plant.nama_ilmiah}")
+            ignored.add(name)
             return
         }
         plant.taxon = "https://powo.science.kew.org/" + kew["url"]?.asText()
