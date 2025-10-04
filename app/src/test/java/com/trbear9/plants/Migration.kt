@@ -3,6 +3,7 @@ package com.trbear9.plants
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.core.StreamReadConstraints
 import com.fasterxml.jackson.core.StreamWriteConstraints
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
@@ -69,39 +70,36 @@ class Migration {
         }
     }
 
+ @Test
+ fun DownloadImage(){
+     val dir = File("cache/kew_cache_blob")
+     for (file in dir.listFiles()) {
+         if(!file.name.endsWith(".json")) continue
+         val name = file.name.replace(".json", "")
+         val kew = objectMapper.readTree(file)
+         try {
+             getImagePath(nama = name, kew = kew)
+         }catch(e: NullPointerException){
+             log.error("No image found for $name")
+         }
+     }
+     migrateImage()
+ }
+
     @Test
-    fun generateSoil() {
-        throw RuntimeException("Stub!")
-        FastApiService.label.forEach { label ->
-            for(i in 0..28) {
-                val pH = i * 0.5f
-                log.info("Generating soil for $label with pH $pH")
-                rag(
-                    """
-                Given the soil type "$label" with a pH of ${pH},
-                provide a detailed soil care and fertility improvement plan.
-                Return the result in **valid JSON only** (no explanations, no Markdown).
-                
-                Schema:
-                {
-                  "pH_correction": "...",
-                  "nutrient_management": {
-                    "N": "...",
-                    "P": "...",
-                    "K": "..."
-                  },
-                  "organic_matter": "...",
-                  "water_retention": "..."
-                }
-            
-                Requirements:
-                - All values must be in Indonesian language.
-                - Do not add extra fields.
-                - Ensure the JSON is strictly valid.
-                """.trimIndent(),
-                    name = label +" "+ pH,
-                    SoilCare::class.java
-                )
+    fun mergePlant(){
+        val dir = File("cache/plant")
+        val target = File("cache/plant_blob")
+        target.mkdirs()
+        for (file in dir.listFiles()) {
+            if(!file.name.endsWith(".json")) continue
+            val target_plant = File(target, file.name)
+            if(!target_plant.exists()){
+                log.info("Processing $file")
+                var tree = objectMapper.readTree(file)
+                tree = objectMapper.readTree(sanitize(tree["output"][1]["content"][0]["text"].asText()))
+                val plant = objectMapper.treeToValue(tree, Plant::class.java)
+                objectMapper.writeValue(target_plant, plant)
             }
         }
     }
@@ -120,11 +118,14 @@ class Migration {
                 geo.rainfall = rain * 1000.0
                 val variable = UserVariable()
                 variable.geo = geo
-                val processed = DataHandler.process(variable)
-                for (score in processed.keys) {
-                    for (record in processed[score]!!) {
-                        plants.add(record)
+                for (soil in FastApiService.soil) {
+                    variable.soil = soil
+                    val processed = DataHandler.process(variable)
+                    for (score in processed.keys) {
+                        for (record in processed[score]!!) {
+                            plants.add(record)
 //                        log.info("${++iteration} Added {} with score {}", DataHandler.getScienceName(record), score)
+                        }
                     }
                 }
             }
@@ -145,7 +146,6 @@ class Migration {
 
         val missing = loaded - initialized
         log.info("Missing plants: ${missing.size}")
-
         for (record in plants) {
             val name = DataHandler.getScienceName(record)
             log.info("Processing $name")
@@ -184,15 +184,67 @@ class Migration {
         }
     }
 
+    @Test
+    fun compressKew(){
+        val dir = File("cache/kew_cache_blob")
+        val map = mutableMapOf<String, JsonNode>()
+        for (file in dir.listFiles()) {
+            if(!file.name.endsWith(".json")) continue
+            objectMapper.readTree(file).let {
+                map[file.name.replace(".json", "")] = it
+            }
+            log.info("loaded ${file.name}")
+        }
+        val dirrr = File("cache/KEW.json")
+        objectMapper.writeValue(dirrr, map)
+        loadKew()
+    }
+
+    @Test
+    fun loadKew(){
+        val dirrr = File("cache/KEW.json")
+        val type = object : TypeReference<Map<String, JsonNode>>() {}
+        val kew = objectMapper.readValue(dirrr, type)
+        for (entry in kew) {
+            val name = entry.key
+            val kew = kew[name]
+            log.info("Loaded $name -> ${kew?.get("name")}")
+        }
+    }
+
+    @Test
+    fun compressPlant(){
+        val dir = File("cache/plant_blob")
+        val plants = mutableSetOf<Plant>()
+        for (file in dir.listFiles()) {
+            if (!file.name.endsWith(".json")) continue
+            val plant = objectMapper.readValue(file, Plant::class.java)
+            plants += plant
+            log.info("loaded ${plant.commonName}")
+        }
+        val dirrr = File("cache/plants.json")
+        objectMapper.writeValue(dirrr, plants)
+    }
+
+    @Test
+    fun loadPlants(){
+        val dirrr = File("cache/plants.json")
+        val plants = objectMapper.readValue(dirrr, Array<Plant>::class.java)
+        for (plant in plants) {
+            log.info("Processing ${plant.commonName}")
+        }
+    }
+
      @JvmOverloads
     @kotlin.jvm.Throws(NullPointerException::class)
-    fun getImagePath(plant: Plant? = null, kew: JsonNode? = null, size: String? = "fullsize") : String? {
-        val q : String? = plant?.nama_ilmiah
+    fun getImagePath(plant: Plant? = null, nama: String? = null, kew: JsonNode? = null, size: String? = "fullsize") : String? {
+        val q : String? = plant?.nama_ilmiah ?: nama!!
 
         val dir = File("cache/images")
         dir.mkdirs()
         val file = File(dir, "$q $size.jpg")
-        if(file.exists()){
+        val file2 = File(dir, "$q.jpg")
+        if(file.exists() || file2.exists()){
             return file.name
         }
         val url = "http:" +
@@ -207,11 +259,11 @@ class Migration {
                 kew1?: return null
                 val nodes = kew1["images"]
                 nodes?: run {
-                    throw NullPointerException("No images found for ${plant.nama_ilmiah}")
+                    throw NullPointerException("No images found for ${plant?.nama_ilmiah}")
                 }
                 nodes[0][size].asText()
             }
-        if (!file.exists()) {
+        if (!file.exists() || !file2.exists()) {
             URI.create(url).toURL().openStream().use { inputStream ->
                 Files.copy(inputStream, file.toPath())
             }
@@ -271,10 +323,11 @@ class Migration {
             var node = objectMapper.readTree(it)
 
             var totalResults = node["totalResults"]
+            val name = it.name.replace(".json", "")
             totalResults?: run {
                 log.warn("No results found for {}", it.name)
                 getKew(it.name)
-                var nama_ilmiah = it.name.replace(".json", "")
+                var nama_ilmiah = name
                 nama_ilmiah = if (nama_ilmiah.contains(" ssp."))
                     nama_ilmiah.replace(" ssp.", "|").split("|")[0]
                 else if (nama_ilmiah.contains(" var."))
@@ -291,19 +344,18 @@ class Migration {
             var flag = false
             for (result in node["results"]) {
                 if(result["accepted"].asBoolean()){
-                    kewCache[it.name.replace(".json", "")] = result
+                    kewCache[name] = result
                     log.info("Found accepted resource! author: {}", result["author"]?.asText())
                     flag = true
                     break;
                 }
             }
-            if(flag) continue
             log.info("No accepted resource found for {}",
                  it.name
             )
             val file = File(kew_cache_blob, it.name)
             if(file.exists()) continue
-            objectMapper.writeValue(file, node)
+            objectMapper.writeValue(file, kewCache[name])
         }
         val took = (System.nanoTime() - start).toDouble() / 1000000.0
         log.info("KEW caches response loaded in {} ms", took)

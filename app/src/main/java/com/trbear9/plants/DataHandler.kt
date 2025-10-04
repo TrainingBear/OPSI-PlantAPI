@@ -93,7 +93,7 @@ object DataHandler {
                                 continue
                             }
                             if (floatVar in min .. max) {
-                                score += 2
+                                score += 1
                                 flag = true
                             }
                         }
@@ -167,7 +167,7 @@ object DataHandler {
                                 continue
                             }
                             if (floatVar in min..max) {
-                                score+=2
+                                score+=1
                                 flag = true
                             }
                         }
@@ -180,19 +180,19 @@ object DataHandler {
                         }
 
                         "PH" -> {
-//                            val min: Float
-//                            val max:Float
-//                            try {
-//                                min = record.get(E.A_minimum_ph).toFloat()
-//                                max = record.get(E.A_maximum_ph).toFloat()
-//                            } catch (_: NumberFormatException){
-//                                 continue
-//                            }
-//                            if (floatVar in min..max) {
-//                                score += 3
-//                                flag = true
-//                            }
-//                            else score -= (floatVar.coerceIn(Math.min(min, max), Math.max(min, max)).absoluteValue).toInt()
+                            val min: Float
+                            val max:Float
+                            try {
+                                min = record.get(E.A_minimum_ph).toFloat()
+                                max = record.get(E.A_maximum_ph).toFloat()
+                            } catch (_: NumberFormatException){
+                                 continue
+                            }
+                            if (floatVar in min..max) {
+                                score += 2
+                                flag = true
+                            }
+                            else score -= (floatVar.coerceIn(Math.min(min, max), Math.max(min, max)).absoluteValue).toInt()
                         }
 
                         else -> {
@@ -200,7 +200,7 @@ object DataHandler {
                             if ((col == E.O_soil_texture || col == E.A_soil_texture) &&
                                 record.get(col).contains("wide")
                             ) {
-                                score += 2
+                                score += 3
                                 flag = true
                                 continue
                             }
